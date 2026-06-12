@@ -496,10 +496,10 @@ Projects: API gateway, stateless microservices.`;
                   </div>
                 </div>
               ) : (
-                <div className="w-full h-full flex items-center justify-center relative group p-2">
+                <div className="w-[1000px] h-[380px] relative flex items-center justify-center rounded-2xl overflow-hidden border border-emerald-500/15 group">
                   <img 
                     src="/flow_graph.jpg" 
-                    className="w-full h-full object-contain rounded-xl shadow-2xl transition-transform duration-500 group-hover:scale-[1.01]" 
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.01]" 
                     alt="UrScore AI System Architecture Diagram (8K Ultra HD)" 
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
