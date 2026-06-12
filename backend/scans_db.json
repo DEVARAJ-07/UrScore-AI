@@ -1,0 +1,17 @@
+{
+  "e444503a-70dd-4962-8856-8c47bc612766": {
+    "id": "e444503a-70dd-4962-8856-8c47bc612766",
+    "developer_id": null,
+    "github_username": "DEVARAJ-07",
+    "resume_url": "http://localhost:5001/public/resumes/resume_upload.pdf",
+    "portfolio_url": null,
+    "leetcode_username": null,
+    "status": "pending",
+    "progress": 0,
+    "logs": [
+      "[SYSTEM] Created scan request for GitHub user DEVARAJ-07."
+    ],
+    "created_at": "2026-06-12T05:27:21.243Z",
+    "updated_at": "2026-06-12T05:27:21.243Z"
+  }
+}
