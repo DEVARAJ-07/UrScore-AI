@@ -105,7 +105,7 @@ export const useScanStore = create<ScanState>((set, get) => ({
       console.log('WebSocket connection closed');
     };
 
-    socket.onerror = (err) => {
+    socket.onerror = () => {
       set({ wsConnected: false });
       get().appendLog(`[CLIENT ERROR] WebSocket connection failed. Updates will poll via HTTP.`);
     };

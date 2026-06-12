@@ -6,6 +6,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 import dotenv from 'dotenv';
 import scansRouter from './routes/scans';
+import webhooksRouter from './routes/webhooks';
 import { initGateway } from './ws/gateway';
 
 dotenv.config();
@@ -29,6 +30,7 @@ app.use('/public/resumes', express.static(resumesDir));
 
 // Scan API Routing
 app.use('/api/scans', scansRouter);
+app.use('/api/webhooks', webhooksRouter);
 
 // Basic health check endpoint
 app.get('/api/health', (req, res) => {

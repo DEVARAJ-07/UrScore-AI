@@ -2,6 +2,7 @@ import { Router, Request, Response } from 'express';
 import { db } from '../db';
 import { getGateway } from '../ws/gateway';
 import { startWorkerScan } from '../services/runner';
+import axios from 'axios';
 
 const router = Router();
 
@@ -51,10 +52,37 @@ router.get('/:id/evidence', async (req: Request, res: Response) => {
 // Trigger a new placement scan (B2B2C worker pattern)
 router.post('/trigger', async (req: Request, res: Response) => {
   try {
-    const { github_username, resume_text, resume_filename, portfolio_url, leetcode_username } = req.body;
+    const { github_username, github_repo_name, resume_text, resume_filename, portfolio_url, leetcode_username } = req.body;
 
     if (!github_username) {
       return res.status(400).json({ error: 'GitHub username is required' });
+    }
+
+    // 1. Perform GitHub existence validation check
+    const token = process.env.GITHUB_TOKEN;
+    const headers: Record<string, string> = { 'User-Agent': 'UrScore-AI-API' };
+    if (token) headers['Authorization'] = `token ${token}`;
+
+    try {
+      if (github_repo_name) {
+        console.log(`[API] Checking if repo exists: https://github.com/${github_username}/${github_repo_name}`);
+        await axios.get(`https://api.github.com/repos/${github_username}/${github_repo_name}`, { headers, timeout: 3500 });
+      } else {
+        console.log(`[API] Checking if user exists: https://github.com/${github_username}`);
+        await axios.get(`https://api.github.com/users/${github_username}`, { headers, timeout: 3500 });
+      }
+    } catch (err: any) {
+      // If the error status is explicitly 404, return validation failure
+      if (err.response && err.response.status === 404) {
+        const targetDesc = github_repo_name 
+          ? `Repository "${github_username}/${github_repo_name}"` 
+          : `GitHub Username "${github_username}"`;
+        return res.status(422).json({
+          error: `${targetDesc} does not exist. Please enter a valid GitHub account or repository link.`
+        });
+      }
+      // If rate-limited or timeout, log warning and let background worker handle mock fallback
+      console.warn(`[API WARNING] GitHub validation check bypassed due to network/rate-limit: ${err.message}`);
     }
 
     // Insert scan with "pending" status
