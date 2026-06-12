@@ -58,33 +58,36 @@ export const Dashboard: React.FC = () => {
   const [dragActive, setDragActive] = useState(false);
   const [isParsingFile, setIsParsingFile] = useState(false);
 
-  // Graph Mode
+  // Graph View Mode state
   const [graphMode, setGraphMode] = useState<'2d' | 'diagram'>('2d');
 
   const renderNode = (x: number, y: number, label: string, subtitle: string, icon: React.ReactNode, active: boolean) => {
     return (
-      <foreignObject x={x} y={y} width="190" height="90" className="overflow-visible" key={`${x}-${y}`}>
-        <div 
-          className={`h-full rounded-2xl p-3 bg-[#06090f]/95 border transition-all duration-300 flex flex-col justify-between ${
-            active 
-              ? 'border-emerald-500/25 shadow-[0_0_15px_rgba(16,185,129,0.08)] text-slate-100 hover:border-emerald-400/50 hover:scale-[1.03]' 
-              : 'border-slate-800 text-slate-400 opacity-65 hover:opacity-100 hover:border-slate-700'
-          }`}
-          style={{
-            fontFamily: 'Plus Jakarta Sans, sans-serif'
-          }}
-        >
-          <div className="flex items-center justify-between">
-            <span className="text-[9px] font-bold tracking-wider uppercase text-slate-450 opacity-80">{subtitle}</span>
-            <div className={`p-1.5 rounded-lg border ${active ? 'bg-emerald-950/40 border-emerald-500/20' : 'bg-slate-950 border-slate-800'}`}>
-              {icon}
-            </div>
-          </div>
-          <div className="mt-1">
-            <h4 className="text-xs font-black text-slate-200">{label}</h4>
+      <div 
+        className={`absolute rounded-2xl p-3 bg-[#06090f]/95 border transition-all duration-300 flex flex-col justify-between ${
+          active 
+            ? 'border-emerald-500/25 shadow-[0_0_15px_rgba(16,185,129,0.08)] text-slate-100 hover:border-emerald-400/50 hover:scale-[1.03]' 
+            : 'border-slate-800 text-slate-400 opacity-65 hover:opacity-100 hover:border-slate-700'
+        }`}
+        style={{
+          left: `${x}px`,
+          top: `${y}px`,
+          width: '190px',
+          height: '90px',
+          fontFamily: 'Plus Jakarta Sans, sans-serif'
+        }}
+        key={`${x}-${y}`}
+      >
+        <div className="flex items-center justify-between">
+          <span className="text-[9px] font-bold tracking-wider uppercase text-slate-400 opacity-80">{subtitle}</span>
+          <div className={`p-1.5 rounded-lg border ${active ? 'bg-emerald-950/40 border-emerald-500/20' : 'bg-slate-950 border-slate-800'}`}>
+            {icon}
           </div>
         </div>
-      </foreignObject>
+        <div className="mt-1">
+          <h4 className="text-xs font-black text-slate-200">{label}</h4>
+        </div>
+      </div>
     );
   };
 
@@ -317,8 +320,6 @@ Projects: API gateway, stateless microservices.`;
 
   const isScanning = status !== 'idle' && status !== 'completed' && status !== 'failed';
 
-  const perspectiveStyle = {};
-
   return (
     <div className="max-w-7xl mx-auto px-8 py-16 relative z-10 select-none">
       
@@ -393,49 +394,33 @@ Projects: API gateway, stateless microservices.`;
                   Flows and Hooks
                 </h3>
               </div>
-              
-              {/* Mode Toggle */}
-              <div className="flex items-center gap-2 bg-black/60 border border-emerald-500/10 rounded-xl p-1 text-[11px] font-bold" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
+              <div className="flex p-1 bg-black/60 border border-emerald-500/10 rounded-xl text-xs font-bold">
                 <button
                   type="button"
                   onClick={() => setGraphMode('2d')}
-                  className={`px-3 py-1.5 rounded-lg transition ${graphMode === '2d' ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-lg' : 'text-slate-400 hover:text-slate-200'}`}
+                  className={`px-4 py-2 rounded-lg transition-all duration-300 ${graphMode === '2d' ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-lg' : 'text-slate-400 hover:text-slate-200'}`}
+                  style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}
                 >
                   2D View
                 </button>
                 <button
                   type="button"
                   onClick={() => setGraphMode('diagram')}
-                  className={`px-3 py-1.5 rounded-lg transition ${graphMode === 'diagram' ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-lg' : 'text-slate-400 hover:text-slate-200'}`}
+                  className={`px-4 py-2 rounded-lg transition-all duration-300 ${graphMode === 'diagram' ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-lg' : 'text-slate-400 hover:text-slate-200'}`}
+                  style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}
                 >
                   System Diagram
                 </button>
               </div>
             </div>
 
-            {graphMode === 'diagram' ? (
-              /* System Flow Image Canvas */
-              <div className="rounded-2xl border border-emerald-500/5 p-2 bg-[#030509]/30 overflow-hidden flex items-center justify-center view-transition">
-                <img 
-                  src="/flow_graph.jpg" 
-                  alt="UrScore AI Flows and Hooks Diagram" 
-                  className="w-full h-auto object-contain rounded-xl shadow-lg border border-emerald-500/5"
-                />
-              </div>
-            ) : (
-              /* Interactive SVG/HTML 2D Canvas */
-              <div 
-                className="relative w-full h-[400px] overflow-hidden rounded-2xl border border-emerald-500/5 bg-[#030509]/30 flex items-center justify-center p-4"
-              >
-                {/* Faint flat grid background */}
-                {graphMode === '2d' && (
-                  <div className="absolute inset-0 neon-grid opacity-10 pointer-events-none" />
-                )}
-                
-                <div 
-                  className="w-[1000px] h-[380px] relative select-none"
-                  style={perspectiveStyle}
-                >
+            {/* Interactive SVG/HTML 2D Canvas */}
+            <div className="relative w-full h-[400px] overflow-hidden rounded-2xl border border-emerald-500/5 bg-[#030509]/30 flex items-center justify-center p-4">
+              {/* Faint flat grid background */}
+              <div className="absolute inset-0 neon-grid opacity-10 pointer-events-none" />
+              
+              {graphMode === '2d' ? (
+                <div className="w-[1000px] h-[380px] relative select-none">
                   {/* SVG for drawing connecting lines */}
                   <svg className="absolute inset-0 w-full h-full pointer-events-none z-0" viewBox="0 0 1000 380" fill="none">
                     <defs>
@@ -448,39 +433,36 @@ Projects: API gateway, stateless microservices.`;
                         <stop offset="0%" stopColor="#1e293b" stopOpacity="0.3" />
                         <stop offset="100%" stopColor="#1e293b" stopOpacity="0.3" />
                       </linearGradient>
-                      <linearGradient id="webhook-grad" x1="100%" y1="0%" x2="0%" y2="0%">
-                        <stop offset="0%" stopColor="#10b981" stopOpacity="0.6" />
-                        <stop offset="100%" stopColor="#0f766e" stopOpacity="0.2" />
-                      </linearGradient>
+                      {/* Green shadow glow filter */}
+                      <filter id="green-glow" x="-10%" y="-10%" width="120%" height="120%">
+                        <feDropShadow dx="0" dy="0" stdDeviation="3" floodColor="#10b981" floodOpacity="0.6" />
+                      </filter>
                     </defs>
 
                     {/* Connecting lines */}
                     {/* GitHub -> Repo Crawler */}
-                    <path d="M 230 75 L 280 75" stroke="url(#flow-active-grad)" strokeWidth="2" strokeDasharray="4, 4" className="animate-pulse" />
+                    <path d="M 230 75 L 280 75" stroke="url(#flow-active-grad)" strokeWidth="2" strokeDasharray="4, 4" filter="url(#green-glow)" className="animate-pulse" />
                     {/* Resume -> PDF Extractor */}
-                    <path d="M 230 195 L 280 195" stroke="url(#flow-active-grad)" strokeWidth="2" strokeDasharray="4, 4" />
+                    <path d="M 230 195 L 280 195" stroke="url(#flow-active-grad)" strokeWidth="2" strokeDasharray="4, 4" filter="url(#green-glow)" />
                     {/* LeetCode -> Stats Scraper */}
-                    <path d="M 230 315 L 280 315" stroke="url(#flow-active-grad)" strokeWidth="2" strokeDasharray="4, 4" />
+                    <path d="M 230 315 L 280 315" stroke="url(#flow-active-grad)" strokeWidth="2" strokeDasharray="4, 4" filter="url(#green-glow)" />
 
                     {/* Repo Crawler -> Language Audit */}
-                    <path d="M 470 75 L 520 75" stroke="url(#flow-active-grad)" strokeWidth="2" />
+                    <path d="M 470 75 L 520 75" stroke="url(#flow-active-grad)" strokeWidth="2" filter="url(#green-glow)" />
                     {/* PDF Extractor -> Exp Calculator */}
-                    <path d="M 470 195 L 520 195" stroke="url(#flow-active-grad)" strokeWidth="2" />
+                    <path d="M 470 195 L 520 195" stroke="url(#flow-active-grad)" strokeWidth="2" filter="url(#green-glow)" />
                     {/* Stats Scraper -> Rank Evaluator */}
-                    <path d="M 470 315 L 520 315" stroke="url(#flow-active-grad)" strokeWidth="2" />
+                    <path d="M 470 315 L 520 315" stroke="url(#flow-active-grad)" strokeWidth="2" filter="url(#green-glow)" />
 
                     {/* Language Audit -> UrScore Core */}
-                    <path d="M 710 75 C 740 75, 750 150, 780 150" stroke="url(#flow-active-grad)" strokeWidth="2" />
+                    <path d="M 710 75 C 740 75, 750 150, 780 150" stroke="url(#flow-active-grad)" strokeWidth="2" filter="url(#green-glow)" />
                     {/* Exp Calculator -> UrScore Core */}
-                    <path d="M 710 195 L 780 190" stroke="url(#flow-active-grad)" strokeWidth="2" />
+                    <path d="M 710 195 L 780 190" stroke="url(#flow-active-grad)" strokeWidth="2" filter="url(#green-glow)" />
                     {/* Rank Evaluator -> UrScore Core */}
-                    <path d="M 710 315 C 740 315, 750 230, 780 230" stroke="url(#flow-active-grad)" strokeWidth="2" />
-
-                    {/* Webhook loop back from UrScore Core bottom edge to GitHub Left Socket */}
-                    <path d="M 870 270 C 870 375, 40 375, 40 120" stroke="url(#webhook-grad)" strokeWidth="2" strokeDasharray="6, 6" className="animate-webhook" />
+                    <path d="M 710 315 C 740 315, 750 230, 780 230" stroke="url(#flow-active-grad)" strokeWidth="2" filter="url(#green-glow)" />
                   </svg>
 
-                  {/* Nodes rendering using foreignObject */}
+                  {/* HTML Nodes positioned absolutely on top of the SVG paths */}
                   {/* COLUMN 1: INPUTS */}
                   {renderNode(40, 30, "GitHub Profile", "GitHub Track", <GitHubIcon />, true)}
                   {renderNode(40, 150, "Resume Upload", "Resume Track", <FileText className="w-5 h-5 text-emerald-400" />, true)}
@@ -497,23 +479,33 @@ Projects: API gateway, stateless microservices.`;
                   {renderNode(520, 270, "Rank Evaluator", "Algorithmic Audit", <Award className="w-5 h-5 text-emerald-400" />, true)}
 
                   {/* COLUMN 4: URSCORE AI CORE */}
-                  <foreignObject x="780" y="110" width="180" height="160" className="overflow-visible">
-                    <div 
-                      className="h-full rounded-2xl p-4 bg-[#05070c] border border-emerald-500/35 shadow-[0_0_25px_rgba(16,185,129,0.25)] flex flex-col items-center justify-center text-center transition-all duration-300 hover:border-emerald-400 hover:scale-[1.02]"
-                      style={{
-                        fontFamily: 'Plus Jakarta Sans, sans-serif'
-                      }}
-                    >
-                      <div className="p-2 bg-[#030509] rounded-2xl border border-emerald-500/20 shadow-[0_0_20px_rgba(16,185,129,0.25)] mb-3 overflow-hidden w-16 h-16 flex items-center justify-center">
-                        <img src="/logo.png" className="w-14 h-14 object-contain rounded-xl" alt="UrScore AI Logo" />
-                      </div>
-                      <h4 className="text-sm font-black text-emerald-400">UrScore AI Core</h4>
-                      <span className="text-[9px] text-slate-550 tracking-wider font-mono mt-1 uppercase font-bold">Flow Aggregator</span>
+                  <div 
+                    className="absolute rounded-2xl p-4 bg-[#05070c] border border-emerald-500/35 shadow-[0_0_25px_rgba(16,185,129,0.25)] flex flex-col items-center justify-center text-center transition-all duration-300 hover:border-emerald-400 hover:scale-[1.02]"
+                    style={{
+                      left: '780px',
+                      top: '110px',
+                      width: '180px',
+                      height: '160px',
+                      fontFamily: 'Plus Jakarta Sans, sans-serif'
+                    }}
+                  >
+                    <div className="p-2 bg-[#030509] rounded-2xl border border-emerald-500/20 shadow-[0_0_20px_rgba(16,185,129,0.25)] mb-3 overflow-hidden w-16 h-16 flex items-center justify-center">
+                      <img src="/logo.png" className="w-14 h-14 object-contain rounded-xl" alt="UrScore AI Logo" />
                     </div>
-                  </foreignObject>
+                    <h4 className="text-sm font-black text-emerald-400">UrScore AI Core</h4>
+                  </div>
                 </div>
-              </div>
-            )}
+              ) : (
+                <div className="w-full h-full flex items-center justify-center relative group p-2">
+                  <img 
+                    src="/flow_graph.jpg" 
+                    className="w-full h-full object-contain rounded-xl shadow-2xl transition-transform duration-500 group-hover:scale-[1.01]" 
+                    alt="UrScore AI System Architecture Diagram (8K Ultra HD)" 
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
+                </div>
+              )}
+            </div>
           </div>
 
           <form onSubmit={handleStartScan} className="grid grid-cols-1 md:grid-cols-3 gap-8">
