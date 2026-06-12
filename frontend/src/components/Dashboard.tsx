@@ -58,9 +58,6 @@ export const Dashboard: React.FC = () => {
   const [dragActive, setDragActive] = useState(false);
   const [isParsingFile, setIsParsingFile] = useState(false);
 
-  // Graph View Mode state
-  const [graphMode, setGraphMode] = useState<'2d' | 'diagram'>('2d');
-
   const renderNode = (x: number, y: number, label: string, subtitle: string, icon: React.ReactNode, active: boolean) => {
     return (
       <div 
@@ -394,24 +391,6 @@ Projects: API gateway, stateless microservices.`;
                   Flows and Hooks
                 </h3>
               </div>
-              <div className="flex p-1 bg-black/60 border border-emerald-500/10 rounded-xl text-xs font-bold">
-                <button
-                  type="button"
-                  onClick={() => setGraphMode('2d')}
-                  className={`px-4 py-2 rounded-lg transition-all duration-300 ${graphMode === '2d' ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-lg' : 'text-slate-400 hover:text-slate-200'}`}
-                  style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}
-                >
-                  2D View
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setGraphMode('diagram')}
-                  className={`px-4 py-2 rounded-lg transition-all duration-300 ${graphMode === 'diagram' ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-lg' : 'text-slate-400 hover:text-slate-200'}`}
-                  style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}
-                >
-                  System Diagram
-                </button>
-              </div>
             </div>
 
             {/* Interactive SVG/HTML 2D Canvas */}
@@ -419,92 +398,81 @@ Projects: API gateway, stateless microservices.`;
               {/* Faint flat grid background */}
               <div className="absolute inset-0 neon-grid opacity-10 pointer-events-none" />
               
-              {graphMode === '2d' ? (
-                <div className="w-[1000px] h-[380px] relative select-none">
-                  {/* SVG for drawing connecting lines */}
-                  <svg className="absolute inset-0 w-full h-full pointer-events-none z-0" viewBox="0 0 1000 380" fill="none">
-                    <defs>
-                      <linearGradient id="flow-active-grad" x1="0%" y1="0%" x2="100%" y2="0%">
-                        <stop offset="0%" stopColor="#10b981" stopOpacity="0.8" />
-                        <stop offset="50%" stopColor="#14b8a6" stopOpacity="0.8" />
-                        <stop offset="100%" stopColor="#10b981" stopOpacity="0.8" />
-                      </linearGradient>
-                      <linearGradient id="flow-inactive-grad" x1="0%" y1="0%" x2="100%" y2="0%">
-                        <stop offset="0%" stopColor="#1e293b" stopOpacity="0.3" />
-                        <stop offset="100%" stopColor="#1e293b" stopOpacity="0.3" />
-                      </linearGradient>
-                      {/* Green shadow glow filter */}
-                      <filter id="green-glow" x="-10%" y="-10%" width="120%" height="120%">
-                        <feDropShadow dx="0" dy="0" stdDeviation="3" floodColor="#10b981" floodOpacity="0.6" />
-                      </filter>
-                    </defs>
+              <div className="w-[1000px] h-[380px] relative select-none">
+                {/* SVG for drawing connecting lines */}
+                <svg className="absolute inset-0 w-full h-full pointer-events-none z-0" viewBox="0 0 1000 380" fill="none">
+                  <defs>
+                    <linearGradient id="flow-active-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stopColor="#10b981" stopOpacity="0.8" />
+                      <stop offset="50%" stopColor="#14b8a6" stopOpacity="0.8" />
+                      <stop offset="100%" stopColor="#10b981" stopOpacity="0.8" />
+                    </linearGradient>
+                    <linearGradient id="flow-inactive-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stopColor="#1e293b" stopOpacity="0.3" />
+                      <stop offset="100%" stopColor="#1e293b" stopOpacity="0.3" />
+                    </linearGradient>
+                    {/* Green shadow glow filter */}
+                    <filter id="green-glow" x="-10%" y="-10%" width="120%" height="120%">
+                      <feDropShadow dx="0" dy="0" stdDeviation="3" floodColor="#10b981" floodOpacity="0.6" />
+                    </filter>
+                  </defs>
 
-                    {/* Connecting lines */}
-                    {/* GitHub -> Repo Crawler */}
-                    <path d="M 230 75 L 280 75" stroke="url(#flow-active-grad)" strokeWidth="2" strokeDasharray="4, 4" filter="url(#green-glow)" className="animate-pulse" />
-                    {/* Resume -> PDF Extractor */}
-                    <path d="M 230 195 L 280 195" stroke="url(#flow-active-grad)" strokeWidth="2" strokeDasharray="4, 4" filter="url(#green-glow)" />
-                    {/* LeetCode -> Stats Scraper */}
-                    <path d="M 230 315 L 280 315" stroke="url(#flow-active-grad)" strokeWidth="2" strokeDasharray="4, 4" filter="url(#green-glow)" />
+                  {/* Connecting lines */}
+                  {/* GitHub -> Repo Crawler */}
+                  <path d="M 230 75 L 280 75" stroke="url(#flow-active-grad)" strokeWidth="2" strokeDasharray="4, 4" filter="url(#green-glow)" className="animate-pulse" />
+                  {/* Resume -> PDF Extractor */}
+                  <path d="M 230 195 L 280 195" stroke="url(#flow-active-grad)" strokeWidth="2" strokeDasharray="4, 4" filter="url(#green-glow)" />
+                  {/* LeetCode -> Stats Scraper */}
+                  <path d="M 230 315 L 280 315" stroke="url(#flow-active-grad)" strokeWidth="2" strokeDasharray="4, 4" filter="url(#green-glow)" />
 
-                    {/* Repo Crawler -> Language Audit */}
-                    <path d="M 470 75 L 520 75" stroke="url(#flow-active-grad)" strokeWidth="2" filter="url(#green-glow)" />
-                    {/* PDF Extractor -> Exp Calculator */}
-                    <path d="M 470 195 L 520 195" stroke="url(#flow-active-grad)" strokeWidth="2" filter="url(#green-glow)" />
-                    {/* Stats Scraper -> Rank Evaluator */}
-                    <path d="M 470 315 L 520 315" stroke="url(#flow-active-grad)" strokeWidth="2" filter="url(#green-glow)" />
+                  {/* Repo Crawler -> Language Audit */}
+                  <path d="M 470 75 L 520 75" stroke="url(#flow-active-grad)" strokeWidth="2" filter="url(#green-glow)" />
+                  {/* PDF Extractor -> Exp Calculator */}
+                  <path d="M 470 195 L 520 195" stroke="url(#flow-active-grad)" strokeWidth="2" filter="url(#green-glow)" />
+                  {/* Stats Scraper -> Rank Evaluator */}
+                  <path d="M 470 315 L 520 315" stroke="url(#flow-active-grad)" strokeWidth="2" filter="url(#green-glow)" />
 
-                    {/* Language Audit -> UrScore Core */}
-                    <path d="M 710 75 C 740 75, 750 150, 780 150" stroke="url(#flow-active-grad)" strokeWidth="2" filter="url(#green-glow)" />
-                    {/* Exp Calculator -> UrScore Core */}
-                    <path d="M 710 195 L 780 190" stroke="url(#flow-active-grad)" strokeWidth="2" filter="url(#green-glow)" />
-                    {/* Rank Evaluator -> UrScore Core */}
-                    <path d="M 710 315 C 740 315, 750 230, 780 230" stroke="url(#flow-active-grad)" strokeWidth="2" filter="url(#green-glow)" />
-                  </svg>
+                  {/* Language Audit -> UrScore Core */}
+                  <path d="M 710 75 C 740 75, 750 150, 780 150" stroke="url(#flow-active-grad)" strokeWidth="2" filter="url(#green-glow)" />
+                  {/* Exp Calculator -> UrScore Core */}
+                  <path d="M 710 195 L 780 190" stroke="url(#flow-active-grad)" strokeWidth="2" filter="url(#green-glow)" />
+                  {/* Rank Evaluator -> UrScore Core */}
+                  <path d="M 710 315 C 740 315, 750 230, 780 230" stroke="url(#flow-active-grad)" strokeWidth="2" filter="url(#green-glow)" />
+                </svg>
 
-                  {/* HTML Nodes positioned absolutely on top of the SVG paths */}
-                  {/* COLUMN 1: INPUTS */}
-                  {renderNode(40, 30, "GitHub Profile", "GitHub Track", <GitHubIcon />, true)}
-                  {renderNode(40, 150, "Resume Upload", "Resume Track", <FileText className="w-5 h-5 text-emerald-400" />, true)}
-                  {renderNode(40, 270, "LeetCode Profile", "LeetCode Track", <Terminal className="w-5 h-5 text-emerald-400" />, true)}
+                {/* HTML Nodes positioned absolutely on top of the SVG paths */}
+                {/* COLUMN 1: INPUTS */}
+                {renderNode(40, 30, "GitHub Profile", "GitHub Track", <GitHubIcon />, true)}
+                {renderNode(40, 150, "Resume Upload", "Resume Track", <FileText className="w-5 h-5 text-emerald-400" />, true)}
+                {renderNode(40, 270, "LeetCode Profile", "LeetCode Track", <Terminal className="w-5 h-5 text-emerald-400" />, true)}
 
-                  {/* COLUMN 2: WORKFLOW PIPELINES */}
-                  {renderNode(280, 30, "Repo Crawler", "Source Analysis", <Terminal className="w-5 h-5 text-emerald-400" />, true)}
-                  {renderNode(280, 150, "PDF Extractor", "Ingestion Engine", <FileCheck className="w-5 h-5 text-emerald-400" />, true)}
-                  {renderNode(280, 270, "Stats Scraper", "Competency Sync", <TrendingUp className="w-5 h-5 text-emerald-400" />, true)}
+                {/* COLUMN 2: WORKFLOW PIPELINES */}
+                {renderNode(280, 30, "Repo Crawler", "Source Analysis", <Terminal className="w-5 h-5 text-emerald-400" />, true)}
+                {renderNode(280, 150, "PDF Extractor", "Ingestion Engine", <FileCheck className="w-5 h-5 text-emerald-400" />, true)}
+                {renderNode(280, 270, "Stats Scraper", "Competency Sync", <TrendingUp className="w-5 h-5 text-emerald-400" />, true)}
 
-                  {/* COLUMN 3: AUDITING NODES */}
-                  {renderNode(520, 30, "Language Audit", "Security & Validation", <ShieldCheck className="w-5 h-5 text-emerald-400" />, true)}
-                  {renderNode(520, 150, "Exp Calculator", "Compliance & Quality", <Briefcase className="w-5 h-5 text-emerald-400" />, true)}
-                  {renderNode(520, 270, "Rank Evaluator", "Algorithmic Audit", <Award className="w-5 h-5 text-emerald-400" />, true)}
+                {/* COLUMN 3: AUDITING NODES */}
+                {renderNode(520, 30, "Language Audit", "Security & Validation", <ShieldCheck className="w-5 h-5 text-emerald-400" />, true)}
+                {renderNode(520, 150, "Exp Calculator", "Compliance & Quality", <Briefcase className="w-5 h-5 text-emerald-400" />, true)}
+                {renderNode(520, 270, "Rank Evaluator", "Algorithmic Audit", <Award className="w-5 h-5 text-emerald-400" />, true)}
 
-                  {/* COLUMN 4: URSCORE AI CORE */}
-                  <div 
-                    className="absolute rounded-2xl p-4 bg-[#05070c] border border-emerald-500/35 shadow-[0_0_25px_rgba(16,185,129,0.25)] flex flex-col items-center justify-center text-center transition-all duration-300 hover:border-emerald-400 hover:scale-[1.02]"
-                    style={{
-                      left: '780px',
-                      top: '110px',
-                      width: '180px',
-                      height: '160px',
-                      fontFamily: 'Plus Jakarta Sans, sans-serif'
-                    }}
-                  >
-                    <div className="p-2 bg-[#030509] rounded-2xl border border-emerald-500/20 shadow-[0_0_20px_rgba(16,185,129,0.25)] mb-3 overflow-hidden w-16 h-16 flex items-center justify-center">
-                      <img src="/logo.png" className="w-14 h-14 object-contain rounded-xl" alt="UrScore AI Logo" />
-                    </div>
-                    <h4 className="text-sm font-black text-emerald-400">UrScore AI Core</h4>
+                {/* COLUMN 4: URSCORE AI CORE */}
+                <div 
+                  className="absolute rounded-2xl p-4 bg-[#05070c] border border-emerald-500/35 shadow-[0_0_25px_rgba(16,185,129,0.25)] flex flex-col items-center justify-center text-center transition-all duration-300 hover:border-emerald-400 hover:scale-[1.02]"
+                  style={{
+                    left: '780px',
+                    top: '110px',
+                    width: '180px',
+                    height: '160px',
+                    fontFamily: 'Plus Jakarta Sans, sans-serif'
+                  }}
+                >
+                  <div className="p-2 bg-[#030509] rounded-2xl border border-emerald-500/20 shadow-[0_0_20px_rgba(16,185,129,0.25)] mb-3 overflow-hidden w-16 h-16 flex items-center justify-center">
+                    <img src="/logo.png" className="w-14 h-14 object-contain rounded-xl" alt="UrScore AI Logo" />
                   </div>
+                  <h4 className="text-sm font-black text-emerald-400">UrScore AI Core</h4>
                 </div>
-              ) : (
-                <div className="w-[1000px] h-[380px] relative flex items-center justify-center rounded-2xl overflow-hidden border border-emerald-500/15 group">
-                  <img 
-                    src="/flow_graph.jpg" 
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.01]" 
-                    alt="UrScore AI System Architecture Diagram (8K Ultra HD)" 
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
-                </div>
-              )}
+              </div>
             </div>
           </div>
 
