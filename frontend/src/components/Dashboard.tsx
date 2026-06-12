@@ -59,8 +59,7 @@ export const Dashboard: React.FC = () => {
   const [isParsingFile, setIsParsingFile] = useState(false);
 
   // Graph Mode
-  const [graphMode, setGraphMode] = useState<'2d' | '3d' | 'diagram'>('3d');
-  const [isHovered, setIsHovered] = useState(false);
+  const [graphMode, setGraphMode] = useState<'3d' | 'diagram'>('3d');
 
   const renderNode = (x: number, y: number, label: string, subtitle: string, icon: React.ReactNode, active: boolean) => {
     return (
@@ -321,14 +320,10 @@ Projects: API gateway, stateless microservices.`;
   const isScanning = status !== 'idle' && status !== 'completed' && status !== 'failed';
 
   const perspectiveStyle = graphMode === '3d' ? {
-    transform: isHovered 
-      ? 'perspective(1000px) rotateX(18deg) rotateY(-8deg) rotateZ(2deg)' 
-      : 'perspective(1000px) rotateX(24deg) rotateY(-12deg) rotateZ(3deg)',
+    transform: 'perspective(1000px) rotateX(24deg) rotateY(-12deg) rotateZ(3deg)',
     transformStyle: 'preserve-3d' as const,
-    transition: 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
   } : {
     transform: 'none',
-    transition: 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
   };
 
   return (
@@ -417,13 +412,6 @@ Projects: API gateway, stateless microservices.`;
                 </button>
                 <button
                   type="button"
-                  onClick={() => setGraphMode('2d')}
-                  className={`px-3 py-1.5 rounded-lg transition ${graphMode === '2d' ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-lg' : 'text-slate-400 hover:text-slate-200'}`}
-                >
-                  2D Interactive
-                </button>
-                <button
-                  type="button"
                   onClick={() => setGraphMode('diagram')}
                   className={`px-3 py-1.5 rounded-lg transition ${graphMode === 'diagram' ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-lg' : 'text-slate-400 hover:text-slate-200'}`}
                 >
@@ -445,8 +433,6 @@ Projects: API gateway, stateless microservices.`;
               /* Interactive SVG/HTML 2D/3D Canvas */
               <div 
                 className="relative w-full h-[400px] overflow-hidden rounded-2xl border border-emerald-500/5 bg-[#030509]/30 flex items-center justify-center p-4"
-                onMouseEnter={() => setIsHovered(true)}
-                onMouseLeave={() => setIsHovered(false)}
               >
                 {/* 3D grid line floor indicator */}
                 {graphMode === '3d' && (
@@ -500,15 +486,6 @@ Projects: API gateway, stateless microservices.`;
                     {/* Webhook loop back from UrScore Core bottom edge to GitHub Left Socket */}
                     <path d="M 870 270 C 870 375, 40 375, 40 120" stroke="url(#webhook-grad)" strokeWidth="2" strokeDasharray="6, 6" className="animate-webhook" />
                   </svg>
-
-                  {/* SVG text descriptors */}
-                  <g className="opacity-40 font-mono text-[9px] uppercase tracking-widest fill-slate-500 font-bold select-none">
-                    <text x="40" y="20">Inputs</text>
-                    <text x="280" y="20">Workflow Pipelines</text>
-                    <text x="520" y="20">Auditing Nodes</text>
-                    <text x="780" y="20">Urscore AI</text>
-                    <text x="410" y="360" className="fill-emerald-400">⚡ Dynamic Webhook Loop</text>
-                  </g>
 
                   {/* Nodes rendering using foreignObject */}
                   {/* COLUMN 1: INPUTS */}
