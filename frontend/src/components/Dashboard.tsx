@@ -59,7 +59,7 @@ export const Dashboard: React.FC = () => {
   const [isParsingFile, setIsParsingFile] = useState(false);
 
   // Graph Mode
-  const [graphMode, setGraphMode] = useState<'3d' | 'diagram'>('3d');
+  const [graphMode, setGraphMode] = useState<'2d' | 'diagram'>('2d');
 
   const renderNode = (x: number, y: number, label: string, subtitle: string, icon: React.ReactNode, active: boolean) => {
     return (
@@ -71,8 +71,6 @@ export const Dashboard: React.FC = () => {
               : 'border-slate-800 text-slate-400 opacity-65 hover:opacity-100 hover:border-slate-700'
           }`}
           style={{
-            transform: graphMode === '3d' ? 'translateZ(25px)' : 'none',
-            transformStyle: 'preserve-3d',
             fontFamily: 'Plus Jakarta Sans, sans-serif'
           }}
         >
@@ -319,12 +317,7 @@ Projects: API gateway, stateless microservices.`;
 
   const isScanning = status !== 'idle' && status !== 'completed' && status !== 'failed';
 
-  const perspectiveStyle = graphMode === '3d' ? {
-    transform: 'perspective(1000px) rotateX(24deg) rotateY(-12deg) rotateZ(3deg)',
-    transformStyle: 'preserve-3d' as const,
-  } : {
-    transform: 'none',
-  };
+  const perspectiveStyle = {};
 
   return (
     <div className="max-w-7xl mx-auto px-8 py-16 relative z-10 select-none">
@@ -405,10 +398,10 @@ Projects: API gateway, stateless microservices.`;
               <div className="flex items-center gap-2 bg-black/60 border border-emerald-500/10 rounded-xl p-1 text-[11px] font-bold" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
                 <button
                   type="button"
-                  onClick={() => setGraphMode('3d')}
-                  className={`px-3 py-1.5 rounded-lg transition ${graphMode === '3d' ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-lg' : 'text-slate-400 hover:text-slate-200'}`}
+                  onClick={() => setGraphMode('2d')}
+                  className={`px-3 py-1.5 rounded-lg transition ${graphMode === '2d' ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-lg' : 'text-slate-400 hover:text-slate-200'}`}
                 >
-                  3D View
+                  2D View
                 </button>
                 <button
                   type="button"
@@ -430,17 +423,17 @@ Projects: API gateway, stateless microservices.`;
                 />
               </div>
             ) : (
-              /* Interactive SVG/HTML 2D/3D Canvas */
+              /* Interactive SVG/HTML 2D Canvas */
               <div 
                 className="relative w-full h-[400px] overflow-hidden rounded-2xl border border-emerald-500/5 bg-[#030509]/30 flex items-center justify-center p-4"
               >
-                {/* 3D grid line floor indicator */}
-                {graphMode === '3d' && (
-                  <div className="absolute inset-0 neon-grid opacity-30 pointer-events-none" />
+                {/* Faint flat grid background */}
+                {graphMode === '2d' && (
+                  <div className="absolute inset-0 neon-grid opacity-10 pointer-events-none" />
                 )}
                 
                 <div 
-                  className="w-[1000px] h-[380px] relative transition-transform duration-500 ease-out select-none"
+                  className="w-[1000px] h-[380px] relative select-none"
                   style={perspectiveStyle}
                 >
                   {/* SVG for drawing connecting lines */}
@@ -508,8 +501,6 @@ Projects: API gateway, stateless microservices.`;
                     <div 
                       className="h-full rounded-2xl p-4 bg-[#05070c] border border-emerald-500/35 shadow-[0_0_25px_rgba(16,185,129,0.25)] flex flex-col items-center justify-center text-center transition-all duration-300 hover:border-emerald-400 hover:scale-[1.02]"
                       style={{
-                        transform: graphMode === '3d' ? 'translateZ(40px)' : 'none',
-                        transformStyle: 'preserve-3d',
                         fontFamily: 'Plus Jakarta Sans, sans-serif'
                       }}
                     >
@@ -640,7 +631,7 @@ Projects: API gateway, stateless microservices.`;
                   </div>
                 </div>
                 
-                <h3 className="text-xl font-bold text-slate-100 mb-2">Resume Profiler</h3>
+                <h3 className="text-xl font-bold text-slate-100 mb-2">Resume</h3>
                 <p className="text-sm text-slate-400 mb-6 leading-relaxed">Verify candidate technology proficiencies strictly via file upload</p>
 
                 {/* Dropzone */}
