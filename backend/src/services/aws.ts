@@ -1,5 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses';
 
 export interface UploadResult {
   url: string;
@@ -8,10 +10,28 @@ export interface UploadResult {
 
 export class AwsService {
   private useMock: boolean;
+  private s3Client: S3Client | null = null;
+  private sesClient: SESClient | null = null;
+  private region: string;
+  private bucket: string;
+  private sender: string;
 
   constructor() {
     // Check if S3 / SES environment parameters exist. If not, use local mock system.
     this.useMock = !process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY;
+    this.region = process.env.AWS_REGION || 'us-east-1';
+    this.bucket = process.env.AWS_S3_BUCKET || 'urscore-ai-reports';
+    this.sender = process.env.AWS_SES_SENDER || 'no-reply@urscore.ai';
+
+    if (!this.useMock) {
+      console.log(`[AWS] Initializing S3 and SES clients in region: ${this.region}`);
+      const credentials = {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!
+      };
+      this.s3Client = new S3Client({ region: this.region, credentials });
+      this.sesClient = new SESClient({ region: this.region, credentials });
+    }
   }
 
   /**
@@ -23,7 +43,9 @@ export class AwsService {
     fileBuffer: Buffer,
     fileName: string
   ): Promise<UploadResult> {
-    if (this.useMock) {
+    const key = `reports/${scanId}_${fileName}`;
+
+    if (this.useMock || !this.s3Client) {
       console.log(`[AWS S3 MOCK] Uploading file for scan ${scanId}: ${fileName}`);
       
       // Store in a local public folder within the backend workspace
@@ -36,17 +58,38 @@ export class AwsService {
 
       return {
         url: `http://localhost:5001/public/reports/${scanId}_${fileName}`,
-        key: `reports/${scanId}_${fileName}`
+        key
       };
     }
 
-    // Real AWS S3 Upload would go here:
-    // const s3 = new AWS.S3();
-    // await s3.putObject({ Bucket, Key, Body: fileBuffer, ContentType: 'application/pdf' }).promise();
-    return {
-      url: `https://urscore-ai-reports.s3.amazonaws.com/reports/${scanId}_${fileName}`,
-      key: `reports/${scanId}_${fileName}`
-    };
+    try {
+      console.log(`[AWS S3] Uploading file to bucket: ${this.bucket}, key: ${key}`);
+      const command = new PutObjectCommand({
+        Bucket: this.bucket,
+        Key: key,
+        Body: fileBuffer,
+        ContentType: 'application/pdf'
+      });
+      await this.s3Client.send(command);
+
+      return {
+        url: `https://${this.bucket}.s3.${this.region}.amazonaws.com/${key}`,
+        key
+      };
+    } catch (err: any) {
+      console.error(`[AWS S3 ERROR] Failed to upload: ${err.message}. Saving locally as fallback.`);
+      const mockDir = path.join(__dirname, '../../public/reports');
+      if (!fs.existsSync(mockDir)) {
+        fs.mkdirSync(mockDir, { recursive: true });
+      }
+      const filePath = path.join(mockDir, `${scanId}_${fileName}`);
+      fs.writeFileSync(filePath, fileBuffer);
+
+      return {
+        url: `http://localhost:5001/public/reports/${scanId}_${fileName}`,
+        key
+      };
+    }
   }
 
   /**
@@ -59,7 +102,7 @@ export class AwsService {
     reportUrl: string
   ): Promise<boolean> {
     const subject = `UrScore AI Readiness Competency Report: ${candidateName}`;
-    const body = `
+    const htmlBody = `
       <h1>UrScore AI Intelligence Hub</h1>
       <p>Hello,</p>
       <p>The placement readiness assessment for <strong>${candidateName}</strong> has been successfully generated.</p>
@@ -69,15 +112,40 @@ export class AwsService {
       <p>Regards,<br />UrScore AI Placement Team</p>
     `;
 
-    if (this.useMock) {
+    if (this.useMock || !this.sesClient) {
       console.log(`[AWS SES MOCK] Sending email to ${recipientEmail}`);
       console.log(`Subject: ${subject}`);
       console.log(`Body Summary: Score of ${overallScore} is ready at ${reportUrl}`);
       return true;
     }
 
-    // Real AWS SES send implementation would go here using @aws-sdk/client-ses
-    return true;
+    try {
+      console.log(`[AWS SES] Sending email to: ${recipientEmail} from: ${this.sender}`);
+      const command = new SendEmailCommand({
+        Destination: {
+          ToAddresses: [recipientEmail]
+        },
+        Message: {
+          Body: {
+            Html: {
+              Charset: 'UTF-8',
+              Data: htmlBody
+            }
+          },
+          Subject: {
+            Charset: 'UTF-8',
+            Data: subject
+          }
+        },
+        Source: this.sender
+      });
+      await this.sesClient.send(command);
+      console.log(`[AWS SES] Email sent successfully.`);
+      return true;
+    } catch (err: any) {
+      console.error(`[AWS SES ERROR] Failed to send email: ${err.message}`);
+      return false;
+    }
   }
 }
 

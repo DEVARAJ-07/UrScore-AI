@@ -9,6 +9,8 @@
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1068.0",
+    "@aws-sdk/client-ses": "^3.1068.0",
     "axios": "^1.17.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",

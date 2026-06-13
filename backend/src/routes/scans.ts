@@ -88,6 +88,7 @@ router.post('/trigger', async (req: Request, res: Response) => {
     // Insert scan with "pending" status
     const scan = await db.insertScan({
       github_username,
+      github_repo_name: github_repo_name || null,
       portfolio_url: portfolio_url || null,
       leetcode_username: leetcode_username || null,
       resume_url: resume_filename ? `http://localhost:5001/public/resumes/${resume_filename}` : null,
@@ -105,7 +106,14 @@ router.post('/trigger', async (req: Request, res: Response) => {
     });
 
     // Trigger stateless parallel worker background job
-    startWorkerScan(scan.id, github_username, resume_text || '', leetcode_username || null, portfolio_url || null)
+    startWorkerScan(
+      scan.id,
+      github_username,
+      github_repo_name || null,
+      resume_text || '',
+      leetcode_username || null,
+      portfolio_url || null
+    )
       .catch(err => {
         console.error(`Error in background worker for scan ${scan.id}:`, err);
       });

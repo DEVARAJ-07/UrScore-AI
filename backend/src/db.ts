@@ -15,6 +15,7 @@ export interface Scan {
   id: string;
   developer_id: string | null;
   github_username: string;
+  github_repo_name: string | null;
   resume_url: string | null;
   portfolio_url: string | null;
   leetcode_username: string | null;
@@ -115,6 +116,7 @@ class DatabaseClient {
       id,
       developer_id: scan.developer_id || null,
       github_username: scan.github_username,
+      github_repo_name: scan.github_repo_name || null,
       resume_url: scan.resume_url || null,
       portfolio_url: scan.portfolio_url || null,
       leetcode_username: scan.leetcode_username || null,

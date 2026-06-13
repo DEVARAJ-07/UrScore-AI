@@ -6,6 +6,7 @@ import { getGateway } from '../ws/gateway';
 export async function startWorkerScan(
   scanId: string,
   githubUsername: string,
+  githubRepoName: string | null,
   resumeText: string,
   leetcodeUsername: string | null,
   portfolioUrl: string | null
@@ -27,7 +28,8 @@ export async function startWorkerScan(
       githubUsername,
       resumeText || '',
       leetcodeUsername || '',
-      portfolioUrl || ''
+      portfolioUrl || '',
+      githubRepoName || ''
     ],
     {
       env: {

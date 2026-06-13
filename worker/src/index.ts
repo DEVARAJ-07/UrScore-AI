@@ -20,15 +20,16 @@ function sendLog(text: string, progress: number) {
 
 async function run() {
   // Read CLI arguments
-  // argv[2] = scanId, argv[3] = githubUsername, argv[4] = resumeText, argv[5] = leetcodeUsername, argv[6] = portfolioUrl
   const args = process.argv.slice(2);
   const scanId = args[0] || 'mock-scan-id';
   const githubUsername = args[1] || 'octocat';
   const resumeText = args[2] || '';
   const leetcodeUsername = args[3] || null;
   const portfolioUrl = args[4] || null;
+  const githubRepoName = args[5] || null;
 
-  sendLog(`Starting competency verification for GitHub: ${githubUsername}`, 5);
+  const targetRepoLog = githubRepoName ? ` (repo: ${githubRepoName})` : '';
+  sendLog(`Starting competency verification for GitHub: ${githubUsername}${targetRepoLog}`, 5);
 
   try {
     // 1. Analyze Resume Text
@@ -38,7 +39,7 @@ async function run() {
 
     // 2. Fetch/Scrape GitHub Profile
     sendLog(`Querying GitHub API metrics...`, 30);
-    const githubProfile = await githubCrawler.fetchDeveloperProfile(githubUsername, (msg, prog) => {
+    const githubProfile = await githubCrawler.fetchDeveloperProfile(githubUsername, githubRepoName, (msg, prog) => {
       sendLog(msg, prog);
     });
     sendLog(`GitHub repos parsed. Total repositories processed: ${githubProfile.repos.length}.`, 65);
