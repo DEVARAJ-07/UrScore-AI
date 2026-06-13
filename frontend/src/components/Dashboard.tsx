@@ -402,12 +402,12 @@ Projects: API gateway, stateless microservices.`;
                 {/* SVG for drawing connecting lines */}
                 <svg className="absolute inset-0 w-full h-full pointer-events-none z-0" viewBox="0 0 1000 380" fill="none">
                   <defs>
-                    <linearGradient id="flow-active-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <linearGradient id="flow-active-grad" x1="0" y1="0" x2="1000" y2="0" gradientUnits="userSpaceOnUse">
                       <stop offset="0%" stopColor="#10b981" stopOpacity="0.8" />
                       <stop offset="50%" stopColor="#14b8a6" stopOpacity="0.8" />
                       <stop offset="100%" stopColor="#10b981" stopOpacity="0.8" />
                     </linearGradient>
-                    <linearGradient id="flow-inactive-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <linearGradient id="flow-inactive-grad" x1="0" y1="0" x2="1000" y2="0" gradientUnits="userSpaceOnUse">
                       <stop offset="0%" stopColor="#1e293b" stopOpacity="0.3" />
                       <stop offset="100%" stopColor="#1e293b" stopOpacity="0.3" />
                     </linearGradient>
@@ -419,7 +419,7 @@ Projects: API gateway, stateless microservices.`;
 
                   {/* Connecting lines */}
                   {/* GitHub -> Repo Crawler */}
-                  <path d="M 230 75 L 280 75" stroke="url(#flow-active-grad)" strokeWidth="2" strokeDasharray="4, 4" filter="url(#green-glow)" className="animate-pulse" />
+                  <path d="M 230 75 L 280 75" stroke="url(#flow-active-grad)" strokeWidth="2" strokeDasharray="4, 4" filter="url(#green-glow)" />
                   {/* Resume -> PDF Extractor */}
                   <path d="M 230 195 L 280 195" stroke="url(#flow-active-grad)" strokeWidth="2" strokeDasharray="4, 4" filter="url(#green-glow)" />
                   {/* LeetCode -> Stats Scraper */}
