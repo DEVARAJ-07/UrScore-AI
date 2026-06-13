@@ -103,5 +103,53 @@
     ],
     "created_at": "2026-06-12T11:53:39.426Z",
     "updated_at": "2026-06-12T11:53:39.426Z"
+  },
+  "c05877fa-9798-4deb-976d-d0d8273c88e1": {
+    "id": "c05877fa-9798-4deb-976d-d0d8273c88e1",
+    "developer_id": null,
+    "github_username": "DEVARAJ-07",
+    "github_repo_name": null,
+    "resume_url": "http://localhost:5001/public/resumes/Devaraj-resume.pdf",
+    "portfolio_url": null,
+    "leetcode_username": null,
+    "status": "pending",
+    "progress": 0,
+    "logs": [
+      "[SYSTEM] Created scan request for GitHub user DEVARAJ-07."
+    ],
+    "created_at": "2026-06-13T05:58:54.564Z",
+    "updated_at": "2026-06-13T05:58:54.564Z"
+  },
+  "b8edd136-fbeb-4845-8e74-f93f6dda8d27": {
+    "id": "b8edd136-fbeb-4845-8e74-f93f6dda8d27",
+    "developer_id": null,
+    "github_username": "DEVARAJ-07",
+    "github_repo_name": null,
+    "resume_url": null,
+    "portfolio_url": null,
+    "leetcode_username": null,
+    "status": "pending",
+    "progress": 0,
+    "logs": [
+      "[SYSTEM] Created scan request for GitHub user DEVARAJ-07."
+    ],
+    "created_at": "2026-06-13T06:04:47.189Z",
+    "updated_at": "2026-06-13T06:04:47.189Z"
+  },
+  "e430fdc5-552a-4cfc-a740-42fc6bf9d1bf": {
+    "id": "e430fdc5-552a-4cfc-a740-42fc6bf9d1bf",
+    "developer_id": null,
+    "github_username": "DEVARAJ-07",
+    "github_repo_name": null,
+    "resume_url": null,
+    "portfolio_url": null,
+    "leetcode_username": null,
+    "status": "pending",
+    "progress": 0,
+    "logs": [
+      "[SYSTEM] Created scan request for GitHub user DEVARAJ-07."
+    ],
+    "created_at": "2026-06-13T06:06:25.629Z",
+    "updated_at": "2026-06-13T06:06:25.629Z"
   }
 }

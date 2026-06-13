@@ -605,7 +605,7 @@ Projects: API gateway, stateless microservices.`;
                   <input
                     type="file"
                     id="file-ingest"
-                    accept=".pdf,.txt"
+                    accept="application/pdf,text/plain"
                     onChange={handleFileChange}
                     className="hidden"
                   />
@@ -799,7 +799,7 @@ Projects: API gateway, stateless microservices.`;
                           ) : (
                             <div className="w-5 h-5 rounded-full border border-slate-800 shrink-0" />
                           )}
-                          <span>{taskDesc}</span>
+                          <span className={isDone ? 'line-through opacity-65 font-medium' : ''}>{taskDesc}</span>
                         </div>
                         <span className={`text-xs font-mono px-3 py-1 rounded-md ${
                           isDone ? 'text-emerald-400 font-black' : 

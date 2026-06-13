@@ -2,6 +2,8 @@ import { analyzeResumeText } from './resume';
 import { githubCrawler } from './github';
 import { extraScraper } from './portfolio';
 import { computeUrScore } from './scoring';
+import * as fs from 'fs';
+import * as path from 'path';
 
 // Helper to log updates back to backend process via IPC or console
 const logs: string[] = [];
@@ -19,6 +21,7 @@ function sendLog(text: string, progress: number) {
 }
 
 async function run() {
+  fs.writeFileSync(path.resolve(__dirname, '../../worker_started.txt'), `started at ${new Date().toISOString()}`);
   // Read CLI arguments
   const args = process.argv.slice(2);
   const scanId = args[0] || 'mock-scan-id';

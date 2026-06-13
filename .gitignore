@@ -1,1 +1,8 @@
-node_modules
+.env
+.next/
+node_modules/
+dist/
+build/
+worker_started.txt
+backend/.env
+frontend/.next/

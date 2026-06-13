@@ -1,4 +1,4 @@
-import { fork } from 'child_process';
+import { spawn } from 'child_process';
 import * as path from 'path';
 import { db } from '../db';
 import { getGateway } from '../ws/gateway';
@@ -20,9 +20,10 @@ export async function startWorkerScan(
   console.log(`[RUNNER] Spawning worker for scan ${scanId} at path: ${workerPath}`);
 
   // We spawn the worker using ts-node to execute TypeScript directly
-  const child = fork(
-    path.resolve(__dirname, '../../node_modules/ts-node/dist/bin.js'),
+  const child = spawn(
+    process.execPath,
     [
+      path.resolve(__dirname, '../../node_modules/ts-node/dist/bin.js'),
       workerPath,
       scanId,
       githubUsername,
@@ -34,11 +35,20 @@ export async function startWorkerScan(
     {
       env: {
         ...process.env,
-        TS_NODE_PROJECT: path.resolve(__dirname, '../../../worker/tsconfig.json')
+        TS_NODE_PROJECT: path.resolve(__dirname, '../../../worker/tsconfig.json'),
+        TS_NODE_TRANSPILE_ONLY: 'true'
       },
-      stdio: ['inherit', 'inherit', 'inherit', 'ipc']
+      stdio: ['ignore', 'pipe', 'pipe', 'ipc']
     }
   );
+
+  child.stdout?.on('data', (data) => {
+    console.log(`[WORKER OUT] ${data.toString().trim()}`);
+  });
+
+  child.stderr?.on('data', (data) => {
+    console.error(`[WORKER ERR] ${data.toString().trim()}`);
+  });
 
   child.on('message', async (message: any) => {
     try {
