@@ -1,1 +1,2501 @@
-{}
+{
+  "7d898637-9a29-4ffc-b7d1-9a24fcf5246b": {
+    "id": "7d898637-9a29-4ffc-b7d1-9a24fcf5246b",
+    "scan_id": "f0752e50-d55e-4904-bc9f-f535a65cbca3",
+    "raw_evidence": {
+      "github_profile": {
+        "username": "DEVARAJ-07",
+        "name": "DEVARAJ-07 Developer",
+        "avatar_url": "https://api.dicebear.com/7.x/adventurer/svg?seed=DEVARAJ-07",
+        "public_repos": 4,
+        "followers": 12,
+        "created_at": "2025-06-13T06:33:16.893Z"
+      },
+      "repositories_analyzed": [
+        {
+          "name": "e-commerce-microservices",
+          "stars": 34,
+          "forks": 8,
+          "languages": {
+            "TypeScript": 8400,
+            "JavaScript": 4200,
+            "HTML": 1600
+          },
+          "dependencies": [
+            "express",
+            "typescript",
+            "redis",
+            "pg",
+            "prisma",
+            "jsonwebtoken",
+            "dotenv",
+            "cors",
+            "jest"
+          ],
+          "commits_analyzed": 5,
+          "readme_summary": "# E-Commerce Microservice Suite\nThis project implements the core ordering and shopping API.\n## Architecture\n- Express API Gateway\n- JWT Authentication..."
+        },
+        {
+          "name": "react-dashboard-tailwind",
+          "stars": 18,
+          "forks": 3,
+          "languages": {
+            "TypeScript": 2100,
+            "CSS": 900,
+            "HTML": 400
+          },
+          "dependencies": [
+            "react",
+            "react-dom",
+            "typescript",
+            "zustand",
+            "recharts",
+            "tailwindcss",
+            "postcss",
+            "vite"
+          ],
+          "commits_analyzed": 3,
+          "readme_summary": "# React Admin Hub\nPremium admin dashboard using Zustand global store.\n- Real-time Recharts data plots.\n- Responsive tailwind grid layouts...."
+        },
+        {
+          "name": "python-data-crawler",
+          "stars": 5,
+          "forks": 1,
+          "languages": {
+            "Python": 820
+          },
+          "dependencies": [
+            "boto3",
+            "requests",
+            "beautifulsoup4",
+            "pandas",
+            "pytest"
+          ],
+          "commits_analyzed": 2,
+          "readme_summary": "# Python S3 Data Pipeline\nPulls listings and stores them in AWS S3 buckets.\n### Prerequisites\nSetup `boto3` AWS credentials in environment variables...."
+        },
+        {
+          "name": "ci-cd-docker-template",
+          "stars": 2,
+          "forks": 0,
+          "languages": {
+            "YAML": 150
+          },
+          "dependencies": [
+            "docker",
+            "kubernetes",
+            "github-actions"
+          ],
+          "commits_analyzed": 1,
+          "readme_summary": "# DevOps Template\nWorkflows for running node tasks on push and pull request...."
+        }
+      ],
+      "resume_extracted_metrics": {
+        "keywords": {
+          "languages": [
+            "javascript",
+            "typescript",
+            "python",
+            "java"
+          ],
+          "frameworks": [
+            "react",
+            "next.js",
+            "express",
+            "fastapi"
+          ],
+          "databases": [
+            "postgresql",
+            "mongodb",
+            "mysql",
+            "supabase"
+          ],
+          "tools": [
+            "git",
+            "docker",
+            "aws",
+            "github actions",
+            "rest api",
+            "ci/cd"
+          ]
+        },
+        "experience_years": 6,
+        "extracted_projects": []
+      },
+      "leetcode_stats": null,
+      "portfolio_stats": null,
+      "score_breakdown": {
+        "verified_keywords": [
+          "javascript",
+          "typescript",
+          "python",
+          "react",
+          "express",
+          "git",
+          "docker"
+        ],
+        "unverified_keywords": [
+          "java",
+          "next.js",
+          "fastapi",
+          "postgresql",
+          "mongodb",
+          "mysql",
+          "supabase",
+          "aws",
+          "github actions",
+          "rest api",
+          "ci/cd"
+        ]
+      }
+    },
+    "created_at": "2026-06-13T06:33:17.150Z"
+  },
+  "c66e6afd-e4d7-4b49-bc81-6c81a0e4ce25": {
+    "id": "c66e6afd-e4d7-4b49-bc81-6c81a0e4ce25",
+    "scan_id": "fdfbcfa8-5505-47f1-9a15-c9291f09768a",
+    "raw_evidence": {
+      "github_profile": {
+        "username": "DEVARAJ-07",
+        "name": "DEVARAJ S",
+        "avatar_url": "https://avatars.githubusercontent.com/u/211518264?v=4",
+        "public_repos": 12,
+        "followers": 2,
+        "created_at": "2025-05-13T13:13:33Z"
+      },
+      "repositories_analyzed": [
+        {
+          "name": "UrScore-AI",
+          "stars": 0,
+          "forks": 0,
+          "languages": {
+            "TypeScript": 143822,
+            "CSS": 9027,
+            "JavaScript": 2206,
+            "HTML": 982
+          },
+          "dependencies": [
+            "concurrently"
+          ],
+          "commits_analyzed": 1,
+          "readme_summary": "No README found"
+        },
+        {
+          "name": "Leetcode-problems",
+          "stars": 0,
+          "forks": 0,
+          "languages": {
+            "Java": 47211
+          },
+          "dependencies": [],
+          "commits_analyzed": 10,
+          "readme_summary": "# Leetcode-problems\n<!---LeetCode Topics Start-->\n# LeetCode Topics\n## Array\n| Problem Name | Difficulty |\n| ------- | ------- |\n| [0001-two-sum](http..."
+        },
+        {
+          "name": "DEVARAJ-07",
+          "stars": 0,
+          "forks": 0,
+          "languages": {},
+          "dependencies": [],
+          "commits_analyzed": 8,
+          "readme_summary": "<div align=\"center\">\n\n# 👋 Welcome, I'm DEVARAJ S\n\n### Full Stack Developer | Mobile App Developer | AI & Cloud Engineer\n\n*Building scalable web appli..."
+        },
+        {
+          "name": "SmartATM",
+          "stars": 0,
+          "forks": 0,
+          "languages": {
+            "JavaScript": 43422,
+            "CSS": 3142,
+            "HTML": 360
+          },
+          "dependencies": [],
+          "commits_analyzed": 0,
+          "readme_summary": "# Smart ATM: Cardless Cash Withdrawal System\n\nA full-stack MERN web application that simulates a modern ATM experience, allowing users to withdraw cas..."
+        },
+        {
+          "name": "Portfolio",
+          "stars": 0,
+          "forks": 0,
+          "languages": {
+            "JavaScript": 115690,
+            "CSS": 3214,
+            "HTML": 1377
+          },
+          "dependencies": [
+            "@emailjs/browser",
+            "@react-three/drei",
+            "@react-three/fiber",
+            "@tailwindcss/vite",
+            "@types/three",
+            "@use-gesture/react",
+            "framer-motion",
+            "nodemailer",
+            "react",
+            "react-dom",
+            "react-icons",
+            "react-intersection-observer",
+            "tailwindcss",
+            "three",
+            "@eslint/js",
+            "@types/react",
+            "@types/react-dom",
+            "@vitejs/plugin-react",
+            "eslint",
+            "eslint-plugin-react-hooks",
+            "eslint-plugin-react-refresh",
+            "gh-pages",
+            "globals",
+            "vite"
+          ],
+          "commits_analyzed": 0,
+          "readme_summary": "# React + Vite\n\nThis template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.\n\nCurrently, two official plugins a..."
+        },
+        {
+          "name": "E-mail-Fraud-Detection",
+          "stars": 0,
+          "forks": 0,
+          "languages": {
+            "HTML": 47894,
+            "Python": 30139
+          },
+          "dependencies": [],
+          "commits_analyzed": 0,
+          "readme_summary": "No README found"
+        },
+        {
+          "name": "Chess-Game",
+          "stars": 0,
+          "forks": 0,
+          "languages": {
+            "JavaScript": 14279,
+            "CSS": 11170,
+            "HTML": 5024,
+            "Python": 2239
+          },
+          "dependencies": [],
+          "commits_analyzed": 2,
+          "readme_summary": "﻿Here’s a `README.md` file version tailored for use with **ChatGPT Free** users — meaning no paid tools or advanced integrations required, and everyth..."
+        },
+        {
+          "name": "SmartEco",
+          "stars": 0,
+          "forks": 0,
+          "languages": {
+            "JavaScript": 442224,
+            "Python": 291792,
+            "CSS": 12118,
+            "Batchfile": 6130,
+            "HTML": 5169,
+            "Shell": 404
+          },
+          "dependencies": [],
+          "commits_analyzed": 0,
+          "readme_summary": "No README found"
+        },
+        {
+          "name": "Feed_the_need",
+          "stars": 0,
+          "forks": 0,
+          "languages": {
+            "HTML": 1000
+          },
+          "dependencies": [],
+          "commits_analyzed": 0,
+          "readme_summary": "No README found"
+        },
+        {
+          "name": "StudentBuddy",
+          "stars": 0,
+          "forks": 0,
+          "languages": {
+            "Dart": 1000
+          },
+          "dependencies": [],
+          "commits_analyzed": 0,
+          "readme_summary": "No README found"
+        },
+        {
+          "name": "QuickBuy",
+          "stars": 0,
+          "forks": 0,
+          "languages": {
+            "JavaScript": 1000
+          },
+          "dependencies": [],
+          "commits_analyzed": 0,
+          "readme_summary": "No README found"
+        },
+        {
+          "name": "DSA",
+          "stars": 0,
+          "forks": 0,
+          "languages": {
+            "Java": 1000
+          },
+          "dependencies": [],
+          "commits_analyzed": 0,
+          "readme_summary": "No README found"
+        }
+      ],
+      "resume_extracted_metrics": {
+        "keywords": {
+          "languages": [],
+          "frameworks": [
+            "react"
+          ],
+          "databases": [],
+          "tools": []
+        },
+        "experience_years": 6,
+        "extracted_projects": []
+      },
+      "leetcode_stats": null,
+      "portfolio_stats": null,
+      "score_breakdown": {
+        "verified_keywords": [
+          "react"
+        ],
+        "unverified_keywords": []
+      }
+    },
+    "created_at": "2026-06-13T06:37:08.507Z"
+  },
+  "68d450ec-68bf-4102-b074-ffc9d396ca56": {
+    "id": "68d450ec-68bf-4102-b074-ffc9d396ca56",
+    "scan_id": "bc945afd-5d5f-4eaa-8251-bbc4420fed78",
+    "raw_evidence": {
+      "github_profile": {
+        "username": "DEVARAJ-07",
+        "name": "DEVARAJ-07 Developer",
+        "avatar_url": "https://api.dicebear.com/7.x/adventurer/svg?seed=DEVARAJ-07",
+        "public_repos": 4,
+        "followers": 12,
+        "created_at": "2025-06-13T06:40:41.435Z"
+      },
+      "repositories_analyzed": [
+        {
+          "name": "e-commerce-microservices",
+          "stars": 34,
+          "forks": 8,
+          "languages": {
+            "TypeScript": 8400,
+            "JavaScript": 4200,
+            "HTML": 1600
+          },
+          "dependencies": [
+            "express",
+            "typescript",
+            "redis",
+            "pg",
+            "prisma",
+            "jsonwebtoken",
+            "dotenv",
+            "cors",
+            "jest"
+          ],
+          "commits_analyzed": 5,
+          "readme_summary": "# E-Commerce Microservice Suite\nThis project implements the core ordering and shopping API.\n## Architecture\n- Express API Gateway\n- JWT Authentication..."
+        },
+        {
+          "name": "react-dashboard-tailwind",
+          "stars": 18,
+          "forks": 3,
+          "languages": {
+            "TypeScript": 2100,
+            "CSS": 900,
+            "HTML": 400
+          },
+          "dependencies": [
+            "react",
+            "react-dom",
+            "typescript",
+            "zustand",
+            "recharts",
+            "tailwindcss",
+            "postcss",
+            "vite"
+          ],
+          "commits_analyzed": 3,
+          "readme_summary": "# React Admin Hub\nPremium admin dashboard using Zustand global store.\n- Real-time Recharts data plots.\n- Responsive tailwind grid layouts...."
+        },
+        {
+          "name": "python-data-crawler",
+          "stars": 5,
+          "forks": 1,
+          "languages": {
+            "Python": 820
+          },
+          "dependencies": [
+            "boto3",
+            "requests",
+            "beautifulsoup4",
+            "pandas",
+            "pytest"
+          ],
+          "commits_analyzed": 2,
+          "readme_summary": "# Python S3 Data Pipeline\nPulls listings and stores them in AWS S3 buckets.\n### Prerequisites\nSetup `boto3` AWS credentials in environment variables...."
+        },
+        {
+          "name": "ci-cd-docker-template",
+          "stars": 2,
+          "forks": 0,
+          "languages": {
+            "YAML": 150
+          },
+          "dependencies": [
+            "docker",
+            "kubernetes",
+            "github-actions"
+          ],
+          "commits_analyzed": 1,
+          "readme_summary": "# DevOps Template\nWorkflows for running node tasks on push and pull request...."
+        }
+      ],
+      "resume_extracted_metrics": {
+        "keywords": {
+          "languages": [
+            "javascript",
+            "typescript",
+            "python",
+            "java"
+          ],
+          "frameworks": [
+            "react",
+            "next.js",
+            "express",
+            "fastapi"
+          ],
+          "databases": [
+            "postgresql",
+            "mongodb",
+            "mysql",
+            "supabase"
+          ],
+          "tools": [
+            "git",
+            "docker",
+            "aws",
+            "github actions",
+            "rest api",
+            "ci/cd"
+          ]
+        },
+        "experience_years": 6,
+        "extracted_projects": []
+      },
+      "leetcode_stats": null,
+      "portfolio_stats": null,
+      "score_breakdown": {
+        "verified_keywords": [
+          "javascript",
+          "typescript",
+          "python",
+          "react",
+          "express",
+          "git",
+          "docker"
+        ],
+        "unverified_keywords": [
+          "java",
+          "next.js",
+          "fastapi",
+          "postgresql",
+          "mongodb",
+          "mysql",
+          "supabase",
+          "aws",
+          "github actions",
+          "rest api",
+          "ci/cd"
+        ]
+      }
+    },
+    "created_at": "2026-06-13T06:40:41.713Z"
+  },
+  "3d4317c2-42ec-4cb7-b510-7739d74ccd5c": {
+    "id": "3d4317c2-42ec-4cb7-b510-7739d74ccd5c",
+    "scan_id": "aa953dac-be73-493f-ba6a-58ffdc823bfe",
+    "raw_evidence": {
+      "github_profile": {
+        "username": "DEVARAJ-07",
+        "name": "DEVARAJ-07 Developer",
+        "avatar_url": "https://api.dicebear.com/7.x/adventurer/svg?seed=DEVARAJ-07",
+        "public_repos": 4,
+        "followers": 12,
+        "created_at": "2025-06-13T06:55:20.424Z"
+      },
+      "repositories_analyzed": [
+        {
+          "name": "e-commerce-microservices",
+          "stars": 34,
+          "forks": 8,
+          "languages": {
+            "TypeScript": 8400,
+            "JavaScript": 4200,
+            "HTML": 1600
+          },
+          "dependencies": [
+            "express",
+            "typescript",
+            "redis",
+            "pg",
+            "prisma",
+            "jsonwebtoken",
+            "dotenv",
+            "cors",
+            "jest"
+          ],
+          "commits_analyzed": 5,
+          "readme_summary": "# E-Commerce Microservice Suite\nThis project implements the core ordering and shopping API.\n## Architecture\n- Express API Gateway\n- JWT Authentication..."
+        },
+        {
+          "name": "react-dashboard-tailwind",
+          "stars": 18,
+          "forks": 3,
+          "languages": {
+            "TypeScript": 2100,
+            "CSS": 900,
+            "HTML": 400
+          },
+          "dependencies": [
+            "react",
+            "react-dom",
+            "typescript",
+            "zustand",
+            "recharts",
+            "tailwindcss",
+            "postcss",
+            "vite"
+          ],
+          "commits_analyzed": 3,
+          "readme_summary": "# React Admin Hub\nPremium admin dashboard using Zustand global store.\n- Real-time Recharts data plots.\n- Responsive tailwind grid layouts...."
+        },
+        {
+          "name": "python-data-crawler",
+          "stars": 5,
+          "forks": 1,
+          "languages": {
+            "Python": 820
+          },
+          "dependencies": [
+            "boto3",
+            "requests",
+            "beautifulsoup4",
+            "pandas",
+            "pytest"
+          ],
+          "commits_analyzed": 2,
+          "readme_summary": "# Python S3 Data Pipeline\nPulls listings and stores them in AWS S3 buckets.\n### Prerequisites\nSetup `boto3` AWS credentials in environment variables...."
+        },
+        {
+          "name": "ci-cd-docker-template",
+          "stars": 2,
+          "forks": 0,
+          "languages": {
+            "YAML": 150
+          },
+          "dependencies": [
+            "docker",
+            "kubernetes",
+            "github-actions"
+          ],
+          "commits_analyzed": 1,
+          "readme_summary": "# DevOps Template\nWorkflows for running node tasks on push and pull request...."
+        }
+      ],
+      "resume_extracted_metrics": {
+        "keywords": {
+          "languages": [
+            "javascript",
+            "typescript",
+            "python",
+            "java"
+          ],
+          "frameworks": [
+            "react",
+            "next.js",
+            "express",
+            "fastapi"
+          ],
+          "databases": [
+            "postgresql",
+            "mongodb",
+            "mysql",
+            "supabase"
+          ],
+          "tools": [
+            "git",
+            "docker",
+            "aws",
+            "github actions",
+            "rest api",
+            "ci/cd"
+          ]
+        },
+        "experience_years": 6,
+        "extracted_projects": []
+      },
+      "leetcode_stats": null,
+      "portfolio_stats": null,
+      "score_breakdown": {
+        "verified_keywords": [
+          "javascript",
+          "typescript",
+          "python",
+          "react",
+          "express",
+          "git",
+          "docker"
+        ],
+        "unverified_keywords": [
+          "java",
+          "next.js",
+          "fastapi",
+          "postgresql",
+          "mongodb",
+          "mysql",
+          "supabase",
+          "aws",
+          "github actions",
+          "rest api",
+          "ci/cd"
+        ]
+      }
+    },
+    "created_at": "2026-06-13T06:55:22.087Z"
+  },
+  "c2870f66-325f-4233-8b2a-e1793e614ce7": {
+    "id": "c2870f66-325f-4233-8b2a-e1793e614ce7",
+    "scan_id": "cbb517aa-1825-46fc-b8e7-3e2e7d0b8561",
+    "raw_evidence": {
+      "github_profile": {
+        "username": "DEVARAJ-07",
+        "name": "DEVARAJ S",
+        "avatar_url": "https://avatars.githubusercontent.com/u/211518264?v=4",
+        "public_repos": 12,
+        "followers": 2,
+        "created_at": "2025-05-13T13:13:33Z"
+      },
+      "repositories_analyzed": [
+        {
+          "name": "Leetcode-problems",
+          "stars": 0,
+          "forks": 0,
+          "languages": {
+            "Java": 47211
+          },
+          "dependencies": [],
+          "commits_analyzed": 10,
+          "readme_summary": "# Leetcode-problems\n<!---LeetCode Topics Start-->\n# LeetCode Topics\n## Array\n| Problem Name | Difficulty |\n| ------- | ------- |\n| [0001-two-sum](http...",
+          "ai_description": "This repository serves as a collection of individual"
+        },
+        {
+          "name": "UrScore-AI",
+          "stars": 0,
+          "forks": 0,
+          "languages": {
+            "TypeScript": 143822,
+            "CSS": 9027,
+            "JavaScript": 2206,
+            "HTML": 982
+          },
+          "dependencies": [
+            "concurrently"
+          ],
+          "commits_analyzed": 1,
+          "readme_summary": "No README found",
+          "ai_description": "This repository implements UrScore AI, a full-stack"
+        },
+        {
+          "name": "DEVARAJ-07",
+          "stars": 0,
+          "forks": 0,
+          "languages": {},
+          "dependencies": [],
+          "commits_analyzed": 8,
+          "readme_summary": "<div align=\"center\">\n\n# 👋 Welcome, I'm DEVARAJ S\n\n### Full Stack Developer | Mobile App Developer | AI & Cloud Engineer\n\n*Building scalable web appli...",
+          "ai_description": "Analysis unavailable due to processing error."
+        },
+        {
+          "name": "SmartATM",
+          "stars": 0,
+          "forks": 0,
+          "languages": {
+            "JavaScript": 43422,
+            "CSS": 3142,
+            "HTML": 360
+          },
+          "dependencies": [],
+          "commits_analyzed": 0,
+          "readme_summary": "# Smart ATM: Cardless Cash Withdrawal System\n\nA full-stack MERN web application that simulates a modern ATM experience, allowing users to withdraw cas...",
+          "ai_description": "This repository implements a Smart ATM system for"
+        },
+        {
+          "name": "Portfolio",
+          "stars": 0,
+          "forks": 0,
+          "languages": {
+            "JavaScript": 115690,
+            "CSS": 3214,
+            "HTML": 1377
+          },
+          "dependencies": [
+            "@emailjs/browser",
+            "@react-three/drei",
+            "@react-three/fiber",
+            "@tailwindcss/vite",
+            "@types/three",
+            "@use-gesture/react",
+            "framer-motion",
+            "nodemailer",
+            "react",
+            "react-dom",
+            "react-icons",
+            "react-intersection-observer",
+            "tailwindcss",
+            "three",
+            "@eslint/js",
+            "@types/react",
+            "@types/react-dom",
+            "@vitejs/plugin-react",
+            "eslint",
+            "eslint-plugin-react-hooks",
+            "eslint-plugin-react-refresh",
+            "gh-pages",
+            "globals",
+            "vite"
+          ],
+          "commits_analyzed": 0,
+          "readme_summary": "# React + Vite\n\nThis template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.\n\nCurrently, two official plugins a...",
+          "ai_description": "This repository represents a modern, interactive personal portfolio"
+        },
+        {
+          "name": "E-mail-Fraud-Detection",
+          "stars": 0,
+          "forks": 0,
+          "languages": {
+            "HTML": 47894,
+            "Python": 30139
+          },
+          "dependencies": [],
+          "commits_analyzed": 0,
+          "readme_summary": "No README found",
+          "ai_description": "Analysis unavailable due to processing error."
+        },
+        {
+          "name": "Chess-Game",
+          "stars": 0,
+          "forks": 0,
+          "languages": {
+            "JavaScript": 14279,
+            "CSS": 11170,
+            "HTML": 5024,
+            "Python": 2239
+          },
+          "dependencies": [],
+          "commits_analyzed": 2,
+          "readme_summary": "﻿Here’s a `README.md` file version tailored for use with **ChatGPT Free** users — meaning no paid tools or advanced integrations required, and everyth...",
+          "ai_description": "Analysis unavailable due to processing error."
+        },
+        {
+          "name": "SmartEco",
+          "stars": 0,
+          "forks": 0,
+          "languages": {
+            "JavaScript": 1000
+          },
+          "dependencies": [],
+          "commits_analyzed": 0,
+          "readme_summary": "No README found",
+          "ai_description": "Analysis unavailable due to processing error."
+        },
+        {
+          "name": "Feed_the_need",
+          "stars": 0,
+          "forks": 0,
+          "languages": {
+            "HTML": 1000
+          },
+          "dependencies": [],
+          "commits_analyzed": 0,
+          "readme_summary": "No README found",
+          "ai_description": "Analysis unavailable due to processing error."
+        },
+        {
+          "name": "StudentBuddy",
+          "stars": 0,
+          "forks": 0,
+          "languages": {
+            "Dart": 1000
+          },
+          "dependencies": [],
+          "commits_analyzed": 0,
+          "readme_summary": "No README found",
+          "ai_description": "Analysis unavailable due to processing error."
+        },
+        {
+          "name": "QuickBuy",
+          "stars": 0,
+          "forks": 0,
+          "languages": {
+            "JavaScript": 1000
+          },
+          "dependencies": [],
+          "commits_analyzed": 0,
+          "readme_summary": "No README found",
+          "ai_description": "Analysis unavailable due to processing error."
+        },
+        {
+          "name": "DSA",
+          "stars": 0,
+          "forks": 0,
+          "languages": {
+            "Java": 1000
+          },
+          "dependencies": [],
+          "commits_analyzed": 0,
+          "readme_summary": "No README found",
+          "ai_description": "Analysis unavailable due to processing error."
+        }
+      ],
+      "resume_extracted_metrics": {
+        "keywords": {
+          "languages": [
+            "javascript",
+            "typescript",
+            "python",
+            "java"
+          ],
+          "frameworks": [
+            "react",
+            "next.js",
+            "express",
+            "fastapi"
+          ],
+          "databases": [
+            "postgresql",
+            "mongodb",
+            "mysql",
+            "supabase"
+          ],
+          "tools": [
+            "git",
+            "docker",
+            "aws",
+            "github actions",
+            "rest api",
+            "ci/cd"
+          ]
+        },
+        "experience_years": 6,
+        "extracted_projects": []
+      },
+      "leetcode_stats": null,
+      "portfolio_stats": null,
+      "score_breakdown": {
+        "verified_keywords": [
+          "javascript",
+          "typescript",
+          "python",
+          "java",
+          "react"
+        ],
+        "unverified_keywords": [
+          "next.js",
+          "express",
+          "fastapi",
+          "postgresql",
+          "mongodb",
+          "mysql",
+          "supabase",
+          "git",
+          "docker",
+          "aws",
+          "github actions",
+          "rest api",
+          "ci/cd"
+        ]
+      }
+    },
+    "created_at": "2026-06-13T09:01:30.538Z"
+  },
+  "150ac6fd-a9c6-47cd-ad41-d1f9d4c9ef46": {
+    "id": "150ac6fd-a9c6-47cd-ad41-d1f9d4c9ef46",
+    "scan_id": "3841704f-5d88-434d-84b6-4a2b769cf0f8",
+    "raw_evidence": {
+      "github_profile": {
+        "username": "alexusesgithub",
+        "name": "Alexusesgithub Developer",
+        "avatar_url": "https://api.dicebear.com/7.x/adventurer/svg?seed=alexusesgithub",
+        "public_repos": 4,
+        "followers": 12,
+        "created_at": "2025-06-13T09:02:42.126Z"
+      },
+      "repositories_analyzed": [
+        {
+          "name": "e-commerce-microservices",
+          "stars": 34,
+          "forks": 8,
+          "languages": {
+            "TypeScript": 8400,
+            "JavaScript": 4200,
+            "HTML": 1600
+          },
+          "dependencies": [
+            "express",
+            "typescript",
+            "redis",
+            "pg",
+            "prisma",
+            "jsonwebtoken",
+            "dotenv",
+            "cors",
+            "jest"
+          ],
+          "commits_analyzed": 5,
+          "readme_summary": "# E-Commerce Microservice Suite\nThis project implements the core ordering and shopping API.\n## Architecture\n- Express API Gateway\n- JWT Authentication...",
+          "ai_description": "Based on the provided metadata, the repository appears to be"
+        },
+        {
+          "name": "react-dashboard-tailwind",
+          "stars": 18,
+          "forks": 3,
+          "languages": {
+            "TypeScript": 2100,
+            "CSS": 900,
+            "HTML": 400
+          },
+          "dependencies": [
+            "react",
+            "react-dom",
+            "typescript",
+            "zustand",
+            "recharts",
+            "tailwindcss",
+            "postcss",
+            "vite"
+          ],
+          "commits_analyzed": 3,
+          "readme_summary": "# React Admin Hub\nPremium admin dashboard using Zustand global store.\n- Real-time Recharts data plots.\n- Responsive tailwind grid layouts....",
+          "ai_description": "This repository appears to be empty or un"
+        },
+        {
+          "name": "python-data-crawler",
+          "stars": 5,
+          "forks": 1,
+          "languages": {
+            "Python": 820
+          },
+          "dependencies": [
+            "boto3",
+            "requests",
+            "beautifulsoup4",
+            "pandas",
+            "pytest"
+          ],
+          "commits_analyzed": 2,
+          "readme_summary": "# Python S3 Data Pipeline\nPulls listings and stores them in AWS S3 buckets.\n### Prerequisites\nSetup `boto3` AWS credentials in environment variables....",
+          "ai_description": "Based on the provided metadata, the repository appears empty"
+        },
+        {
+          "name": "ci-cd-docker-template",
+          "stars": 2,
+          "forks": 0,
+          "languages": {
+            "YAML": 150
+          },
+          "dependencies": [
+            "docker",
+            "kubernetes",
+            "github-actions"
+          ],
+          "commits_analyzed": 1,
+          "readme_summary": "# DevOps Template\nWorkflows for running node tasks on push and pull request....",
+          "ai_description": "This repository appears to be an empty template or placeholder,"
+        }
+      ],
+      "resume_extracted_metrics": {
+        "keywords": {
+          "languages": [
+            "javascript",
+            "typescript",
+            "python",
+            "java"
+          ],
+          "frameworks": [
+            "react",
+            "next.js",
+            "express",
+            "fastapi"
+          ],
+          "databases": [
+            "postgresql",
+            "mongodb",
+            "mysql",
+            "supabase"
+          ],
+          "tools": [
+            "git",
+            "docker",
+            "aws",
+            "github actions",
+            "rest api",
+            "ci/cd"
+          ]
+        },
+        "experience_years": 6,
+        "extracted_projects": []
+      },
+      "leetcode_stats": null,
+      "portfolio_stats": null,
+      "score_breakdown": {
+        "verified_keywords": [
+          "javascript",
+          "typescript",
+          "python",
+          "react",
+          "express",
+          "git",
+          "docker"
+        ],
+        "unverified_keywords": [
+          "java",
+          "next.js",
+          "fastapi",
+          "postgresql",
+          "mongodb",
+          "mysql",
+          "supabase",
+          "aws",
+          "github actions",
+          "rest api",
+          "ci/cd"
+        ]
+      }
+    },
+    "created_at": "2026-06-13T09:02:43.549Z"
+  },
+  "e9cd05fb-43cf-4f4f-80d6-8e7b2775062d": {
+    "id": "e9cd05fb-43cf-4f4f-80d6-8e7b2775062d",
+    "scan_id": "c3bb6357-2395-44f3-a399-0b5e5f1961fa",
+    "raw_evidence": {
+      "github_profile": {
+        "username": "DEVARAJ-08LC",
+        "name": "DEVARAJ-08LC Developer",
+        "avatar_url": "https://api.dicebear.com/7.x/adventurer/svg?seed=DEVARAJ-08LC",
+        "public_repos": 4,
+        "followers": 12,
+        "created_at": "2025-06-13T09:03:42.311Z"
+      },
+      "repositories_analyzed": [
+        {
+          "name": "e-commerce-microservices",
+          "stars": 34,
+          "forks": 8,
+          "languages": {
+            "TypeScript": 8400,
+            "JavaScript": 4200,
+            "HTML": 1600
+          },
+          "dependencies": [
+            "express",
+            "typescript",
+            "redis",
+            "pg",
+            "prisma",
+            "jsonwebtoken",
+            "dotenv",
+            "cors",
+            "jest"
+          ],
+          "commits_analyzed": 5,
+          "readme_summary": "# E-Commerce Microservice Suite\nThis project implements the core ordering and shopping API.\n## Architecture\n- Express API Gateway\n- JWT Authentication...",
+          "ai_description": "Based on the provided metadata, the repository appears to"
+        },
+        {
+          "name": "react-dashboard-tailwind",
+          "stars": 18,
+          "forks": 3,
+          "languages": {
+            "TypeScript": 2100,
+            "CSS": 900,
+            "HTML": 400
+          },
+          "dependencies": [
+            "react",
+            "react-dom",
+            "typescript",
+            "zustand",
+            "recharts",
+            "tailwindcss",
+            "postcss",
+            "vite"
+          ],
+          "commits_analyzed": 3,
+          "readme_summary": "# React Admin Hub\nPremium admin dashboard using Zustand global store.\n- Real-time Recharts data plots.\n- Responsive tailwind grid layouts....",
+          "ai_description": "This repository appears to be empty or uninitialized, as"
+        },
+        {
+          "name": "python-data-crawler",
+          "stars": 5,
+          "forks": 1,
+          "languages": {
+            "Python": 820
+          },
+          "dependencies": [
+            "boto3",
+            "requests",
+            "beautifulsoup4",
+            "pandas",
+            "pytest"
+          ],
+          "commits_analyzed": 2,
+          "readme_summary": "# Python S3 Data Pipeline\nPulls listings and stores them in AWS S3 buckets.\n### Prerequisites\nSetup `boto3` AWS credentials in environment variables....",
+          "ai_description": "Analysis unavailable due to processing error."
+        },
+        {
+          "name": "ci-cd-docker-template",
+          "stars": 2,
+          "forks": 0,
+          "languages": {
+            "YAML": 150
+          },
+          "dependencies": [
+            "docker",
+            "kubernetes",
+            "github-actions"
+          ],
+          "commits_analyzed": 1,
+          "readme_summary": "# DevOps Template\nWorkflows for running node tasks on push and pull request....",
+          "ai_description": "This repository appears to be an empty or un"
+        }
+      ],
+      "resume_extracted_metrics": {
+        "keywords": {
+          "languages": [
+            "javascript",
+            "typescript",
+            "python",
+            "java"
+          ],
+          "frameworks": [
+            "react",
+            "next.js",
+            "express",
+            "fastapi"
+          ],
+          "databases": [
+            "postgresql",
+            "mongodb",
+            "mysql",
+            "supabase"
+          ],
+          "tools": [
+            "git",
+            "docker",
+            "aws",
+            "github actions",
+            "rest api",
+            "ci/cd"
+          ]
+        },
+        "experience_years": 6,
+        "extracted_projects": []
+      },
+      "leetcode_stats": null,
+      "portfolio_stats": null,
+      "score_breakdown": {
+        "verified_keywords": [
+          "javascript",
+          "typescript",
+          "python",
+          "react",
+          "express",
+          "git",
+          "docker"
+        ],
+        "unverified_keywords": [
+          "java",
+          "next.js",
+          "fastapi",
+          "postgresql",
+          "mongodb",
+          "mysql",
+          "supabase",
+          "aws",
+          "github actions",
+          "rest api",
+          "ci/cd"
+        ]
+      }
+    },
+    "created_at": "2026-06-13T09:03:43.592Z"
+  },
+  "b95c7312-a6a5-4760-8ac9-a520fee5bc54": {
+    "id": "b95c7312-a6a5-4760-8ac9-a520fee5bc54",
+    "scan_id": "b67977f2-ae16-4432-9b21-b6d77cddd62f",
+    "raw_evidence": {
+      "github_profile": {
+        "username": "DEVARAJ-07",
+        "name": "DEVARAJ-07 Developer",
+        "avatar_url": "https://api.dicebear.com/7.x/adventurer/svg?seed=DEVARAJ-07",
+        "public_repos": 4,
+        "followers": 12,
+        "created_at": "2025-06-13T09:08:42.593Z"
+      },
+      "repositories_analyzed": [
+        {
+          "name": "e-commerce-microservices",
+          "stars": 34,
+          "forks": 8,
+          "languages": {
+            "TypeScript": 8400,
+            "JavaScript": 4200,
+            "HTML": 1600
+          },
+          "dependencies": [
+            "express",
+            "typescript",
+            "redis",
+            "pg",
+            "prisma",
+            "jsonwebtoken",
+            "dotenv",
+            "cors",
+            "jest"
+          ],
+          "commits_analyzed": 5,
+          "readme_summary": "# E-Commerce Microservice Suite\nThis project implements the core ordering and shopping API.\n## Architecture\n- Express API Gateway\n- JWT Authentication...",
+          "ai_description": "Based solely on the provided metadata, this repository"
+        },
+        {
+          "name": "react-dashboard-tailwind",
+          "stars": 18,
+          "forks": 3,
+          "languages": {
+            "TypeScript": 2100,
+            "CSS": 900,
+            "HTML": 400
+          },
+          "dependencies": [
+            "react",
+            "react-dom",
+            "typescript",
+            "zustand",
+            "recharts",
+            "tailwindcss",
+            "postcss",
+            "vite"
+          ],
+          "commits_analyzed": 3,
+          "readme_summary": "# React Admin Hub\nPremium admin dashboard using Zustand global store.\n- Real-time Recharts data plots.\n- Responsive tailwind grid layouts....",
+          "ai_description": "This repository appears to be empty or contains no detectable code"
+        },
+        {
+          "name": "python-data-crawler",
+          "stars": 5,
+          "forks": 1,
+          "languages": {
+            "Python": 820
+          },
+          "dependencies": [
+            "boto3",
+            "requests",
+            "beautifulsoup4",
+            "pandas",
+            "pytest"
+          ],
+          "commits_analyzed": 2,
+          "readme_summary": "# Python S3 Data Pipeline\nPulls listings and stores them in AWS S3 buckets.\n### Prerequisites\nSetup `boto3` AWS credentials in environment variables....",
+          "ai_description": "The repository contains no detectable code, dependencies, or files"
+        },
+        {
+          "name": "ci-cd-docker-template",
+          "stars": 2,
+          "forks": 0,
+          "languages": {
+            "YAML": 150
+          },
+          "dependencies": [
+            "docker",
+            "kubernetes",
+            "github-actions"
+          ],
+          "commits_analyzed": 1,
+          "readme_summary": "# DevOps Template\nWorkflows for running node tasks on push and pull request....",
+          "ai_description": "This repository appears to be empty or contains"
+        }
+      ],
+      "resume_extracted_metrics": {
+        "keywords": {
+          "languages": [
+            "javascript",
+            "typescript",
+            "python",
+            "java"
+          ],
+          "frameworks": [
+            "react",
+            "next.js",
+            "express",
+            "fastapi"
+          ],
+          "databases": [
+            "postgresql",
+            "mongodb",
+            "mysql",
+            "supabase"
+          ],
+          "tools": [
+            "git",
+            "docker",
+            "aws",
+            "github actions",
+            "rest api",
+            "ci/cd"
+          ]
+        },
+        "experience_years": 6,
+        "extracted_projects": []
+      },
+      "leetcode_stats": null,
+      "portfolio_stats": null,
+      "score_breakdown": {
+        "verified_keywords": [
+          "javascript",
+          "typescript",
+          "python",
+          "react",
+          "express",
+          "git",
+          "docker"
+        ],
+        "unverified_keywords": [
+          "java",
+          "next.js",
+          "fastapi",
+          "postgresql",
+          "mongodb",
+          "mysql",
+          "supabase",
+          "aws",
+          "github actions",
+          "rest api",
+          "ci/cd"
+        ]
+      }
+    },
+    "created_at": "2026-06-13T09:08:44.077Z"
+  },
+  "49b2fc44-cb13-43e2-9194-103fabd3339f": {
+    "id": "49b2fc44-cb13-43e2-9194-103fabd3339f",
+    "scan_id": "378e6d53-84f1-49cc-93b8-5a2648df4aad",
+    "raw_evidence": {
+      "github_profile": {
+        "username": "DEVARAJ-07",
+        "name": "DEVARAJ S",
+        "avatar_url": "https://avatars.githubusercontent.com/u/211518264?v=4",
+        "public_repos": 12,
+        "followers": 2,
+        "created_at": "2025-05-13T13:13:33Z"
+      },
+      "repositories_analyzed": [
+        {
+          "name": "Leetcode-problems",
+          "stars": 0,
+          "forks": 0,
+          "languages": {
+            "Java": 47211
+          },
+          "dependencies": [],
+          "commits_analyzed": 10,
+          "readme_summary": "# Leetcode-problems\n<!---LeetCode Topics Start-->\n# LeetCode Topics\n## Array\n| Problem Name | Difficulty |\n| ------- | ------- |\n| [0001-two-sum](http...",
+          "ai_description": "This repository serves as a collection of individual Java solutions"
+        },
+        {
+          "name": "UrScore-AI",
+          "stars": 0,
+          "forks": 0,
+          "languages": {
+            "TypeScript": 143822,
+            "CSS": 9027,
+            "JavaScript": 2206,
+            "HTML": 982
+          },
+          "dependencies": [
+            "concurrently"
+          ],
+          "commits_analyzed": 1,
+          "readme_summary": "No README found",
+          "ai_description": "This repository implements UrScore AI, a full-"
+        },
+        {
+          "name": "DEVARAJ-07",
+          "stars": 0,
+          "forks": 0,
+          "languages": {},
+          "dependencies": [],
+          "commits_analyzed": 8,
+          "readme_summary": "<div align=\"center\">\n\n# 👋 Welcome, I'm DEVARAJ S\n\n### Full Stack Developer | Mobile App Developer | AI & Cloud Engineer\n\n*Building scalable web appli...",
+          "ai_description": "This repository appears to be a personal profile or \""
+        },
+        {
+          "name": "SmartATM",
+          "stars": 0,
+          "forks": 0,
+          "languages": {
+            "JavaScript": 43422,
+            "CSS": 3142,
+            "HTML": 360
+          },
+          "dependencies": [],
+          "commits_analyzed": 0,
+          "readme_summary": "# Smart ATM: Cardless Cash Withdrawal System\n\nA full-stack MERN web application that simulates a modern ATM experience, allowing users to withdraw cas...",
+          "ai_description": "Analysis unavailable due to processing error."
+        },
+        {
+          "name": "Portfolio",
+          "stars": 0,
+          "forks": 0,
+          "languages": {
+            "JavaScript": 115690,
+            "CSS": 3214,
+            "HTML": 1377
+          },
+          "dependencies": [
+            "@emailjs/browser",
+            "@react-three/drei",
+            "@react-three/fiber",
+            "@tailwindcss/vite",
+            "@types/three",
+            "@use-gesture/react",
+            "framer-motion",
+            "nodemailer",
+            "react",
+            "react-dom",
+            "react-icons",
+            "react-intersection-observer",
+            "tailwindcss",
+            "three",
+            "@eslint/js",
+            "@types/react",
+            "@types/react-dom",
+            "@vitejs/plugin-react",
+            "eslint",
+            "eslint-plugin-react-hooks",
+            "eslint-plugin-react-refresh",
+            "gh-pages",
+            "globals",
+            "vite"
+          ],
+          "commits_analyzed": 0,
+          "readme_summary": "# React + Vite\n\nThis template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.\n\nCurrently, two official plugins a...",
+          "ai_description": "Analysis unavailable due to processing error."
+        },
+        {
+          "name": "E-mail-Fraud-Detection",
+          "stars": 0,
+          "forks": 0,
+          "languages": {
+            "HTML": 47894,
+            "Python": 30139
+          },
+          "dependencies": [],
+          "commits_analyzed": 0,
+          "readme_summary": "No README found",
+          "ai_description": "Analysis unavailable due to processing error."
+        },
+        {
+          "name": "Chess-Game",
+          "stars": 0,
+          "forks": 0,
+          "languages": {
+            "JavaScript": 14279,
+            "CSS": 11170,
+            "HTML": 5024,
+            "Python": 2239
+          },
+          "dependencies": [],
+          "commits_analyzed": 2,
+          "readme_summary": "﻿Here’s a `README.md` file version tailored for use with **ChatGPT Free** users — meaning no paid tools or advanced integrations required, and everyth...",
+          "ai_description": "Analysis unavailable due to processing error."
+        },
+        {
+          "name": "SmartEco",
+          "stars": 0,
+          "forks": 0,
+          "languages": {
+            "JavaScript": 442224,
+            "Python": 291792,
+            "CSS": 12118,
+            "Batchfile": 6130,
+            "HTML": 5169,
+            "Shell": 404
+          },
+          "dependencies": [],
+          "commits_analyzed": 0,
+          "readme_summary": "No README found",
+          "ai_description": "Analysis unavailable due to processing error."
+        },
+        {
+          "name": "Feed_the_need",
+          "stars": 0,
+          "forks": 0,
+          "languages": {
+            "HTML": 4640,
+            "Python": 4478,
+            "CSS": 1670
+          },
+          "dependencies": [],
+          "commits_analyzed": 0,
+          "readme_summary": "# Food-waste\nthis is a web page to order food from hotels ,hostels's left over good food for lower price \n...",
+          "ai_description": "Analysis unavailable due to processing error."
+        },
+        {
+          "name": "StudentBuddy",
+          "stars": 0,
+          "forks": 0,
+          "languages": {
+            "Dart": 180671,
+            "Kotlin": 132
+          },
+          "dependencies": [],
+          "commits_analyzed": 0,
+          "readme_summary": "# student_buddy\n\nA new Flutter project.\n\n## Getting Started\n\nThis project is a starting point for a Flutter application.\n\nA few resources to get you s...",
+          "ai_description": "Analysis unavailable due to processing error."
+        },
+        {
+          "name": "QuickBuy",
+          "stars": 0,
+          "forks": 0,
+          "languages": {
+            "JavaScript": 123167,
+            "CSS": 44079,
+            "HTML": 1186
+          },
+          "dependencies": [],
+          "commits_analyzed": 0,
+          "readme_summary": "# QuickBuy 🛒 – Full Stack E-Commerce Application\n\nA complete, professional full-stack e-commerce web application built with React, Node.js, Express, ...",
+          "ai_description": "Analysis unavailable due to processing error."
+        },
+        {
+          "name": "DSA",
+          "stars": 0,
+          "forks": 0,
+          "languages": {
+            "Java": 71054
+          },
+          "dependencies": [],
+          "commits_analyzed": 1,
+          "readme_summary": "No README found",
+          "ai_description": "Analysis unavailable due to processing error."
+        }
+      ],
+      "resume_extracted_metrics": {
+        "keywords": {
+          "languages": [
+            "javascript",
+            "typescript",
+            "python",
+            "java"
+          ],
+          "frameworks": [
+            "react",
+            "next.js",
+            "express",
+            "fastapi"
+          ],
+          "databases": [
+            "postgresql",
+            "mongodb",
+            "mysql",
+            "supabase"
+          ],
+          "tools": [
+            "git",
+            "docker",
+            "aws",
+            "github actions",
+            "rest api",
+            "ci/cd"
+          ]
+        },
+        "experience_years": 6,
+        "extracted_projects": []
+      },
+      "leetcode_stats": null,
+      "portfolio_stats": null,
+      "score_breakdown": {
+        "verified_keywords": [
+          "javascript",
+          "typescript",
+          "python",
+          "java",
+          "react"
+        ],
+        "unverified_keywords": [
+          "next.js",
+          "express",
+          "fastapi",
+          "postgresql",
+          "mongodb",
+          "mysql",
+          "supabase",
+          "git",
+          "docker",
+          "aws",
+          "github actions",
+          "rest api",
+          "ci/cd"
+        ]
+      }
+    },
+    "created_at": "2026-06-13T09:20:05.434Z"
+  },
+  "f908438a-b3fc-49ad-af79-ff2794b61fbf": {
+    "id": "f908438a-b3fc-49ad-af79-ff2794b61fbf",
+    "scan_id": "446a3a2b-eac2-478a-80e5-f0652e12d832",
+    "raw_evidence": {
+      "github_profile": {
+        "username": "alexusesgithub",
+        "name": "Alex A",
+        "avatar_url": "https://avatars.githubusercontent.com/u/166297813?v=4",
+        "public_repos": 9,
+        "followers": 6,
+        "created_at": "2024-04-07T11:05:45Z"
+      },
+      "repositories_analyzed": [
+        {
+          "name": "Leetcode-problems",
+          "stars": 0,
+          "forks": 0,
+          "languages": {
+            "Java": 36390
+          },
+          "dependencies": [],
+          "commits_analyzed": 10,
+          "readme_summary": "# Leetcode-problems\n<!---LeetCode Topics Start-->\n# LeetCode Topics\n## Array\n| Problem Name | Difficulty |\n| ------- | ------- |\n| [0001-two-sum](http...",
+          "ai_description": "Analysis unavailable due to processing error."
+        },
+        {
+          "name": "Team7-ngpit",
+          "stars": 0,
+          "forks": 0,
+          "languages": {
+            "TypeScript": 95182,
+            "Python": 15684,
+            "CSS": 4079,
+            "PowerShell": 3804,
+            "Shell": 3774,
+            "JavaScript": 2776,
+            "HTML": 1322,
+            "Batchfile": 1140,
+            "Dockerfile": 295
+          },
+          "dependencies": [],
+          "commits_analyzed": 5,
+          "readme_summary": "# FutureForge AI – The AI Employability Ecosystem for 2030\n\n## 📌 Project Overview\n\nBy 2030, artificial intelligence will automate traditional entry-l...",
+          "ai_description": "Analysis unavailable due to processing error."
+        },
+        {
+          "name": "ai-education-equity-system",
+          "stars": 0,
+          "forks": 0,
+          "languages": {
+            "TypeScript": 285346,
+            "JavaScript": 142135,
+            "HTML": 25759,
+            "Python": 23770,
+            "CSS": 12609,
+            "Batchfile": 561
+          },
+          "dependencies": [
+            "@google/generative-ai",
+            "autoprefixer",
+            "axios",
+            "exceljs",
+            "next",
+            "postcss",
+            "react",
+            "react-dom",
+            "tailwindcss",
+            "@types/node",
+            "@types/react",
+            "typescript"
+          ],
+          "commits_analyzed": 1,
+          "readme_summary": "# AI Education Equity System\n\nAn AI-powered platform designed to enhance educational equity by providing personalized learning experiences for student...",
+          "ai_description": "Analysis unavailable due to processing error."
+        },
+        {
+          "name": "Heart-disease-prediction",
+          "stars": 0,
+          "forks": 0,
+          "languages": {
+            "Jupyter Notebook": 38815,
+            "HTML": 11111,
+            "Python": 1314,
+            "JavaScript": 12
+          },
+          "dependencies": [],
+          "commits_analyzed": 1,
+          "readme_summary": "No README found",
+          "ai_description": "Analysis unavailable due to processing error."
+        },
+        {
+          "name": "StudentBuddy",
+          "stars": 0,
+          "forks": 0,
+          "languages": {
+            "Dart": 180671,
+            "Kotlin": 132
+          },
+          "dependencies": [],
+          "commits_analyzed": 1,
+          "readme_summary": "Overview: StudentBuddy is a cross‑platform (Android, iOS, Web) Flutter application that acts as a 24/7 personalized tutor and academic hub. It combine...",
+          "ai_description": "Analysis unavailable due to processing error."
+        },
+        {
+          "name": "email-spam-analyser",
+          "stars": 0,
+          "forks": 0,
+          "languages": {
+            "HTML": 48800,
+            "Python": 30972
+          },
+          "dependencies": [],
+          "commits_analyzed": 2,
+          "readme_summary": "# email-spam-analyser...",
+          "ai_description": "Analysis unavailable due to processing error."
+        },
+        {
+          "name": "alexusesgithub",
+          "stars": 0,
+          "forks": 0,
+          "languages": {},
+          "dependencies": [],
+          "commits_analyzed": 6,
+          "readme_summary": "<h1 align=\"center\">Hi 👋, I'm Alex A</h1>\n\n<h3 align=\"center\">\nFull Stack Developer | AI & ML Enthusiast | Software Developer\n</h3>\n\n<p align=\"center\"...",
+          "ai_description": "Analysis unavailable due to processing error."
+        },
+        {
+          "name": "AI-Powered-Cancer-Prediction-Mobile-App-Early-Detection-System-",
+          "stars": 0,
+          "forks": 0,
+          "languages": {},
+          "dependencies": [],
+          "commits_analyzed": 2,
+          "readme_summary": "# AI-Powered-Cancer-Prediction-Mobile-App-Early-Detection-System-...",
+          "ai_description": "Analysis unavailable due to processing error."
+        },
+        {
+          "name": "burnout",
+          "stars": 0,
+          "forks": 0,
+          "languages": {
+            "Python": 43004,
+            "Jupyter Notebook": 26934
+          },
+          "dependencies": [
+            "pandas",
+            "numpy",
+            "scikit-learn",
+            "xgboost",
+            "lightgbm",
+            "catboost",
+            "matplotlib",
+            "seaborn"
+          ],
+          "commits_analyzed": 2,
+          "readme_summary": "# MotoGP Lap Time Prediction\r\n\r\n## Model Architecture\r\nEnsemble model combining three algorithms with optimized weights:\r\n- XGBoost (40%): n_estimator...",
+          "ai_description": "Analysis unavailable due to processing error."
+        }
+      ],
+      "resume_extracted_metrics": {
+        "keywords": {
+          "languages": [
+            "javascript",
+            "typescript",
+            "python",
+            "java"
+          ],
+          "frameworks": [
+            "react",
+            "next.js",
+            "express",
+            "fastapi"
+          ],
+          "databases": [
+            "postgresql",
+            "mongodb",
+            "mysql",
+            "supabase"
+          ],
+          "tools": [
+            "git",
+            "docker",
+            "aws",
+            "github actions",
+            "rest api",
+            "ci/cd"
+          ]
+        },
+        "experience_years": 6,
+        "extracted_projects": []
+      },
+      "leetcode_stats": null,
+      "portfolio_stats": null,
+      "score_breakdown": {
+        "verified_keywords": [
+          "javascript",
+          "typescript",
+          "python",
+          "java",
+          "react",
+          "next.js"
+        ],
+        "unverified_keywords": [
+          "express",
+          "fastapi",
+          "postgresql",
+          "mongodb",
+          "mysql",
+          "supabase",
+          "git",
+          "docker",
+          "aws",
+          "github actions",
+          "rest api",
+          "ci/cd"
+        ]
+      }
+    },
+    "created_at": "2026-06-13T09:21:41.310Z"
+  },
+  "e607e30e-c4ae-48d1-a040-03670786fa09": {
+    "id": "e607e30e-c4ae-48d1-a040-03670786fa09",
+    "scan_id": "3160704c-a9a6-4a29-a4eb-28097c06931b",
+    "raw_evidence": {
+      "github_profile": {
+        "username": "renishandrick",
+        "name": "Renish Andrick",
+        "avatar_url": "https://avatars.githubusercontent.com/u/199193915?v=4",
+        "public_repos": 7,
+        "followers": 0,
+        "created_at": "2025-02-14T05:09:07Z"
+      },
+      "repositories_analyzed": [
+        {
+          "name": "Leetcode-problems",
+          "stars": 0,
+          "forks": 0,
+          "languages": {
+            "Java": 44941
+          },
+          "dependencies": [],
+          "commits_analyzed": 10,
+          "readme_summary": "# Leetcode-problems\n<!---LeetCode Topics Start-->\n# LeetCode Topics\n## Array\n| Problem Name | Difficulty |\n| ------- | ------- |\n| [0001-two-sum](http...",
+          "ai_description": "Analysis unavailable due to processing error."
+        },
+        {
+          "name": "Atm-security",
+          "stars": 0,
+          "forks": 0,
+          "languages": {
+            "Python": 108471,
+            "HTML": 14544,
+            "Batchfile": 1620
+          },
+          "dependencies": [
+            "ultralytics",
+            "opencv-python",
+            "torch",
+            "torchvision",
+            "numpy",
+            "labelimg"
+          ],
+          "commits_analyzed": 10,
+          "readme_summary": "# ATM Security System — Project Setup\n\nQuick steps to get this project running locally.\n\nPrerequisites\n- Python 3.10+ (you already have a virtualenv i...",
+          "ai_description": "Analysis unavailable due to processing error."
+        },
+        {
+          "name": "email-detector",
+          "stars": 0,
+          "forks": 0,
+          "languages": {
+            "HTML": 47894,
+            "Python": 30139
+          },
+          "dependencies": [],
+          "commits_analyzed": 1,
+          "readme_summary": "# 🛡️ Cyber Sentinel AI - Email Fraud Detection System\n\nAn AI-powered web application that detects email fraud using machine learning and psychologica...",
+          "ai_description": "Analysis unavailable due to processing error."
+        },
+        {
+          "name": "AI-assistant-for-learning",
+          "stars": 0,
+          "forks": 0,
+          "languages": {
+            "Dart": 867548,
+            "PLpgSQL": 23159,
+            "Kotlin": 132
+          },
+          "dependencies": [],
+          "commits_analyzed": 1,
+          "readme_summary": "# 🎓 StudentBuddy\n\nStudentBuddy is an AI-powered educational ecosystem that bridges the gap between productivity, mentorship, and assessment. Designed...",
+          "ai_description": "Analysis unavailable due to processing error."
+        },
+        {
+          "name": "renishandrick",
+          "stars": 0,
+          "forks": 0,
+          "languages": {},
+          "dependencies": [],
+          "commits_analyzed": 5,
+          "readme_summary": "<div align=\"center\">\n\n# Hello 👋 Renish here,\n\n### A Curious Coder | Passionate AI/ML Engineer | Evolving Data Scientist\n\n</div>\n\n---\n\n## 👨‍💻 About ...",
+          "ai_description": "This repository appears to be a placeholder or a personal"
+        },
+        {
+          "name": "Food-waste",
+          "stars": 0,
+          "forks": 0,
+          "languages": {
+            "HTML": 4640,
+            "Python": 4478,
+            "CSS": 1670
+          },
+          "dependencies": [],
+          "commits_analyzed": 3,
+          "readme_summary": "# Food-waste\nthis is a web page to order food from hotels ,hostels's left over good food for lower price \n...",
+          "ai_description": "Analysis unavailable due to processing error."
+        },
+        {
+          "name": "SmartEco",
+          "stars": 0,
+          "forks": 0,
+          "languages": {
+            "Python": 43733
+          },
+          "dependencies": [],
+          "commits_analyzed": 3,
+          "readme_summary": "# SmartEco\nan application for campus sustainabilty\n...",
+          "ai_description": "This Python-based repository implements a machine"
+        }
+      ],
+      "resume_extracted_metrics": {
+        "keywords": {
+          "languages": [
+            "javascript",
+            "typescript",
+            "python",
+            "java"
+          ],
+          "frameworks": [
+            "react",
+            "next.js",
+            "express",
+            "fastapi"
+          ],
+          "databases": [
+            "postgresql",
+            "mongodb",
+            "mysql",
+            "supabase"
+          ],
+          "tools": [
+            "git",
+            "docker",
+            "aws",
+            "github actions",
+            "rest api",
+            "ci/cd"
+          ]
+        },
+        "experience_years": 6,
+        "extracted_projects": []
+      },
+      "leetcode_stats": null,
+      "portfolio_stats": null,
+      "score_breakdown": {
+        "verified_keywords": [
+          "python",
+          "java"
+        ],
+        "unverified_keywords": [
+          "javascript",
+          "typescript",
+          "react",
+          "next.js",
+          "express",
+          "fastapi",
+          "postgresql",
+          "mongodb",
+          "mysql",
+          "supabase",
+          "git",
+          "docker",
+          "aws",
+          "github actions",
+          "rest api",
+          "ci/cd"
+        ]
+      }
+    },
+    "created_at": "2026-06-13T09:23:13.140Z"
+  },
+  "d7fd15aa-5502-4a78-aea8-5ecfb8f7e152": {
+    "id": "d7fd15aa-5502-4a78-aea8-5ecfb8f7e152",
+    "scan_id": "8fc97f6d-d620-4458-82cb-3d5e2072c56a",
+    "raw_evidence": {
+      "github_profile": {
+        "username": "DEVARAJ-07",
+        "name": "DEVARAJ S",
+        "avatar_url": "https://avatars.githubusercontent.com/u/211518264?v=4",
+        "public_repos": 12,
+        "followers": 2,
+        "created_at": "2025-05-13T13:13:33Z"
+      },
+      "repositories_analyzed": [
+        {
+          "name": "Leetcode-problems",
+          "stars": 0,
+          "forks": 0,
+          "languages": {
+            "Java": 47211
+          },
+          "dependencies": [],
+          "commits_analyzed": 10,
+          "readme_summary": "# Leetcode-problems\n<!---LeetCode Topics Start-->\n# LeetCode Topics\n## Array\n| Problem Name | Difficulty |\n| ------- | ------- |\n| [0001-two-sum](http...",
+          "ai_description": "Analysis unavailable due to processing error."
+        },
+        {
+          "name": "UrScore-AI",
+          "stars": 0,
+          "forks": 0,
+          "languages": {
+            "TypeScript": 143822,
+            "CSS": 9027,
+            "JavaScript": 2206,
+            "HTML": 982
+          },
+          "dependencies": [
+            "concurrently"
+          ],
+          "commits_analyzed": 1,
+          "readme_summary": "No README found",
+          "ai_description": "Analysis unavailable due to processing error."
+        },
+        {
+          "name": "DEVARAJ-07",
+          "stars": 0,
+          "forks": 0,
+          "languages": {},
+          "dependencies": [],
+          "commits_analyzed": 8,
+          "readme_summary": "<div align=\"center\">\n\n# 👋 Welcome, I'm DEVARAJ S\n\n### Full Stack Developer | Mobile App Developer | AI & Cloud Engineer\n\n*Building scalable web appli...",
+          "ai_description": "Analysis unavailable due to processing error."
+        },
+        {
+          "name": "SmartATM",
+          "stars": 0,
+          "forks": 0,
+          "languages": {
+            "JavaScript": 43422,
+            "CSS": 3142,
+            "HTML": 360
+          },
+          "dependencies": [],
+          "commits_analyzed": 0,
+          "readme_summary": "# Smart ATM: Cardless Cash Withdrawal System\n\nA full-stack MERN web application that simulates a modern ATM experience, allowing users to withdraw cas...",
+          "ai_description": "Analysis unavailable due to processing error."
+        },
+        {
+          "name": "Portfolio",
+          "stars": 0,
+          "forks": 0,
+          "languages": {
+            "JavaScript": 115690,
+            "CSS": 3214,
+            "HTML": 1377
+          },
+          "dependencies": [
+            "@emailjs/browser",
+            "@react-three/drei",
+            "@react-three/fiber",
+            "@tailwindcss/vite",
+            "@types/three",
+            "@use-gesture/react",
+            "framer-motion",
+            "nodemailer",
+            "react",
+            "react-dom",
+            "react-icons",
+            "react-intersection-observer",
+            "tailwindcss",
+            "three",
+            "@eslint/js",
+            "@types/react",
+            "@types/react-dom",
+            "@vitejs/plugin-react",
+            "eslint",
+            "eslint-plugin-react-hooks",
+            "eslint-plugin-react-refresh",
+            "gh-pages",
+            "globals",
+            "vite"
+          ],
+          "commits_analyzed": 0,
+          "readme_summary": "# React + Vite\n\nThis template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.\n\nCurrently, two official plugins a...",
+          "ai_description": "Analysis unavailable due to processing error."
+        },
+        {
+          "name": "E-mail-Fraud-Detection",
+          "stars": 0,
+          "forks": 0,
+          "languages": {
+            "HTML": 47894,
+            "Python": 30139
+          },
+          "dependencies": [],
+          "commits_analyzed": 0,
+          "readme_summary": "No README found",
+          "ai_description": "Analysis unavailable due to processing error."
+        },
+        {
+          "name": "Chess-Game",
+          "stars": 0,
+          "forks": 0,
+          "languages": {
+            "JavaScript": 14279,
+            "CSS": 11170,
+            "HTML": 5024,
+            "Python": 2239
+          },
+          "dependencies": [],
+          "commits_analyzed": 2,
+          "readme_summary": "﻿Here’s a `README.md` file version tailored for use with **ChatGPT Free** users — meaning no paid tools or advanced integrations required, and everyth...",
+          "ai_description": "Analysis unavailable due to processing error."
+        },
+        {
+          "name": "SmartEco",
+          "stars": 0,
+          "forks": 0,
+          "languages": {
+            "JavaScript": 442224,
+            "Python": 291792,
+            "CSS": 12118,
+            "Batchfile": 6130,
+            "HTML": 5169,
+            "Shell": 404
+          },
+          "dependencies": [],
+          "commits_analyzed": 0,
+          "readme_summary": "No README found",
+          "ai_description": "Analysis unavailable due to processing error."
+        },
+        {
+          "name": "Feed_the_need",
+          "stars": 0,
+          "forks": 0,
+          "languages": {
+            "HTML": 4640,
+            "Python": 4478,
+            "CSS": 1670
+          },
+          "dependencies": [],
+          "commits_analyzed": 0,
+          "readme_summary": "# Food-waste\nthis is a web page to order food from hotels ,hostels's left over good food for lower price \n...",
+          "ai_description": "Analysis unavailable due to processing error."
+        },
+        {
+          "name": "StudentBuddy",
+          "stars": 0,
+          "forks": 0,
+          "languages": {
+            "Dart": 180671,
+            "Kotlin": 132
+          },
+          "dependencies": [],
+          "commits_analyzed": 0,
+          "readme_summary": "# student_buddy\n\nA new Flutter project.\n\n## Getting Started\n\nThis project is a starting point for a Flutter application.\n\nA few resources to get you s...",
+          "ai_description": "Analysis unavailable due to processing error."
+        },
+        {
+          "name": "QuickBuy",
+          "stars": 0,
+          "forks": 0,
+          "languages": {
+            "JavaScript": 123167,
+            "CSS": 44079,
+            "HTML": 1186
+          },
+          "dependencies": [],
+          "commits_analyzed": 0,
+          "readme_summary": "# QuickBuy 🛒 – Full Stack E-Commerce Application\n\nA complete, professional full-stack e-commerce web application built with React, Node.js, Express, ...",
+          "ai_description": "Analysis unavailable due to processing error."
+        },
+        {
+          "name": "DSA",
+          "stars": 0,
+          "forks": 0,
+          "languages": {
+            "Java": 71054
+          },
+          "dependencies": [],
+          "commits_analyzed": 1,
+          "readme_summary": "No README found",
+          "ai_description": "Analysis unavailable due to processing error."
+        }
+      ],
+      "resume_extracted_metrics": {
+        "keywords": {
+          "languages": [
+            "javascript",
+            "typescript",
+            "python",
+            "java"
+          ],
+          "frameworks": [
+            "react",
+            "next.js",
+            "express",
+            "fastapi"
+          ],
+          "databases": [
+            "postgresql",
+            "mongodb",
+            "mysql",
+            "supabase"
+          ],
+          "tools": [
+            "git",
+            "docker",
+            "aws",
+            "github actions",
+            "rest api",
+            "ci/cd"
+          ]
+        },
+        "experience_years": 6,
+        "extracted_projects": []
+      },
+      "leetcode_stats": {
+        "solvedTotal": 152,
+        "solvedEasy": 94,
+        "solvedMedium": 49,
+        "solvedHard": 9,
+        "ranking": 817600,
+        "acceptanceRate": 45.4
+      },
+      "portfolio_stats": null,
+      "score_breakdown": {
+        "verified_keywords": [
+          "javascript",
+          "typescript",
+          "python",
+          "java",
+          "react"
+        ],
+        "unverified_keywords": [
+          "next.js",
+          "express",
+          "fastapi",
+          "postgresql",
+          "mongodb",
+          "mysql",
+          "supabase",
+          "git",
+          "docker",
+          "aws",
+          "github actions",
+          "rest api",
+          "ci/cd"
+        ]
+      }
+    },
+    "created_at": "2026-06-13T09:25:31.910Z"
+  },
+  "1f5b902a-6194-4bd4-b856-2ba02e69b632": {
+    "id": "1f5b902a-6194-4bd4-b856-2ba02e69b632",
+    "scan_id": "43c969dc-4ed8-4867-888a-32b8229ebead",
+    "raw_evidence": {
+      "github_profile": {
+        "username": "DEVARAJ-07",
+        "name": "DEVARAJ S",
+        "avatar_url": "https://avatars.githubusercontent.com/u/211518264?v=4",
+        "public_repos": 12,
+        "followers": 2,
+        "created_at": "2025-05-13T13:13:33Z"
+      },
+      "repositories_analyzed": [
+        {
+          "name": "StudentBuddy",
+          "stars": 0,
+          "forks": 0,
+          "languages": {
+            "Dart": 180671,
+            "Kotlin": 132
+          },
+          "dependencies": [],
+          "commits_analyzed": 0,
+          "readme_summary": "# student_buddy\n\nA new Flutter project.\n\n## Getting Started\n\nThis project is a starting point for a Flutter application.\n\nA few resources to get you s...",
+          "ai_description": "StudentBuddy is a Flutter-based mobile application"
+        }
+      ],
+      "resume_extracted_metrics": {
+        "keywords": {
+          "languages": [
+            "javascript",
+            "typescript",
+            "python",
+            "java"
+          ],
+          "frameworks": [
+            "react",
+            "next.js",
+            "express",
+            "fastapi"
+          ],
+          "databases": [
+            "postgresql",
+            "mongodb",
+            "mysql",
+            "supabase"
+          ],
+          "tools": [
+            "git",
+            "docker",
+            "aws",
+            "github actions",
+            "rest api",
+            "ci/cd"
+          ]
+        },
+        "experience_years": 6,
+        "extracted_projects": []
+      },
+      "leetcode_stats": null,
+      "portfolio_stats": null,
+      "score_breakdown": {
+        "verified_keywords": [],
+        "unverified_keywords": [
+          "javascript",
+          "typescript",
+          "python",
+          "java",
+          "react",
+          "next.js",
+          "express",
+          "fastapi",
+          "postgresql",
+          "mongodb",
+          "mysql",
+          "supabase",
+          "git",
+          "docker",
+          "aws",
+          "github actions",
+          "rest api",
+          "ci/cd"
+        ]
+      }
+    },
+    "created_at": "2026-06-13T10:51:45.550Z"
+  },
+  "3ccc26b3-db40-49ab-8038-402d3723e7e8": {
+    "id": "3ccc26b3-db40-49ab-8038-402d3723e7e8",
+    "scan_id": "233a50e1-cea9-47ab-ae5f-be0a9bc2e42a",
+    "raw_evidence": {
+      "github_profile": {
+        "username": "DEVARAJ-07",
+        "name": "DEVARAJ S",
+        "avatar_url": "https://avatars.githubusercontent.com/u/211518264?v=4",
+        "public_repos": 12,
+        "followers": 2,
+        "created_at": "2025-05-13T13:13:33Z"
+      },
+      "repositories_analyzed": [
+        {
+          "name": "StudentBuddy",
+          "stars": 0,
+          "forks": 0,
+          "languages": {
+            "Dart": 180671,
+            "Kotlin": 132
+          },
+          "dependencies": [],
+          "commits_analyzed": 0,
+          "readme_summary": "# student_buddy\n\nA new Flutter project.\n\n## Getting Started\n\nThis project is a starting point for a Flutter application.\n\nA few resources to get you s...",
+          "ai_description": "Analysis unavailable due to processing error."
+        }
+      ],
+      "resume_extracted_metrics": {
+        "keywords": {
+          "languages": [
+            "javascript",
+            "typescript",
+            "python",
+            "java"
+          ],
+          "frameworks": [
+            "react",
+            "next.js",
+            "express",
+            "fastapi"
+          ],
+          "databases": [
+            "postgresql",
+            "mongodb",
+            "mysql",
+            "supabase"
+          ],
+          "tools": [
+            "git",
+            "docker",
+            "aws",
+            "github actions",
+            "rest api",
+            "ci/cd"
+          ]
+        },
+        "experience_years": 6,
+        "extracted_projects": []
+      },
+      "leetcode_stats": {
+        "solvedTotal": 0,
+        "solvedEasy": 0,
+        "solvedMedium": 0,
+        "solvedHard": 0,
+        "ranking": 0,
+        "acceptanceRate": 0,
+        "topicStats": []
+      },
+      "portfolio_stats": null,
+      "score_breakdown": {
+        "verified_keywords": [],
+        "unverified_keywords": [
+          "javascript",
+          "typescript",
+          "python",
+          "java",
+          "react",
+          "next.js",
+          "express",
+          "fastapi",
+          "postgresql",
+          "mongodb",
+          "mysql",
+          "supabase",
+          "git",
+          "docker",
+          "aws",
+          "github actions",
+          "rest api",
+          "ci/cd"
+        ]
+      }
+    },
+    "created_at": "2026-06-13T10:52:38.013Z"
+  }
+}

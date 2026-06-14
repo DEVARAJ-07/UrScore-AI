@@ -8,7 +8,9 @@ interface ScanState {
   report: any | null;
   evidence: any | null;
   wsConnected: boolean;
+  viewingReport: boolean;
   
+  setViewReport: (val: boolean) => void;
   startScanSubscription: (scanId: string) => void;
   stopScanSubscription: () => void;
   setReportData: (report: any, evidence: any) => void;
@@ -26,6 +28,9 @@ export const useScanStore = create<ScanState>((set, get) => ({
   report: null,
   evidence: null,
   wsConnected: false,
+  viewingReport: false,
+
+  setViewReport: (val: boolean) => set({ viewingReport: val }),
 
   appendLog: (log: string) => {
     set((state) => ({ logs: [...state.logs, log] }));
@@ -44,7 +49,8 @@ export const useScanStore = create<ScanState>((set, get) => ({
       logs: [`[CLIENT] Connecting to intelligence websocket...`],
       report: null,
       evidence: null,
-      wsConnected: false
+      wsConnected: false,
+      viewingReport: false
     });
 
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
@@ -135,7 +141,8 @@ export const useScanStore = create<ScanState>((set, get) => ({
       status: 'idle',
       report: null,
       evidence: null,
-      wsConnected: false
+      wsConnected: false,
+      viewingReport: false
     });
   }
 }));
@@ -148,7 +155,8 @@ async function fetchReportAndEvidence(scanId: string, set: any) {
     
     if (reportRes.ok && evidenceRes.ok) {
       const report = await reportRes.json();
-      const evidence = await evidenceRes.json();
+      const evidenceData = await evidenceRes.json();
+      const evidence = evidenceData.raw_evidence || evidenceData;
       set({ report, evidence, status: 'completed', progress: 100 });
     }
   } catch (err) {

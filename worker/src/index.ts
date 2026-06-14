@@ -4,6 +4,8 @@ import { extraScraper } from './portfolio';
 import { computeUrScore } from './scoring';
 import * as fs from 'fs';
 import * as path from 'path';
+import { generatePdfReport } from './pdf_generator';
+import { uploadReportToS3, sendReportEmail } from './aws';
 
 // Helper to log updates back to backend process via IPC or console
 const logs: string[] = [];
@@ -82,7 +84,8 @@ async function run() {
         languages: r.languages,
         dependencies: r.dependencies,
         commits_analyzed: r.commits.length,
-        readme_summary: r.readme ? `${r.readme.substring(0, 150)}...` : 'No README found'
+        readme_summary: r.readme ? `${r.readme.substring(0, 150)}...` : 'No README found',
+        ai_description: r.ai_description || 'No analysis available'
       })),
       resume_extracted_metrics: {
         keywords: resumeAnalysis.keywords,
@@ -97,11 +100,36 @@ async function run() {
       }
     };
 
-    // 6. Simulate S3 PDF report link generation
-    const mockPdfUrl = `http://localhost:5001/public/reports/${scanId}_competency_report.pdf`;
+    // 6. Generate and Upload actual PDF report to AWS S3
+    sendLog(`Generating print-ready PDF Competency Report...`, 92);
+    const pdfPath = await generatePdfReport(report, evidence, scanId);
+    
+    sendLog(`Uploading report to AWS S3...`, 95);
+    const filename = `${scanId}_competency_report.pdf`;
+    let pdfUrl = '';
+    try {
+      if (process.env.AWS_ACCESS_KEY_ID) {
+        pdfUrl = await uploadReportToS3(pdfPath, filename);
+        sendLog(`Report uploaded successfully to S3: ${pdfUrl}`, 97);
+        
+        // 7. Send SES Email
+        const email = process.env.AWS_SES_SENDER || 'devakrs07@gmail.com';
+        if (email) {
+          sendLog(`Dispatching report via AWS SES to ${email}...`, 98);
+          await sendReportEmail(email, pdfUrl, githubProfile.name || githubProfile.username);
+        }
+      } else {
+        pdfUrl = `http://localhost:5001/public/reports/${filename}`;
+        sendLog(`[AWS WARNING] Missing credentials. Simulated PDF upload: ${pdfUrl}`, 97);
+      }
+    } catch (e: any) {
+      sendLog(`[AWS ERROR] S3/SES Failed: ${e.message}`, 97);
+      pdfUrl = `http://localhost:5001/public/reports/${filename}`;
+    }
+
     const finalizedReport = {
       ...report,
-      pdf_report_url: mockPdfUrl,
+      pdf_report_url: pdfUrl,
       summary_metrics: {
         total_repos: githubProfile.repos.length,
         verified_skills_count: report.verified_keywords.length,
@@ -110,8 +138,6 @@ async function run() {
         experience_years: resumeAnalysis.experienceYears
       }
     };
-
-    sendLog(`Generating print-ready PDF Competency Report...`, 95);
 
     // Notify backend process of completion
     if (process.send) {

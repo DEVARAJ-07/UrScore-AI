@@ -11,7 +11,7 @@ import {
   Terminal, ShieldCheck, FileText, ArrowLeft,
   TrendingUp, Award, Download, Loader2, Sparkles, Upload, 
   Briefcase, AlertCircle, RefreshCw, CheckCircle2,
-  FileCheck
+  FileCheck, Code, ChevronRight
 } from 'lucide-react';
 
 // Cast PDF download link for strict typescript compilers
@@ -40,7 +40,9 @@ export const Dashboard: React.FC = () => {
     report,
     evidence,
     startScanSubscription,
-    resetStore
+    resetStore,
+    viewingReport,
+    setViewReport
   } = useScanStore();
 
   // Inputs
@@ -301,9 +303,9 @@ Projects: API gateway, stateless microservices.`;
     return { label: 'Associate Level (L1)', color: 'text-amber-400 border-amber-500/35 bg-amber-500/10' };
   };
 
-  // Progress queries checkmarks logic (4 steps)
+  // Progress queries checkmarks logic (5 steps)
   const getQueryStatus = (taskIndex: number) => {
-    const boundaries = [25, 50, 75, 95];
+    const boundaries = [25, 30, 65, 75, 95];
     const targetBoundary = boundaries[taskIndex];
     
     if (progress >= targetBoundary) {
@@ -605,14 +607,20 @@ Projects: API gateway, stateless microservices.`;
                   <input
                     type="file"
                     id="file-ingest"
-                    accept="application/pdf,text/plain"
                     onChange={handleFileChange}
+                    accept=".pdf,.txt,application/pdf,text/plain"
                     className="hidden"
                   />
                   {isParsingFile ? (
-                    <div className="space-y-2 text-center">
-                      <Loader2 className="w-10 h-10 text-emerald-400 mx-auto animate-spin" />
-                      <div className="text-xs text-emerald-400 font-bold">Extracting PDF layout...</div>
+                    <div className="space-y-4 text-center pb-4">
+                      <div className="loading-star-container">
+                        <div className="loading-star">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="text-emerald-400">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                          </svg>
+                        </div>
+                      </div>
+                      <div className="text-xs text-emerald-400 font-bold uppercase tracking-widest animate-pulse">Extracting PDF layout...</div>
                     </div>
                   ) : (
                     <>
@@ -778,6 +786,7 @@ Projects: API gateway, stateless microservices.`;
                 {/* Checklist queries (as requested by user with ticks) */}
                 <div className="space-y-4 text-sm font-bold text-slate-300">
                   {[
+                    'Analyzing Resume',
                     'Analyzing GitHub Profile',
                     'Analyzing Repositories',
                     'Analyzing Codes',
@@ -795,7 +804,15 @@ Projects: API gateway, stateless microservices.`;
                           {isDone ? (
                             <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
                           ) : statusInfo.label === 'running' ? (
-                            <Loader2 className="w-5 h-5 text-emerald-400 animate-spin shrink-0" />
+                            <div className="w-5 h-5 shrink-0 flex items-center justify-center">
+                              <div className="loading-star-container" style={{ width: '24px', height: '24px', perspective: '300px' }}>
+                                <div className="loading-star" style={{ animationDuration: '2.5s' }}>
+                                  <svg viewBox="0 0 24 24" fill="currentColor" className="text-emerald-400">
+                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                                  </svg>
+                                </div>
+                              </div>
+                            </div>
                           ) : (
                             <div className="w-5 h-5 rounded-full border border-slate-800 shrink-0" />
                           )}
@@ -823,8 +840,146 @@ Projects: API gateway, stateless microservices.`;
         </div>
       )}
 
-      {/* 3. FINAL ASSESSMENT REPORT DISPLAY (COMPLETED PHASE) */}
-      {(status === 'completed' || status === 'failed') && report && evidence && (
+      {/* 3. INTERMEDIATE ANALYZE PAGE (COMPLETED BUT !viewingReport) */}
+      {status === 'completed' && !viewingReport && evidence && (
+        <div className="space-y-8 view-transition relative z-10 max-w-5xl mx-auto">
+          <div className="text-center space-y-4 mb-12">
+            <h2 className="text-3xl font-black text-slate-100" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
+              Codebase Analysis Complete
+            </h2>
+            <p className="text-slate-400 font-semibold text-sm max-w-2xl mx-auto">
+              Our AI engine has successfully parsed {evidence.repositories_analyzed.length} repositories from the candidate's profile. Below are the architectural summaries derived directly from their codebase files and dependencies.
+            </p>
+          </div>
+
+          <div className="space-y-6">
+            {evidence.repositories_analyzed.map((repo: any, idx: number) => (
+              <div key={idx} className="fancy-card p-6 shadow-xl relative overflow-hidden group">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 blur-3xl pointer-events-none group-hover:bg-emerald-500/10 transition-colors duration-500" />
+                <div className="flex items-start gap-4">
+                  <div className="p-3 bg-[#030509] rounded-2xl border border-emerald-500/10 shadow-md shrink-0">
+                    <Code className="w-6 h-6 text-emerald-400" />
+                  </div>
+                  <div className="space-y-2 flex-1">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-lg font-bold text-slate-200">{repo.name}</h3>
+                      <div className="flex items-center gap-3 text-xs font-mono">
+                        <span className="text-amber-400/80 bg-amber-400/10 px-2 py-0.5 rounded">★ {repo.stars}</span>
+                        <span className="text-slate-500">{Object.keys(repo.languages || {}).slice(0, 2).join(', ')}</span>
+                      </div>
+                    </div>
+                    <div className="text-sm leading-relaxed text-slate-400">
+                      {repo.ai_description}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Custom Visualization for LeetCode Stats if they exist */}
+          {report.leetcode_stats && report.leetcode_stats.solvedTotal > 0 && (
+            <div className="fancy-card p-8 mt-12 mb-12 shadow-2xl relative overflow-hidden group">
+              <div className="absolute top-0 left-0 w-64 h-64 bg-emerald-500/10 blur-3xl rounded-full pointer-events-none group-hover:bg-emerald-500/20 transition-all duration-700"></div>
+              <div className="absolute bottom-0 right-0 w-64 h-64 bg-teal-500/10 blur-3xl rounded-full pointer-events-none group-hover:bg-teal-500/20 transition-all duration-700"></div>
+              
+              <div className="relative z-10 flex flex-col md:flex-row items-center md:items-start gap-12">
+                
+                {/* Left side: Global Difficulty Stats */}
+                <div className="flex-1 space-y-6">
+                  <div className="flex items-center gap-4">
+                    <div className="p-4 bg-[#030509] rounded-2xl border border-emerald-500/10 shadow-lg">
+                      <LeetCodeIcon />
+                    </div>
+                    <div>
+                      <h3 className="text-2xl font-black text-slate-100" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
+                        LeetCode Profile
+                      </h3>
+                      <p className="text-emerald-400 font-bold text-sm">Top {Math.max(1, Math.round((report.leetcode_stats.ranking / 5000000) * 100))}% globally</p>
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-3 gap-4">
+                    <div className="bg-[#030509] border border-slate-800 rounded-2xl p-4 text-center shadow-inner relative overflow-hidden">
+                      <div className="absolute top-0 left-0 w-full h-1 bg-emerald-400"></div>
+                      <div className="text-emerald-400 font-black text-3xl mb-1">{report.leetcode_stats.solvedEasy}</div>
+                      <div className="text-[10px] uppercase tracking-widest text-slate-500 font-bold">Easy</div>
+                    </div>
+                    <div className="bg-[#030509] border border-slate-800 rounded-2xl p-4 text-center shadow-inner relative overflow-hidden">
+                      <div className="absolute top-0 left-0 w-full h-1 bg-amber-400"></div>
+                      <div className="text-amber-400 font-black text-3xl mb-1">{report.leetcode_stats.solvedMedium}</div>
+                      <div className="text-[10px] uppercase tracking-widest text-slate-500 font-bold">Medium</div>
+                    </div>
+                    <div className="bg-[#030509] border border-slate-800 rounded-2xl p-4 text-center shadow-inner relative overflow-hidden">
+                      <div className="absolute top-0 left-0 w-full h-1 bg-rose-500"></div>
+                      <div className="text-rose-500 font-black text-3xl mb-1">{report.leetcode_stats.solvedHard}</div>
+                      <div className="text-[10px] uppercase tracking-widest text-slate-500 font-bold">Hard</div>
+                    </div>
+                  </div>
+                  
+                  <div className="bg-emerald-950/20 border border-emerald-500/10 rounded-xl px-5 py-4 flex items-center justify-between">
+                    <div className="text-sm font-bold text-slate-400">Total Solved</div>
+                    <div className="text-xl font-black text-slate-100">{report.leetcode_stats.solvedTotal} <span className="text-slate-500 text-xs ml-1">Problems</span></div>
+                  </div>
+                </div>
+
+                {/* Right side: Topic Mastery (Trees, Graphs, Stack, etc.) */}
+                <div className="flex-[1.5] w-full">
+                  <h4 className="text-sm font-black text-slate-300 uppercase tracking-widest mb-6 flex items-center gap-2">
+                    <Sparkles className="w-4 h-4 text-emerald-400" />
+                    Topic Mastery
+                  </h4>
+                  
+                  {report.leetcode_stats.topicStats && report.leetcode_stats.topicStats.length > 0 ? (
+                    <div className="flex flex-wrap gap-3">
+                      {report.leetcode_stats.topicStats.map((topic: any, idx: number) => {
+                        // Calculate a subtle dynamic size/color based on problems solved
+                        const isHigh = topic.problemsSolved > 30;
+                        const isMed = topic.problemsSolved > 10;
+                        
+                        return (
+                          <div 
+                            key={idx} 
+                            className={`flex items-center gap-3 px-4 py-2.5 rounded-full border transition-all duration-300 hover:scale-105 ${
+                              isHigh 
+                                ? 'bg-emerald-950/40 border-emerald-500/30 text-emerald-300 shadow-[0_0_15px_rgba(16,185,129,0.1)]' 
+                                : isMed 
+                                  ? 'bg-slate-800/50 border-slate-700 text-slate-300' 
+                                  : 'bg-[#030509] border-slate-800 text-slate-400'
+                            }`}
+                          >
+                            <span className="text-sm font-bold">{topic.tagName}</span>
+                            <div className={`w-1 h-1 rounded-full ${isHigh ? 'bg-emerald-400' : 'bg-slate-600'}`}></div>
+                            <span className={`text-xs font-black ${isHigh ? 'text-white' : 'text-slate-500'}`}>{topic.problemsSolved}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <div className="text-sm text-slate-500 italic p-6 border border-dashed border-slate-800 rounded-2xl text-center">
+                      Detailed topic statistics are not publicly available for this user.
+                    </div>
+                  )}
+                </div>
+                
+              </div>
+            </div>
+          )}
+
+          <div className="flex justify-center pt-8 pb-20 border-t border-emerald-500/10">
+            <button
+              onClick={() => setViewReport(true)}
+              className="px-8 py-4 bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-500 hover:from-emerald-500 hover:via-teal-500 hover:to-emerald-400 text-white font-black rounded-2xl text-sm uppercase tracking-widest transition-all duration-300 shadow-[0_0_30px_rgba(16,185,129,0.15)] flex items-center justify-center gap-2 hover:scale-[1.02]"
+            >
+              Proceed to Final Report
+              <ChevronRight className="w-5 h-5" />
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* 4. FINAL ASSESSMENT REPORT DISPLAY (COMPLETED PHASE) */}
+      {status === 'completed' && viewingReport && report && evidence && (
         <div className="space-y-6 view-transition relative z-10">
           
           {/* Back Button (Standard navigation support) */}
@@ -909,19 +1064,19 @@ Projects: API gateway, stateless microservices.`;
                   <div className="grid grid-cols-2 gap-4 pt-2">
                     <div>
                       <span className="text-slate-500 block text-xs uppercase font-black">Candidate</span>
-                      <span className="font-bold text-slate-200 text-lg">{evidence.github_profile.name || evidence.github_profile.username}</span>
+                      <span className="font-bold text-slate-200 text-lg">{evidence?.github_profile?.name || evidence?.github_profile?.username || 'N/A'}</span>
                     </div>
                     <div>
                       <span className="text-slate-500 block text-xs uppercase font-black">Verified Exp</span>
-                      <span className="font-bold text-slate-200 text-lg">{report.summary_metrics.experience_years || 1} Years</span>
+                      <span className="font-bold text-slate-200 text-lg">{report?.summary_metrics?.experience_years || 1} Years</span>
                     </div>
                     <div>
                       <span className="text-slate-500 block text-xs uppercase font-black">GitHub Source</span>
-                      <span className="font-bold text-slate-200 text-lg">@{evidence.github_profile.username}</span>
+                      <span className="font-bold text-slate-200 text-lg">@{evidence?.github_profile?.username || 'N/A'}</span>
                     </div>
                     <div>
                       <span className="text-slate-500 block text-xs uppercase font-black">Total Repos</span>
-                      <span className="font-bold text-slate-200 text-lg">{report.summary_metrics.total_repos} audited</span>
+                      <span className="font-bold text-slate-200 text-lg">{report?.summary_metrics?.total_repos || 0} audited</span>
                     </div>
                   </div>
 
@@ -997,18 +1152,18 @@ Projects: API gateway, stateless microservices.`;
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-slate-900/30 font-mono text-[11px]">
-                        {evidence.score_breakdown.verified_keywords.map((skill: string, idx: number) => (
+                        {evidence?.score_breakdown?.verified_keywords?.map((skill: string, idx: number) => (
                           <tr key={idx} className="hover:bg-emerald-500/5">
                             <td className="py-2.5 px-2 text-slate-200 font-bold">{skill}</td>
                             <td className="py-2.5 px-2 text-right font-black text-emerald-400 uppercase">VERIFIED</td>
                           </tr>
-                        ))}
-                        {evidence.score_breakdown.unverified_keywords.map((skill: string, idx: number) => (
+                        )) || null}
+                        {evidence?.score_breakdown?.unverified_keywords?.map((skill: string, idx: number) => (
                           <tr key={idx} className="hover:bg-red-500/5">
                             <td className="py-2.5 px-2 text-slate-500">{skill}</td>
                             <td className="py-2.5 px-2 text-right font-black text-red-400/80 uppercase">UNVERIFIED</td>
                           </tr>
-                        ))}
+                        )) || null}
                       </tbody>
                     </table>
                   </div>
@@ -1016,6 +1171,36 @@ Projects: API gateway, stateless microservices.`;
               </div>
             </div>
 
+          </div>
+        </div>
+      )}
+
+      {/* 4. ERROR PHASE */}
+      {status === 'failed' && (
+        <div className="space-y-6 view-transition relative z-10">
+          <div className="flex justify-start">
+            <button
+              onClick={resetStore}
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#070b13] hover:bg-[#0c121e] border border-red-500/10 rounded-xl text-sm font-bold text-slate-400 transition-all duration-300 hover:border-red-500/35"
+            >
+              <ArrowLeft className="w-4 h-4 text-red-400" />
+              Back to Form
+            </button>
+          </div>
+          <div className="fancy-card p-8 shadow-2xl border-red-500/20 bg-red-950/10">
+            <h3 className="text-xl font-bold text-red-400 flex items-center gap-2 mb-4">
+              <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+              Scan Failed
+            </h3>
+            <p className="text-slate-300 mb-6">The verification pipeline encountered a critical error. Please review the logs below.</p>
+            <div className="bg-black/95 font-mono text-xs text-red-400/90 rounded-2xl p-5 h-64 overflow-y-auto border border-red-900 space-y-1">
+              {logs.map((log, index) => (
+                <div key={index} className="leading-relaxed">
+                  {log}
+                </div>
+              ))}
+              <div ref={terminalEndRef} />
+            </div>
           </div>
         </div>
       )}

@@ -72,7 +72,7 @@ router.post('/trigger', async (req: Request, res: Response) => {
         await axios.get(`https://api.github.com/users/${github_username}`, { headers, timeout: 3500 });
       }
     } catch (err: any) {
-      // If the error status is explicitly 404, return validation failure
+      // If the error status is 404, the account or repo does not exist
       if (err.response && err.response.status === 404) {
         const targetDesc = github_repo_name 
           ? `Repository "${github_username}/${github_repo_name}"` 
@@ -81,8 +81,8 @@ router.post('/trigger', async (req: Request, res: Response) => {
           error: `${targetDesc} does not exist. Please enter a valid GitHub account or repository link.`
         });
       }
-      // If rate-limited or timeout, log warning and let background worker handle mock fallback
-      console.warn(`[API WARNING] GitHub validation check bypassed due to network/rate-limit: ${err.message}`);
+      // If some other network error occurs (like 429 Too Many Requests), we still might want to block or warn.
+      console.warn(`[API WARNING] GitHub validation check failed: ${err.message}`);
     }
 
     // Insert scan with "pending" status

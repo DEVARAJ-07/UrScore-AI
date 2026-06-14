@@ -1,5 +1,10 @@
 import axios from 'axios';
 
+export interface LeetCodeTopicStat {
+  tagName: string;
+  problemsSolved: number;
+}
+
 export interface LeetCodeStats {
   solvedTotal: number;
   solvedEasy: number;
@@ -7,6 +12,7 @@ export interface LeetCodeStats {
   solvedHard: number;
   ranking: number;
   acceptanceRate: number;
+  topicStats: LeetCodeTopicStat[];
 }
 
 export interface PortfolioStats {
@@ -18,46 +24,84 @@ export interface PortfolioStats {
 
 export class ExtraScraper {
   /**
-   * Fetches LeetCode statistics.
+   * Fetches LeetCode statistics via official GraphQL endpoint
    */
   public async fetchLeetCode(username: string, logCallback: (msg: string) => void): Promise<LeetCodeStats | null> {
-    logCallback(`[LEETCODE] Fetching LeetCode profile statistics for: ${username}`);
+    logCallback(`[LEETCODE] Fetching LeetCode profile statistics and topics for: ${username}`);
     
+    const defaultZeroStats: LeetCodeStats = {
+      solvedTotal: 0,
+      solvedEasy: 0,
+      solvedMedium: 0,
+      solvedHard: 0,
+      ranking: 0,
+      acceptanceRate: 0,
+      topicStats: []
+    };
+
     try {
-      // Query FaisalShohag or Heroku public stats endpoints
-      const res = await axios.get(`https://leetcode-stats-api.herokuapp.com/${username}`, { timeout: 3000 });
-      if (res.data && res.data.status === 'success') {
-        logCallback(`[LEETCODE] Successfully retrieved public LeetCode statistics.`);
+      const query = `
+        query getUserProfile($username: String!) {
+          matchedUser(username: $username) {
+            profile { ranking }
+            submitStats {
+              acSubmissionNum { difficulty count }
+            }
+            tagProblemCounts {
+              advanced { tagName problemsSolved }
+              intermediate { tagName problemsSolved }
+              fundamental { tagName problemsSolved }
+            }
+          }
+        }
+      `;
+
+      const res = await axios.post('https://leetcode.com/graphql', {
+        query,
+        variables: { username }
+      }, { timeout: 6000 });
+
+      if (res.data && res.data.data && res.data.data.matchedUser) {
+        logCallback(`[LEETCODE] Successfully retrieved verified LeetCode statistics.`);
+        const user = res.data.data.matchedUser;
+        const submissions = user.submitStats?.acSubmissionNum || [];
+        
+        let solvedTotal = 0, solvedEasy = 0, solvedMedium = 0, solvedHard = 0;
+        
+        submissions.forEach((sub: any) => {
+          if (sub.difficulty === 'All') solvedTotal = sub.count;
+          if (sub.difficulty === 'Easy') solvedEasy = sub.count;
+          if (sub.difficulty === 'Medium') solvedMedium = sub.count;
+          if (sub.difficulty === 'Hard') solvedHard = sub.count;
+        });
+
+        const topics = user.tagProblemCounts || {};
+        const rawTopicStats = [
+          ...(topics.advanced || []),
+          ...(topics.intermediate || []),
+          ...(topics.fundamental || [])
+        ];
+
+        // Sort topics by most problems solved
+        rawTopicStats.sort((a, b) => b.problemsSolved - a.problemsSolved);
+
         return {
-          solvedTotal: res.data.totalSolved || 0,
-          solvedEasy: res.data.easySolved || 0,
-          solvedMedium: res.data.mediumSolved || 0,
-          solvedHard: res.data.hardSolved || 0,
-          ranking: res.data.ranking || 0,
-          acceptanceRate: res.data.acceptanceRate || 0
+          solvedTotal,
+          solvedEasy,
+          solvedMedium,
+          solvedHard,
+          ranking: user.profile?.ranking || 0,
+          acceptanceRate: 0, // Acceptance rate would need an extra query, but total/easy/med/hard is sufficient
+          topicStats: rawTopicStats.slice(0, 15) // Top 15 topics
         };
+      } else {
+        logCallback(`[LEETCODE ERROR] User not found or invalid response. Returning zeros.`);
+        return defaultZeroStats;
       }
     } catch (err: any) {
-      logCallback(`[LEETCODE] API request timed out or returned error. Generating simulation data.`);
+      logCallback(`[LEETCODE ERROR] API request failed (${err.message}). Returning zeros.`);
+      return defaultZeroStats;
     }
-
-    // High quality simulation fallback so the dashboard looks loaded and real
-    // Seed using sum of characters in username to keep it consistent
-    const seed = username.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-    const solvedEasy = (seed % 120) + 30;
-    const solvedMedium = (seed % 90) + 15;
-    const solvedHard = (seed % 30) + 5;
-    const solvedTotal = solvedEasy + solvedMedium + solvedHard;
-    const ranking = 1000000 - (solvedTotal * 1200);
-
-    return {
-      solvedTotal,
-      solvedEasy,
-      solvedMedium,
-      solvedHard,
-      ranking: Math.max(12000, ranking),
-      acceptanceRate: 45.4
-    };
   }
 
   /**

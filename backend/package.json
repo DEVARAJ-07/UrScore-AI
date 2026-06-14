@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/server.js",
-    "dev": "ts-node-dev --respawn --transpile-only src/server.ts"
+    "dev": "ts-node-dev --ignore-watch ../worker --ignore-watch scans_db.json --ignore-watch reports_db.json --ignore-watch evidence_db.json --respawn --transpile-only src/server.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1068.0",

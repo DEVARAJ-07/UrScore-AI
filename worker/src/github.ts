@@ -1,5 +1,6 @@
 import axios from 'axios';
 import * as path from 'path';
+import { analyzeRepoCodebase } from './ai_analyzer';
 
 export interface GithubRepo {
   name: string;
@@ -20,6 +21,7 @@ export interface GithubRepo {
   test_files: number;
   extension_counts: Record<string, number>;
   file_paths: string[];
+  ai_description?: string;
 }
 
 export interface GithubProfile {
@@ -50,8 +52,7 @@ export class GithubCrawler {
       headers['Authorization'] = `token ${this.token}`;
       logCallback(`[GITHUB] Using OAuth token authentication for rate limits.`, 10);
     } else {
-      logCallback(`[GITHUB] No OAuth token provided. Falling back to simulated crawl/mock environment to avoid API rate limits.`, 10);
-      return this.generateSimulatedProfile(username, repoName, logCallback);
+      logCallback(`[GITHUB] No OAuth token provided. Attempting connection to public GitHub API...`, 10);
     }
 
     try {
@@ -194,6 +195,8 @@ export class GithubCrawler {
           logCallback(`[GITHUB WARNING] Git Trees API skipped for ${r.name}: ${e.message}`, Math.min(65, Math.round(currentProgress)));
         }
 
+        const ai_description = await analyzeRepoCodebase(r.name, r.description, languages, dependencies, filePaths);
+
         repos.push({
           name: r.name,
           description: r.description,
@@ -209,7 +212,8 @@ export class GithubCrawler {
           total_files: totalFilesCount,
           test_files: testFilesCount,
           extension_counts: extensionCounts,
-          file_paths: filePaths
+          file_paths: filePaths,
+          ai_description
         });
       }
 
@@ -224,14 +228,14 @@ export class GithubCrawler {
       };
     } catch (err: any) {
       logCallback(`[GITHUB ERROR] Failed to fetch data: ${err.message}. Falling back to simulation.`, 20);
-      return this.generateSimulatedProfile(username, repoName, logCallback);
+      return await this.generateSimulatedProfile(username, repoName, logCallback);
     }
   }
 
   /**
    * Generates highly detailed and realistic developer metrics.
    */
-  private generateSimulatedProfile(username: string, repoName: string | null, logCallback: (msg: string, progress: number) => void): GithubProfile {
+  private async generateSimulatedProfile(username: string, repoName: string | null, logCallback: (msg: string, progress: number) => void): Promise<GithubProfile> {
     logCallback(`[SIMULATION] Booting GitHub analysis worker mock pipelines...`, 20);
 
     let repos: GithubRepo[] = [];
@@ -267,7 +271,8 @@ export class GithubCrawler {
           total_files: 45,
           test_files: 4,
           extension_counts: { '.ts': 28, '.tsx': 12, '.json': 3, '.md': 2 },
-          file_paths: ['package.json', 'tsconfig.json', 'src/server.ts', 'src/routes.ts', 'src/controllers/auth.ts', 'tests/auth.test.ts']
+          file_paths: ['package.json', 'tsconfig.json', 'src/server.ts', 'src/routes.ts', 'src/controllers/auth.ts', 'tests/auth.test.ts'],
+          ai_description: await analyzeRepoCodebase(repoName, null, { 'TypeScript': 6200 }, ['express', 'typescript'], [])
         }
       ];
     } else {
@@ -325,7 +330,8 @@ This project implements the core ordering and shopping API.
           total_files: 112,
           test_files: 12,
           extension_counts: { '.ts': 75, '.js': 20, '.json': 8, '.md': 4, '.yml': 5 },
-          file_paths: ['package.json', 'tsconfig.json', 'src/index.ts', 'src/services/db.ts', 'tests/db.test.ts']
+          file_paths: ['package.json', 'tsconfig.json', 'src/index.ts', 'src/services/db.ts', 'tests/db.test.ts'],
+          ai_description: await analyzeRepoCodebase('e-commerce-microservices', null, {}, [], [])
         },
         {
           name: 'react-dashboard-tailwind',
@@ -349,7 +355,8 @@ Premium admin dashboard using Zustand global store.
           total_files: 48,
           test_files: 2,
           extension_counts: { '.tsx': 25, '.ts': 10, '.css': 8, '.html': 2, '.json': 3 },
-          file_paths: ['package.json', 'src/main.tsx', 'src/App.tsx', 'src/components/Chart.tsx', 'src/components/Chart.test.tsx']
+          file_paths: ['package.json', 'src/main.tsx', 'src/App.tsx', 'src/components/Chart.tsx', 'src/components/Chart.test.tsx'],
+          ai_description: await analyzeRepoCodebase('react-dashboard-tailwind', null, {}, [], [])
         },
         {
           name: 'python-data-crawler',
@@ -372,7 +379,8 @@ Setup \`boto3\` AWS credentials in environment variables.`,
           total_files: 18,
           test_files: 3,
           extension_counts: { '.py': 12, '.txt': 2, '.csv': 2, '.md': 2 },
-          file_paths: ['requirements.txt', 'crawler.py', 'parser.py', 'tests/test_crawler.py']
+          file_paths: ['requirements.txt', 'crawler.py', 'parser.py', 'tests/test_crawler.py'],
+          ai_description: await analyzeRepoCodebase('python-data-crawler', null, {}, [], [])
         },
         {
           name: 'ci-cd-docker-template',
@@ -392,7 +400,8 @@ Workflows for running node tasks on push and pull request.`,
           total_files: 7,
           test_files: 0,
           extension_counts: { '.yml': 4, '.yaml': 2, '.md': 1 },
-          file_paths: ['.github/workflows/ci.yml', '.github/workflows/cd.yml', 'Dockerfile', 'README.md']
+          file_paths: ['.github/workflows/ci.yml', '.github/workflows/cd.yml', 'Dockerfile', 'README.md'],
+          ai_description: await analyzeRepoCodebase('ci-cd-docker-template', null, {}, [], [])
         }
       ];
     }

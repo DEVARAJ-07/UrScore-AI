@@ -8,8 +8,12 @@
     "start": "node dist/index.js"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1068.0",
+    "@aws-sdk/client-ses": "^3.1068.0",
+    "@google/genai": "^2.8.0",
     "axios": "^1.7.2",
-    "dotenv": "^16.4.5"
+    "dotenv": "^16.4.5",
+    "pdfkit": "^0.19.1"
   },
   "devDependencies": {
     "@types/node": "^20.14.2",

@@ -38,6 +38,7 @@ export async function startWorkerScan(
         TS_NODE_PROJECT: path.resolve(__dirname, '../../../worker/tsconfig.json'),
         TS_NODE_TRANSPILE_ONLY: 'true'
       },
+      cwd: path.resolve(__dirname, '../../../worker'),
       stdio: ['ignore', 'pipe', 'pipe', 'ipc']
     }
   );

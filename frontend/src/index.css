@@ -133,3 +133,30 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #252848;
 }
+
+/* 3D Rotating Star Animation */
+.loading-star-container {
+  perspective: 1000px;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+}
+
+.loading-star {
+  width: 100%;
+  height: 100%;
+  animation: star-spin-orbit 4s infinite cubic-bezier(0.45, 0.05, 0.55, 0.95);
+  transform-style: preserve-3d;
+  filter: drop-shadow(0 0 20px rgba(16, 185, 129, 0.8)) drop-shadow(0 0 40px rgba(124, 58, 237, 0.6));
+}
+
+@keyframes star-spin-orbit {
+  0% { transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(0.8); }
+  25% { transform: rotateX(180deg) rotateY(90deg) rotateZ(45deg) scale(1.2); }
+  50% { transform: rotateX(360deg) rotateY(180deg) rotateZ(180deg) scale(0.9); }
+  75% { transform: rotateX(540deg) rotateY(270deg) rotateZ(225deg) scale(1.1); }
+  100% { transform: rotateX(720deg) rotateY(360deg) rotateZ(360deg) scale(0.8); }
+}
