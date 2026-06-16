@@ -73,6 +73,7 @@ router.post('/github', async (req: Request, res: Response) => {
     startWorkerScan(
       newScan.id,
       githubUsername,
+      repoName || null,
       resumeText,
       matchingScan.leetcode_username,
       matchingScan.portfolio_url

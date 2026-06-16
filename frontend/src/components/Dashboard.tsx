@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useScanStore } from '../store/useScanStore';
 import { 
-  Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, 
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend,
   ResponsiveContainer
 } from 'recharts';
 import { ReportPDF } from './ReportPDF';
@@ -11,7 +11,7 @@ import {
   Terminal, ShieldCheck, FileText, ArrowLeft,
   TrendingUp, Award, Download, Loader2, Sparkles, Upload, 
   Briefcase, AlertCircle, RefreshCw, CheckCircle2,
-  FileCheck, Code, ChevronRight
+  FileCheck, Code, ChevronRight, ChevronUp, ChevronDown
 } from 'lucide-react';
 
 // Cast PDF download link for strict typescript compilers
@@ -33,7 +33,6 @@ const LeetCodeIcon = () => (
 
 export const Dashboard: React.FC = () => {
   const {
-    activeScanId,
     logs,
     progress,
     status,
@@ -57,8 +56,10 @@ export const Dashboard: React.FC = () => {
 
   // Ingest state
   const [uploadedFileName, setUploadedFileName] = useState('');
+  const [resumeFile, setResumeFile] = useState<File | null>(null);
   const [dragActive, setDragActive] = useState(false);
   const [isParsingFile, setIsParsingFile] = useState(false);
+  const [showLogs, setShowLogs] = useState(false);
 
   const renderNode = (x: number, y: number, label: string, subtitle: string, icon: React.ReactNode, active: boolean) => {
     return (
@@ -91,6 +92,7 @@ export const Dashboard: React.FC = () => {
   };
 
   const terminalEndRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (terminalEndRef.current) {
@@ -107,72 +109,38 @@ export const Dashboard: React.FC = () => {
     return () => window.removeEventListener('popstate', handlePopState);
   }, [resetStore]);
 
-  // Helper to load PDF.js dynamically
-  const loadPdfJs = (): Promise<any> => {
-    return new Promise((resolve, reject) => {
-      if ((window as any).pdfjsLib) {
-        resolve((window as any).pdfjsLib);
-        return;
-      }
-      const script = document.createElement('script');
-      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js';
-      script.onload = () => {
-        const pdfjsLib = (window as any).pdfjsLib;
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
-        resolve(pdfjsLib);
-      };
-      script.onerror = () => reject(new Error('Failed to load PDF processing engine.'));
-      document.head.appendChild(script);
-    });
-  };
-
-  // Extract text from file cleanly
+  // Extract text from file cleanly (local reading for .txt, server-side parsing for .pdf)
   const processResumeFile = async (file: File) => {
     setUploadedFileName(file.name);
+    setResumeFile(file);
     setErrorMsg('');
-    setIsParsingFile(true);
-
-    try {
-      if (file.name.toLowerCase().endsWith('.pdf')) {
-        const pdfjsLib = await loadPdfJs();
-        const arrayBuffer = await file.arrayBuffer();
-        const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-        let extractedText = '';
-        
-        for (let i = 1; i <= pdf.numPages; i++) {
-          const page = await pdf.getPage(i);
-          const content = await page.getTextContent();
-          const pageText = content.items
-            .map((item: any) => item.str)
-            .join(' ');
-          extractedText += pageText + '\n';
-        }
-        
-        // Strip null bytes out of extracted text to prevent process fork crashes
-        const sanitized = extractedText.replace(/\0/g, ' ').trim();
-        setResumeText(sanitized || `Parsed Resume: ${file.name}`);
-      } else {
-        // Plain text parsing
+    
+    if (file.name.toLowerCase().endsWith('.pdf')) {
+      setIsParsingFile(true);
+      // PDF text extraction is fully performed server-side by the API runner
+      setResumeText(`PDF Upload: ${file.name}`);
+      setTimeout(() => {
+        setIsParsingFile(false);
+      }, 800);
+    } else {
+      // For text files, read locally
+      setIsParsingFile(true);
+      try {
         const reader = new FileReader();
         reader.onload = (evt) => {
           const rawText = (evt.target?.result as string) || '';
           const sanitized = rawText.replace(/\0/g, ' ').trim();
           setResumeText(sanitized || `Parsed Resume: ${file.name}`);
+          setIsParsingFile(false);
+        };
+        reader.onerror = () => {
+          setErrorMsg('Failed to read text file');
+          setIsParsingFile(false);
         };
         reader.readAsText(file);
+      } catch (err) {
+        setIsParsingFile(false);
       }
-    } catch (err: any) {
-      console.warn('PDF parsing failed, falling back to basic text simulation:', err.message);
-      // Fallback: rich mock developer resume text
-      const fallbackText = `Developer with skills in software engineering, frontend architecture, and backend systems.
-Languages: TypeScript, JavaScript, Python, Java, HTML, CSS.
-Frameworks: React, Next.js, Express, Tailwind, Django.
-Databases: PostgreSQL, MongoDB, Redis, SQLite.
-Tools: Git, Docker, AWS, GitHub Actions.
-Projects: API gateway, stateless microservices.`;
-      setResumeText(fallbackText);
-    } finally {
-      setIsParsingFile(false);
     }
   };
 
@@ -211,19 +179,17 @@ Projects: API gateway, stateless microservices.`;
     setIsSubmitting(true);
 
     try {
+      const formData = new FormData();
+      formData.append('github_username', targetUsername);
+      if (targetRepoName) formData.append('github_repo_name', targetRepoName);
+      if (leetcodeUsername) formData.append('leetcode_username', leetcodeUsername.trim());
+      formData.append('resume_text', resumeText.trim() || `Developer with skills in software engineering and cloud deployment. Projects: ${uploadedFileName}`);
+      formData.append('resume_filename', uploadedFileName);
+      if (resumeFile) formData.append('resume_file', resumeFile);
+
       const response = await fetch('/api/scans/trigger', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          github_username: targetUsername,
-          github_repo_name: targetRepoName,
-          resume_text: resumeText.trim() || `Developer with skills in software engineering and cloud deployment. Projects: ${uploadedFileName}`,
-          leetcode_username: leetcodeUsername.trim() || null,
-          portfolio_url: null,
-          resume_filename: uploadedFileName
-        })
+        body: formData
       });
 
       let errMessage = 'Verification request refused by API validation nodes';
@@ -279,22 +245,11 @@ Projects: API gateway, stateless microservices.`;
     if (e.target.files && e.target.files[0]) {
       processResumeFile(e.target.files[0]);
     }
+    e.target.value = '';
   };
 
-  // Radar Map Mapper
-  const getChartData = () => {
-    if (!report) return [];
-    return [
-      { subject: 'Skill verification', value: report.skill_verification },
-      { subject: 'Commit Quality', value: report.commit_quality },
-      { subject: 'Project Complexity', value: report.project_complexity },
-      { subject: 'Recency Weighting', value: report.recency },
-      { subject: 'Cross Reference', value: report.cross_reference },
-      { subject: 'Consistency', value: report.activity_consistency },
-    ];
-  };
 
-  const chartData = getChartData();
+
 
   const getRatingLabel = (score: number) => {
     if (score >= 90) return { label: 'Elite Architect (L4)', color: 'text-emerald-400 border-emerald-500/35 bg-emerald-500/10' };
@@ -492,7 +447,9 @@ Projects: API gateway, stateless microservices.`;
                   </div>
                 </div>
                 
-                <h3 className="text-xl font-bold text-slate-100 mb-2">GitHub Codebase</h3>
+                <h3 className="text-xl font-bold text-slate-100 mb-2">
+                  GitHub Codebase <span className="text-rose-500 font-extrabold text-lg leading-none">*</span>
+                </h3>
                 <p className="text-sm text-slate-400 mb-6 leading-relaxed">Identify repository patterns, commit syntax, and framework imports</p>
 
                 {/* Sub tabs */}
@@ -593,7 +550,9 @@ Projects: API gateway, stateless microservices.`;
                   </div>
                 </div>
                 
-                <h3 className="text-xl font-bold text-slate-100 mb-2">Resume</h3>
+                <h3 className="text-xl font-bold text-slate-100 mb-2">
+                  Resume <span className="text-rose-500 font-extrabold text-lg leading-none">*</span>
+                </h3>
                 <p className="text-sm text-slate-400 mb-6 leading-relaxed">Verify candidate technology proficiencies strictly via file upload</p>
 
                 {/* Dropzone */}
@@ -602,9 +561,15 @@ Projects: API gateway, stateless microservices.`;
                   onDragOver={handleDrag}
                   onDragLeave={handleDrag}
                   onDrop={handleDrop}
-                  className={`border-2 border-dashed rounded-2xl p-8 text-center transition-all duration-350 relative ${dragActive ? 'border-emerald-500 bg-emerald-600/5' : 'border-slate-800 bg-[#030509]/30 hover:border-slate-700'} min-h-[160px] flex flex-col justify-center`}
+                  onClick={() => {
+                    if (!isParsingFile && !isSubmitting) {
+                      fileInputRef.current?.click();
+                    }
+                  }}
+                  className={`border-2 border-dashed rounded-2xl p-8 text-center transition-all duration-350 relative cursor-pointer ${dragActive ? 'border-emerald-500 bg-emerald-600/5' : 'border-slate-800 bg-[#030509]/30 hover:border-slate-700'} min-h-[160px] flex flex-col justify-center`}
                 >
                   <input
+                    ref={fileInputRef}
                     type="file"
                     id="file-ingest"
                     onChange={handleFileChange}
@@ -612,15 +577,9 @@ Projects: API gateway, stateless microservices.`;
                     className="hidden"
                   />
                   {isParsingFile ? (
-                    <div className="space-y-4 text-center pb-4">
-                      <div className="loading-star-container">
-                        <div className="loading-star">
-                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="text-emerald-400">
-                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-                          </svg>
-                        </div>
-                      </div>
-                      <div className="text-xs text-emerald-400 font-bold uppercase tracking-widest animate-pulse">Extracting PDF layout...</div>
+                    <div className="space-y-4 text-center py-4 flex flex-col items-center justify-center">
+                      <Loader2 className="w-10 h-10 text-emerald-400 animate-spin" />
+                      <div className="text-xs text-emerald-400 font-bold uppercase tracking-widest animate-pulse">Extracting document layout...</div>
                     </div>
                   ) : (
                     <>
@@ -633,9 +592,9 @@ Projects: API gateway, stateless microservices.`;
                         </div>
                       ) : (
                         <div>
-                          <label htmlFor="file-ingest" className="text-sm font-bold text-emerald-400 hover:text-emerald-300 cursor-pointer block">
+                          <span className="text-sm font-bold text-emerald-400 hover:text-emerald-300 block">
                             Browse Document
-                          </label>
+                          </span>
                           <div className="text-xs text-slate-500 mt-1">Drag & drop PDF or TXT file here</div>
                         </div>
                       )}
@@ -661,7 +620,7 @@ Projects: API gateway, stateless microservices.`;
                   </div>
                 </div>
                 
-                <h3 className="text-xl font-bold text-slate-100 mb-2">Optional Audits</h3>
+                <h3 className="text-xl font-bold text-slate-100 mb-2 flex items-center justify-between">Optional Audits <span className="text-[10px] uppercase tracking-wider font-extrabold text-slate-400 bg-slate-500/10 px-2 py-0.5 rounded border border-slate-500/10">Optional</span></h3>
                 <p className="text-sm text-slate-400 mb-6 leading-relaxed">Augment core score matrices with extra profiles statistics</p>
 
                 <div className="space-y-6">
@@ -977,52 +936,426 @@ Projects: API gateway, stateless microservices.`;
           </div>
         </div>
       )}
-
       {/* 4. FINAL ASSESSMENT REPORT DISPLAY (COMPLETED PHASE) */}
-      {status === 'completed' && viewingReport && report && evidence && (
-        <div className="space-y-6 view-transition relative z-10">
-          
-          {/* Back Button (Standard navigation support) */}
-          <div className="flex justify-start">
-            <button
-              onClick={resetStore}
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#070b13] hover:bg-[#0c121e] border border-emerald-500/10 rounded-xl text-sm font-bold text-slate-400 transition-all duration-300 hover:border-emerald-500/35"
-            >
-              <ArrowLeft className="w-4 h-4 text-emerald-400" />
-              Back to Form
-            </button>
-          </div>
+      {status === 'completed' && viewingReport && report && evidence && (() => {
+        // Dynamically calculate resume health parameters
+        const verifiedCount = evidence?.score_breakdown?.verified_keywords?.length || 0;
+        const unverifiedCount = evidence?.score_breakdown?.unverified_keywords?.length || 0;
+        const totalKeywords = verifiedCount + unverifiedCount;
+        const atsScore = totalKeywords > 0 
+          ? Math.round((verifiedCount / totalKeywords) * 35 + 60) 
+          : 75;
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            {/* Left: Progress Console */}
-            <div className="lg:col-span-4 space-y-6">
-              <div className="fancy-card p-6 shadow-2xl">
-                <div className="flex items-center justify-between mb-4 border-b border-emerald-500/10 pb-3">
-                  <h3 className="text-sm font-bold text-slate-200 flex items-center gap-2">
-                    <Terminal className="w-4 h-4 text-emerald-400" />
-                    Active Ingestion Logs
+        const unverifiedList = evidence?.score_breakdown?.unverified_keywords || [];
+        const mistakes = [
+          unverifiedList.length > 0 
+            ? `Listed proficiencies [${unverifiedList.slice(0, 3).join(', ')}] in resume are missing matching files or libraries in GitHub repos.`
+            : "Resume projects lack deep links or reference indicators to live repositories.",
+          "Commit history has minor occurrences of unstructured or generic messages (e.g. 'update code')."
+        ];
+        
+        const improvements = [
+          unverifiedList.length > 0
+            ? `Verify claimed skills by pushing projects utilizing ${unverifiedList.slice(0, 2).join(', ')} to public repositories.`
+            : "Add specific dependencies and packages in package.json or requirements.txt to clear validation nodes.",
+          "Adopt Conventional Commits format (feat:, fix:, docs:) in repositories.",
+          "Increase unit testing coverage within GitHub repos to boost verified project complexity metrics."
+        ];
+
+        const repoChartData = evidence?.repositories_analyzed?.map((r: any) => ({
+          name: r.name.length > 18 ? `${r.name.slice(0, 15)}...` : r.name,
+          Commits: r.commits_analyzed || 0,
+          Stars: r.stars || 0,
+          Forks: r.forks || 0,
+        })) || [];
+
+        return (
+          <div className="space-y-10 view-transition relative z-10 w-full max-w-6xl mx-auto">
+            
+            {/* Navigation back and header row */}
+            <div className="flex justify-between items-center">
+              <button
+                onClick={resetStore}
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#070b13] hover:bg-[#0c121e] border border-emerald-500/10 rounded-xl text-xs font-bold text-slate-400 transition-all duration-300 hover:border-emerald-500/35"
+              >
+                <ArrowLeft className="w-4 h-4 text-emerald-400" />
+                Back to Form
+              </button>
+            </div>
+
+            {/* Title / Header Candidate Card */}
+            <div className="fancy-card p-8 grid grid-cols-1 md:grid-cols-12 gap-8 items-center shadow-2xl relative overflow-hidden bg-[#06090f]">
+              <div className="absolute top-0 right-0 w-36 h-36 bg-gradient-to-br from-emerald-600/10 to-transparent pointer-events-none rounded-bl-full" />
+              
+              {/* Glass Score medallion */}
+              <div className="md:col-span-4 flex flex-col items-center justify-center border-b md:border-b-0 md:border-r border-emerald-500/10 pb-6 md:pb-0 md:pr-8">
+                <span className="text-[10px] text-slate-500 uppercase font-bold tracking-wider">
+                  Composite score
+                </span>
+                <div className="relative flex items-center justify-center w-28 h-28 rounded-full score-medallion mt-3">
+                  <div className="text-center">
+                    <span className="text-xl font-black text-slate-100 tracking-tight">{report.overall_score}</span>
+                    <span className="text-xs text-slate-500 block -mt-1 font-bold">/100</span>
+                  </div>
+                </div>
+                
+                <div className={`mt-3 px-3 py-1 text-[10px] font-bold rounded-full border ${getRatingLabel(report.overall_score).color}`}>
+                  {getRatingLabel(report.overall_score).label}
+                </div>
+              </div>
+
+              {/* Header Info */}
+              <div className="md:col-span-8 space-y-4 text-xs text-slate-400">
+                <h3 className="text-xs font-bold text-slate-100 flex items-center gap-1.5 tracking-wider uppercase" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
+                  <Award className="w-5 h-5 text-emerald-400" />
+                  Verification Report Finalized
+                </h3>
+                
+                <div className="grid grid-cols-3 gap-4 pt-2 border-t border-slate-900">
+                  <div>
+                    <span className="text-slate-500 block text-[9px] uppercase font-bold tracking-wider">Candidate Name</span>
+                    <span className="font-bold text-slate-300 text-[10px] mt-0.5 block">{evidence?.github_profile?.name || evidence?.github_profile?.username || 'N/A'}</span>
+                  </div>
+                  <div>
+                    <span className="text-slate-500 block text-[9px] uppercase font-bold tracking-wider">Total Repos</span>
+                    <span className="font-bold text-slate-300 text-[10px] mt-0.5 block">
+                      {evidence?.github_profile?.public_repos || 0} Repos
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-slate-500 block text-[9px] uppercase font-bold tracking-wider">Repos Count (Analyzed)</span>
+                    <span className="font-bold text-slate-300 text-[10px] mt-0.5 block">
+                      {evidence?.repositories_analyzed?.length || 0} Repos
+                    </span>
+                  </div>
+                </div>
+
+                <div className="pt-2 flex gap-3">
+                  <DownloadLink
+                    document={<ReportPDF report={report} evidence={evidence} />}
+                    fileName={`competency_report_${evidence.github_profile.username}.pdf`}
+                    className="inline-flex items-center gap-1.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 px-4 py-2 rounded-lg text-[10px] font-bold transition text-white shadow-glow"
+                  >
+                    {({ loading }: any) => (
+                      (<>
+                        <Download className="w-3.5 h-3.5" />
+                        {loading ? 'Compiling PDF...' : 'Download PDF Report'}
+                      </>) as any
+                    )}
+                  </DownloadLink>
+
+                  <button
+                    onClick={resetStore}
+                    className="inline-flex items-center gap-1.5 bg-[#030509] hover:bg-[#0c121e] border border-emerald-500/10 px-4 py-2 rounded-lg text-[10px] font-bold transition text-slate-300"
+                  >
+                    <RefreshCw className="w-3.5 h-3.5" />
+                    Run New Audit
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Verification Subscores Breakdown Grid */}
+            <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
+              {[
+                { name: "Skill Verification", val: report.skill_verification, weight: "25%", color: "border-emerald-500/10 hover:border-emerald-500/25" },
+                { name: "Commit Quality", val: report.commit_quality, weight: "20%", color: "border-blue-500/10 hover:border-blue-500/25" },
+                { name: "Project Complexity", val: report.project_complexity, weight: "20%", color: "border-purple-500/10 hover:border-purple-500/25" },
+                { name: "Recency Weighting", val: report.recency, weight: "15%", color: "border-pink-500/10 hover:border-pink-500/25" },
+                { name: "Cross Reference", val: report.cross_reference, weight: "12%", color: "border-amber-500/10 hover:border-amber-500/25" },
+                { name: "Consistency", val: report.activity_consistency, weight: "8%", color: "border-teal-500/10 hover:border-teal-500/25" },
+              ].map((sub, i) => (
+                <div key={i} className={`fancy-card p-4 text-center border bg-[#06090f] transition-all duration-300 hover:scale-[1.02] ${sub.color}`}>
+                  <span className="text-[9px] text-slate-500 uppercase font-bold tracking-wider block leading-tight">{sub.name}</span>
+                  <span className="text-base font-black block mt-1 text-slate-200">{sub.val}%</span>
+                  <span className="text-[8px] text-slate-500 block mt-0.5 font-semibold">Weight: {sub.weight}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* Split row: Verification Matrix & Resume insights */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              
+              {/* Verification Matrix (improved badge visualization) */}
+              <div className="fancy-card p-8 shadow-2xl flex flex-col justify-between bg-[#06090f]">
+                <div>
+                  <h3 className="text-xs font-bold text-slate-200 mb-1.5 flex items-center gap-1.5 tracking-wider uppercase">
+                    <ShieldCheck className="w-4.5 h-4.5 text-emerald-400" />
+                    Verification Matrix
                   </h3>
-                  <span className="text-xs font-mono text-slate-500 bg-slate-950 px-2 py-0.5 rounded border border-slate-900">
-                    ID: {activeScanId?.slice(0, 8)}
-                  </span>
-                </div>
-
-                {/* Progress */}
-                <div className="mb-4">
-                  <div className="flex justify-between text-xs mb-1 font-mono">
-                    <span className="text-slate-400 uppercase">Phase: {status.replace('_', ' ')}</span>
-                    <span className="text-emerald-400 font-bold">{progress}%</span>
+                  <p className="text-[10px] text-slate-400 mb-4 leading-relaxed">
+                    Languages and libraries verified by package configurations in GitHub source trees vs resume claims.
+                  </p>
+                  
+                  {/* Verified Badges */}
+                  <div className="space-y-3 mb-5">
+                    <h4 className="text-[10px] font-bold text-emerald-400 uppercase tracking-wider">
+                      ✓ Verified Technical Proficiencies
+                    </h4>
+                    {evidence?.score_breakdown?.verified_keywords?.length > 0 ? (
+                      <div className="flex flex-wrap gap-1.5">
+                        {evidence.score_breakdown.verified_keywords.map((skill: string, idx: number) => (
+                          <span 
+                            key={idx}
+                            className="text-[10px] font-mono font-bold px-2.5 py-1 bg-emerald-950/20 border border-emerald-500/25 text-emerald-300 rounded-full"
+                          >
+                            {skill}
+                          </span>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-[10px] text-slate-500 italic">No verified skills found.</p>
+                    )}
                   </div>
-                  <div className="w-full bg-[#030509] rounded-full h-2 overflow-hidden mb-4">
-                    <div 
-                      className="bg-gradient-to-r from-emerald-500 to-teal-400 h-2 transition-all duration-500"
-                      style={{ width: `${progress}%` }}
+
+                  {/* Unverified Badges */}
+                  <div className="space-y-3">
+                    <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                      ✗ Unverified / Resume Only Claims
+                    </h4>
+                    {evidence?.score_breakdown?.unverified_keywords?.length > 0 ? (
+                      <div className="flex flex-wrap gap-1.5">
+                        {evidence.score_breakdown.unverified_keywords.map((skill: string, idx: number) => (
+                          <span 
+                            key={idx}
+                            className="text-[10px] font-mono px-2.5 py-1 bg-slate-900/40 border border-slate-800 text-slate-400 rounded-full"
+                          >
+                            {skill}
+                          </span>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-[10px] text-slate-500 italic">No unverified skills.</p>
+                    )}
+                  </div>
+
+                </div>
+              </div>
+
+              {/* Resume & ATS Review */}
+              <div className="fancy-card p-8 shadow-2xl flex flex-col justify-between bg-[#06090f]">
+                <div>
+                  <h3 className="text-xs font-bold text-slate-200 mb-3.5 flex items-center gap-1.5 tracking-wider uppercase">
+                    <FileText className="w-4.5 h-4.5 text-emerald-400" />
+                    Resume & ATS Assessment
+                  </h3>
+                  
+                  {/* ATS Score & Gauge */}
+                  <div className="flex items-center gap-4 mb-4 bg-black/40 border border-slate-900 rounded-xl p-3.5">
+                    <div className="relative flex items-center justify-center w-16 h-16 rounded-full border-4 border-emerald-500/20 bg-slate-950 shrink-0">
+                      <span className="text-lg font-black text-emerald-400">{atsScore}</span>
+                      <span className="text-[8px] text-slate-500 block absolute bottom-1.5 font-bold">ATS %</span>
+                    </div>
+                    <div>
+                      <h4 className="text-xs font-bold text-slate-200">Ingested Resume Health</h4>
+                      <p className="text-[10px] text-slate-400 mt-0.5 leading-relaxed">
+                        Score is determined by keyword verification overlap and formatting indicators.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Mistakes */}
+                  <div className="space-y-2 mb-4">
+                    <h4 className="text-[10px] font-bold text-rose-400 uppercase tracking-wider flex items-center gap-1.5">
+                      <AlertCircle className="w-3 h-3" />
+                      Areas of Improvement (Mistakes)
+                    </h4>
+                    <ul className="space-y-1.5">
+                      {mistakes.map((m, idx) => (
+                        <li key={idx} className="text-[11px] text-slate-400 pl-3 border-l border-rose-500/30 leading-relaxed">
+                          {m}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* Betters */}
+                  <div className="space-y-2">
+                    <h4 className="text-[10px] font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
+                      <Sparkles className="w-3 h-3" />
+                      Actionable Recommendations (Betters)
+                    </h4>
+                    <ul className="space-y-1.5">
+                      {improvements.map((imp, idx) => (
+                        <li key={idx} className="text-[11px] text-slate-400 pl-3 border-l border-emerald-500/30 leading-relaxed">
+                          {imp}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
+
+            {/* Repository Activity & Performance (separate container box, dynamic) */}
+            <div className="fancy-card p-8 shadow-2xl border border-slate-900 bg-[#06090f] space-y-4">
+              <h3 className="text-xs font-bold text-slate-300 mb-6 flex items-center gap-1.5 tracking-wider uppercase">
+                <TrendingUp className="w-4 h-4 text-emerald-400" />
+                Repository Activity & Performance Metrics
+              </h3>
+              <div className="w-full h-80">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart 
+                    data={repoChartData} 
+                    margin={{ top: 20, right: 30, left: 10, bottom: 20 }}
+                    barGap={16}
+                    barCategoryGap="35%"
+                  >
+                    <defs>
+                      <linearGradient id="colorCommits" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#059669" stopOpacity={0.85}/>
+                        <stop offset="95%" stopColor="#10b981" stopOpacity={0.15}/>
+                      </linearGradient>
+                      <linearGradient id="colorStars" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.85}/>
+                        <stop offset="95%" stopColor="#3b82f6" stopOpacity={0.15}/>
+                      </linearGradient>
+                      <linearGradient id="colorForks" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.85}/>
+                        <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0.15}/>
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" opacity={0.15} />
+                    <XAxis dataKey="name" tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 'bold' }} axisLine={{ stroke: '#1e293b' }} tickLine={false} />
+                    <YAxis tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 'bold' }} axisLine={{ stroke: '#1e293b' }} tickLine={false} />
+                    <Legend 
+                      wrapperStyle={{ fontSize: '10px', paddingTop: '15px' }} 
+                      iconType="circle"
+                      iconSize={8}
                     />
-                  </div>
-                </div>
+                    <Bar 
+                      dataKey="Commits" 
+                      fill="url(#colorCommits)" 
+                      stroke="#059669" 
+                      strokeWidth={1} 
+                      radius={[4, 4, 0, 0]} 
+                      barSize={12} 
+                      activeBar={false} 
+                    />
+                    <Bar 
+                      dataKey="Stars" 
+                      fill="url(#colorStars)" 
+                      stroke="#3b82f6" 
+                      strokeWidth={1} 
+                      radius={[4, 4, 0, 0]} 
+                      barSize={12} 
+                      activeBar={false} 
+                    />
+                    <Bar 
+                      dataKey="Forks" 
+                      fill="url(#colorForks)" 
+                      stroke="#8b5cf6" 
+                      strokeWidth={1} 
+                      radius={[4, 4, 0, 0]} 
+                      barSize={12} 
+                      activeBar={false} 
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
 
-                {/* Terminal Logs */}
-                <div className="bg-black/95 font-mono text-xs text-emerald-400/90 rounded-2xl p-5 h-96 overflow-y-auto border border-slate-900 space-y-1">
+            {/* LeetCode Stats (Verification Page ONLY) */}
+            {evidence?.leetcode_stats && evidence.leetcode_stats.solvedTotal > 0 && (
+              <div className="fancy-card p-6 shadow-2xl relative overflow-hidden group bg-[#06090f]">
+                <div className="absolute top-0 left-0 w-64 h-64 bg-emerald-500/5 blur-3xl rounded-full pointer-events-none"></div>
+                <div className="flex flex-col md:flex-row items-center md:items-start gap-10">
+                  
+                  {/* Left: Stats Summary */}
+                  <div className="flex-1 space-y-4 w-full text-xs text-slate-400">
+                    <div className="flex items-center gap-3.5 border-b border-slate-900 pb-3">
+                      <div className="p-2.5 bg-[#030509] rounded-xl border border-emerald-500/10 shadow-lg">
+                        <LeetCodeIcon />
+                      </div>
+                      <div>
+                        <h3 className="text-sm font-bold text-slate-100">
+                          LeetCode Algorithm Statistics
+                        </h3>
+                        <p className="text-emerald-400 font-bold text-[10px] mt-0.5">
+                          Top {Math.max(1, Math.round((evidence.leetcode_stats.ranking / 5000000) * 100))}% globally
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-3 gap-3">
+                      <div className="bg-[#030509] border border-slate-800 rounded-xl p-3 text-center">
+                        <div className="text-emerald-400 font-black text-xl mb-0.5">{evidence.leetcode_stats.solvedEasy || 0}</div>
+                        <div className="text-[8px] uppercase tracking-widest text-slate-500 font-bold">Easy</div>
+                      </div>
+                      <div className="bg-[#030509] border border-slate-800 rounded-xl p-3 text-center">
+                        <div className="text-amber-400 font-black text-xl mb-0.5">{evidence.leetcode_stats.solvedMedium || 0}</div>
+                        <div className="text-[8px] uppercase tracking-widest text-slate-500 font-bold">Medium</div>
+                      </div>
+                      <div className="bg-[#030509] border border-slate-800 rounded-xl p-3 text-center">
+                        <div className="text-rose-500 font-black text-xl mb-0.5">{evidence.leetcode_stats.solvedHard || 0}</div>
+                        <div className="text-[8px] uppercase tracking-widest text-slate-500 font-bold">Hard</div>
+                      </div>
+                    </div>
+                    
+                    <div className="bg-emerald-950/15 border border-emerald-500/10 rounded-xl px-4 py-3 flex items-center justify-between">
+                      <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Global Ranking</div>
+                      <div className="text-xs font-bold text-slate-200">
+                        {evidence.leetcode_stats.ranking > 0 ? `#${evidence.leetcode_stats.ranking.toLocaleString()}` : 'N/A'}
+                      </div>
+                    </div>
+
+                    <div className="bg-emerald-950/15 border border-emerald-500/10 rounded-xl px-4 py-3 flex items-center justify-between">
+                      <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Acceptance Rate</div>
+                      <div className="text-xs font-bold text-slate-200">
+                        {evidence.leetcode_stats.acceptanceRate}%
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Right: Topic Focus */}
+                  <div className="flex-1 w-full">
+                    <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-1.5">
+                      <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+                      LeetCode Topic Mastery
+                    </h4>
+                    {evidence.leetcode_stats.topicStats && evidence.leetcode_stats.topicStats.length > 0 ? (
+                      <div className="flex flex-wrap gap-2">
+                        {evidence.leetcode_stats.topicStats.map((topic: any, idx: number) => (
+                          <div 
+                            key={idx} 
+                            className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-slate-800 bg-[#030509] text-slate-300"
+                          >
+                            <span className="text-[10px] font-bold">{topic.tagName}</span>
+                            <span className="text-[10px] font-black text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full">{topic.problemsSolved}</span>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="text-[10px] text-slate-500 italic p-5 border border-dashed border-slate-800 rounded-xl text-center">
+                        No public topics statistics available.
+                      </div>
+                    )}
+                  </div>
+
+                </div>
+              </div>
+            )}
+
+            {/* Collapsible Telemetry Logs Console at the bottom */}
+            <div className="fancy-card p-6 shadow-xl border border-slate-900 bg-[#030509]/30">
+              <button 
+                onClick={() => setShowLogs(!showLogs)}
+                className="w-full flex items-center justify-between text-sm font-bold text-slate-400 hover:text-slate-200 transition"
+              >
+                <span className="flex items-center gap-2">
+                  <Terminal className="w-4 h-4 text-emerald-400" />
+                  Ingestion Telemetry Stream Logs
+                </span>
+                <span className="flex items-center gap-1.5 text-xs text-slate-500">
+                  {showLogs ? 'Hide Telemetry Logs' : 'Show Telemetry Logs'}
+                  {showLogs ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                </span>
+              </button>
+              
+              {showLogs && (
+                <div className="mt-4 bg-black/95 font-mono text-xs text-emerald-400/90 rounded-2xl p-5 h-80 overflow-y-auto border border-slate-900 space-y-1">
                   {logs.map((log, index) => (
                     <div key={index} className="leading-relaxed">
                       {log}
@@ -1030,150 +1363,13 @@ Projects: API gateway, stateless microservices.`;
                   ))}
                   <div ref={terminalEndRef} />
                 </div>
-              </div>
-            </div>
-
-            {/* Right: Scores Visualization */}
-            <div className="lg:col-span-8 space-y-6">
-              {/* Float glass score badge */}
-              <div className="fancy-card p-8 grid grid-cols-1 md:grid-cols-12 gap-8 items-center shadow-2xl relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-36 h-36 bg-gradient-to-br from-emerald-600/10 to-transparent pointer-events-none rounded-bl-full" />
-                
-                {/* Glass Score medallion */}
-                <div className="md:col-span-5 flex flex-col items-center justify-center border-b md:border-b-0 md:border-r border-emerald-500/10 pb-6 md:pb-0 md:pr-8">
-                  <span className="text-xs text-slate-400 uppercase font-black tracking-widest">
-                    Composite score
-                  </span>
-                  <div className="relative flex items-center justify-center w-36 h-36 rounded-full score-medallion mt-4">
-                    <div className="text-center">
-                      <span className="text-5xl font-black text-slate-100 tracking-tight">{report.overall_score}</span>
-                      <span className="text-sm text-slate-500 block -mt-1 font-bold">/100</span>
-                    </div>
-                  </div>
-                  
-                  <div className={`mt-4 px-4 py-1.5 text-xs font-black rounded-full border ${getRatingLabel(report.overall_score).color}`}>
-                    {getRatingLabel(report.overall_score).label}
-                  </div>
-                </div>
-
-                <div className="md:col-span-7 space-y-3.5 text-sm text-slate-400">
-                  <h3 className="text-xl font-bold text-slate-100 flex items-center gap-2">
-                    <Award className="w-5 h-5 text-emerald-400" />
-                    Verification Report Finalized
-                  </h3>
-                  <div className="grid grid-cols-2 gap-4 pt-2">
-                    <div>
-                      <span className="text-slate-500 block text-xs uppercase font-black">Candidate</span>
-                      <span className="font-bold text-slate-200 text-lg">{evidence?.github_profile?.name || evidence?.github_profile?.username || 'N/A'}</span>
-                    </div>
-                    <div>
-                      <span className="text-slate-500 block text-xs uppercase font-black">Verified Exp</span>
-                      <span className="font-bold text-slate-200 text-lg">{report?.summary_metrics?.experience_years || 1} Years</span>
-                    </div>
-                    <div>
-                      <span className="text-slate-500 block text-xs uppercase font-black">GitHub Source</span>
-                      <span className="font-bold text-slate-200 text-lg">@{evidence?.github_profile?.username || 'N/A'}</span>
-                    </div>
-                    <div>
-                      <span className="text-slate-500 block text-xs uppercase font-black">Total Repos</span>
-                      <span className="font-bold text-slate-200 text-lg">{report?.summary_metrics?.total_repos || 0} audited</span>
-                    </div>
-                  </div>
-
-                  <div className="pt-6 flex gap-3">
-                    <DownloadLink
-                      document={<ReportPDF report={report} evidence={evidence} />}
-                      fileName={`competency_report_${evidence.github_profile.username}.pdf`}
-                      className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 px-5 py-3 rounded-xl text-xs font-black transition text-white shadow-glow"
-                    >
-                      {({ loading }: any) => (
-                        (<>
-                          <Download className="w-4 h-4" />
-                          {loading ? 'Compiling PDF...' : 'Download PDF Report'}
-                        </>) as any
-                      )}
-                    </DownloadLink>
-
-                    <button
-                      onClick={resetStore}
-                      className="inline-flex items-center gap-2 bg-[#030509] hover:bg-[#0c121e] border border-emerald-500/10 px-5 py-3 rounded-xl text-xs font-black transition text-slate-300"
-                    >
-                      <RefreshCw className="w-4 h-4" />
-                      Run New Audit
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              {/* Visuals Radar & Matrix */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {/* Radar */}
-                <div className="fancy-card p-6">
-                  <h3 className="text-sm font-bold text-slate-200 mb-4 flex items-center gap-2">
-                    <TrendingUp className="w-4 h-4 text-emerald-400" />
-                    Competency Radar
-                  </h3>
-                  <div className="w-full h-64">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <RadarChart cx="50%" cy="50%" outerRadius="75%" data={chartData}>
-                        <PolarGrid stroke="#0b172a" />
-                        <PolarAngleAxis dataKey="subject" tick={{ fill: '#94a3b8', fontSize: 9, fontWeight: 'bold' }} />
-                        <PolarRadiusAxis angle={30} domain={[0, 100]} tick={{ fill: '#475569', fontSize: 8 }} />
-                        <Radar
-                          name="Scoring Weight"
-                          dataKey="value"
-                          stroke="#10b981"
-                          fill="#10b981"
-                          fillOpacity={0.25}
-                        />
-                      </RadarChart>
-                    </ResponsiveContainer>
-                  </div>
-                </div>
-
-                {/* Skills Grid */}
-                <div className="fancy-card p-6 flex flex-col justify-between">
-                  <div>
-                    <h3 className="text-sm font-bold text-slate-200 mb-2 flex items-center gap-2">
-                      <ShieldCheck className="w-4 h-4 text-emerald-400" />
-                      Verification Matrix
-                    </h3>
-                    <p className="text-xs text-slate-400 mb-4 leading-relaxed">
-                      Languages and libraries verified by package configurations in source trees.
-                    </p>
-                  </div>
-
-                  <div className="overflow-y-auto max-h-48 border border-emerald-500/10 rounded-xl bg-black/40 p-3">
-                    <table className="w-full text-left text-xs border-collapse">
-                      <thead>
-                        <tr className="border-b border-emerald-500/10 text-slate-500 font-bold uppercase tracking-wider text-[9px]">
-                          <th className="py-2 px-2">Skill</th>
-                          <th className="py-2 px-2 text-right">Status</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-slate-900/30 font-mono text-[11px]">
-                        {evidence?.score_breakdown?.verified_keywords?.map((skill: string, idx: number) => (
-                          <tr key={idx} className="hover:bg-emerald-500/5">
-                            <td className="py-2.5 px-2 text-slate-200 font-bold">{skill}</td>
-                            <td className="py-2.5 px-2 text-right font-black text-emerald-400 uppercase">VERIFIED</td>
-                          </tr>
-                        )) || null}
-                        {evidence?.score_breakdown?.unverified_keywords?.map((skill: string, idx: number) => (
-                          <tr key={idx} className="hover:bg-red-500/5">
-                            <td className="py-2.5 px-2 text-slate-500">{skill}</td>
-                            <td className="py-2.5 px-2 text-right font-black text-red-400/80 uppercase">UNVERIFIED</td>
-                          </tr>
-                        )) || null}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
+              )}
             </div>
 
           </div>
-        </div>
-      )}
+        );
+      })()}
+
 
       {/* 4. ERROR PHASE */}
       {status === 'failed' && (

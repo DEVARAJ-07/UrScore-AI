@@ -13,10 +13,12 @@
     "@google/genai": "^2.8.0",
     "axios": "^1.7.2",
     "dotenv": "^16.4.5",
-    "pdfkit": "^0.19.1"
+    "pdfkit": "^0.19.1",
+    "puppeteer": "^25.1.0"
   },
   "devDependencies": {
     "@types/node": "^20.14.2",
+    "@types/pdfkit": "^0.17.6",
     "typescript": "^5.4.5"
   }
 }

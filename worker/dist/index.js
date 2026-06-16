@@ -1,9 +1,46 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
 Object.defineProperty(exports, "__esModule", { value: true });
 const resume_1 = require("./resume");
 const github_1 = require("./github");
 const portfolio_1 = require("./portfolio");
 const scoring_1 = require("./scoring");
+const fs = __importStar(require("fs"));
+const path = __importStar(require("path"));
+const pdf_generator_1 = require("./pdf_generator");
+const aws_1 = require("./aws");
 // Helper to log updates back to backend process via IPC or console
 const logs = [];
 function sendLog(text, progress) {
@@ -19,15 +56,17 @@ function sendLog(text, progress) {
     }
 }
 async function run() {
+    fs.writeFileSync(path.resolve(__dirname, '../../worker_started.txt'), `started at ${new Date().toISOString()}`);
     // Read CLI arguments
-    // argv[2] = scanId, argv[3] = githubUsername, argv[4] = resumeText, argv[5] = leetcodeUsername, argv[6] = portfolioUrl
     const args = process.argv.slice(2);
     const scanId = args[0] || 'mock-scan-id';
     const githubUsername = args[1] || 'octocat';
     const resumeText = args[2] || '';
     const leetcodeUsername = args[3] || null;
     const portfolioUrl = args[4] || null;
-    sendLog(`Starting competency verification for GitHub: ${githubUsername}`, 5);
+    const githubRepoName = args[5] || null;
+    const targetRepoLog = githubRepoName ? ` (repo: ${githubRepoName})` : '';
+    sendLog(`Starting competency verification for GitHub: ${githubUsername}${targetRepoLog}`, 5);
     try {
         // 1. Analyze Resume Text
         sendLog(`Analyzing resume text content for matching keywords...`, 15);
@@ -35,7 +74,7 @@ async function run() {
         sendLog(`Resume analyzed. Detected experience: ${resumeAnalysis.experienceYears} years. Found keywords: ${resumeAnalysis.totalKeywordsCount}.`, 25);
         // 2. Fetch/Scrape GitHub Profile
         sendLog(`Querying GitHub API metrics...`, 30);
-        const githubProfile = await github_1.githubCrawler.fetchDeveloperProfile(githubUsername, (msg, prog) => {
+        const githubProfile = await github_1.githubCrawler.fetchDeveloperProfile(githubUsername, githubRepoName, (msg, prog) => {
             sendLog(msg, prog);
         });
         sendLog(`GitHub repos parsed. Total repositories processed: ${githubProfile.repos.length}.`, 65);
@@ -71,7 +110,9 @@ async function run() {
                 languages: r.languages,
                 dependencies: r.dependencies,
                 commits_analyzed: r.commits.length,
-                readme_summary: r.readme ? `${r.readme.substring(0, 150)}...` : 'No README found'
+                readme_summary: r.readme ? `${r.readme.substring(0, 150)}...` : 'No README found',
+                ai_description: r.ai_description || 'No analysis available',
+                file_paths: r.file_paths || []
             })),
             resume_extracted_metrics: {
                 keywords: resumeAnalysis.keywords,
@@ -85,11 +126,35 @@ async function run() {
                 unverified_keywords: report.unverified_keywords
             }
         };
-        // 6. Simulate S3 PDF report link generation
-        const mockPdfUrl = `http://localhost:5001/public/reports/${scanId}_competency_report.pdf`;
+        // 6. Generate and Upload actual PDF report to AWS S3
+        sendLog(`Generating print-ready PDF Competency Report...`, 92);
+        const pdfPath = await (0, pdf_generator_1.generatePdfReport)(report, evidence, scanId);
+        sendLog(`Uploading report to AWS S3...`, 95);
+        const filename = `${scanId}_competency_report.pdf`;
+        let pdfUrl = '';
+        try {
+            if (process.env.AWS_ACCESS_KEY_ID) {
+                pdfUrl = await (0, aws_1.uploadReportToS3)(pdfPath, filename);
+                sendLog(`Report uploaded successfully to S3: ${pdfUrl}`, 97);
+                // 7. Send SES Email
+                const email = process.env.AWS_SES_SENDER || 'devakrs07@gmail.com';
+                if (email) {
+                    sendLog(`Dispatching report via AWS SES to ${email}...`, 98);
+                    await (0, aws_1.sendReportEmail)(email, pdfUrl, githubProfile.name || githubProfile.username);
+                }
+            }
+            else {
+                pdfUrl = `http://localhost:5001/public/reports/${filename}`;
+                sendLog(`[AWS WARNING] Missing credentials. Simulated PDF upload: ${pdfUrl}`, 97);
+            }
+        }
+        catch (e) {
+            sendLog(`[AWS ERROR] S3/SES Failed: ${e.message}`, 97);
+            pdfUrl = `http://localhost:5001/public/reports/${filename}`;
+        }
         const finalizedReport = {
             ...report,
-            pdf_report_url: mockPdfUrl,
+            pdf_report_url: pdfUrl,
             summary_metrics: {
                 total_repos: githubProfile.repos.length,
                 verified_skills_count: report.verified_keywords.length,
@@ -98,7 +163,6 @@ async function run() {
                 experience_years: resumeAnalysis.experienceYears
             }
         };
-        sendLog(`Generating print-ready PDF Competency Report...`, 95);
         // Notify backend process of completion
         if (process.send) {
             process.send({

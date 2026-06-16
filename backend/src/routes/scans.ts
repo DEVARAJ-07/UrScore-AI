@@ -3,6 +3,10 @@ import { db } from '../db';
 import { getGateway } from '../ws/gateway';
 import { startWorkerScan } from '../services/runner';
 import axios from 'axios';
+import multer from 'multer';
+const pdfParse = require('pdf-parse');
+
+const upload = multer({ storage: multer.memoryStorage() });
 
 const router = Router();
 
@@ -50,9 +54,20 @@ router.get('/:id/evidence', async (req: Request, res: Response) => {
 });
 
 // Trigger a new placement scan (B2B2C worker pattern)
-router.post('/trigger', async (req: Request, res: Response) => {
+router.post('/trigger', upload.single('resume_file'), async (req: Request, res: Response) => {
   try {
-    const { github_username, github_repo_name, resume_text, resume_filename, portfolio_url, leetcode_username } = req.body;
+    let { github_username, github_repo_name, resume_text, resume_filename, portfolio_url, leetcode_username } = req.body;
+
+    // Server-side PDF extraction
+    if (req.file && req.file.mimetype === 'application/pdf') {
+      try {
+        console.log(`[API] Parsing PDF file server-side: ${req.file.originalname}`);
+        const pdfData = await pdfParse(req.file.buffer);
+        resume_text = pdfData.text.replace(/\0/g, ' ').trim();
+      } catch (pdfErr) {
+        console.error(`[API ERROR] Failed to parse PDF server-side:`, pdfErr);
+      }
+    }
 
     if (!github_username) {
       return res.status(400).json({ error: 'GitHub username is required' });

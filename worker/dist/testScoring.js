@@ -51,7 +51,12 @@ const mockGithubFull = {
                 { message: 'feat: configure docker and pg database connection', date: new Date(Date.now() - 2 * 24 * 3600 * 1000).toISOString() },
                 { message: 'refactor: split routers into modules', date: new Date(Date.now() - 5 * 24 * 3600 * 1000).toISOString() },
                 { message: 'fix: validation schema token updates', date: new Date(Date.now() - 10 * 24 * 3600 * 1000).toISOString() }
-            ]
+            ],
+            total_files: 5,
+            test_files: 1,
+            extension_counts: {},
+            file_paths: [],
+            ai_description: ''
         },
         {
             name: 'react-dashboard',
@@ -67,7 +72,12 @@ const mockGithubFull = {
             commits: [
                 { message: 'feat: add analytics graph', date: new Date(Date.now() - 3 * 24 * 3600 * 1000).toISOString() },
                 { message: 'initial commit', date: new Date(Date.now() - 20 * 24 * 3600 * 1000).toISOString() }
-            ]
+            ],
+            total_files: 5,
+            test_files: 1,
+            extension_counts: {},
+            file_paths: [],
+            ai_description: ''
         }
     ]
 };
@@ -86,7 +96,7 @@ function runTests() {
     console.log(`Cross Reference Score: ${score1.cross_reference}%`);
     console.log(`Activity Consistency Score: ${score1.activity_consistency}%\n`);
     // Test Case 2: Full Expert profile
-    const score2 = (0, scoring_1.computeUrScore)(mockResumeStandard, mockGithubFull, { solvedTotal: 150, solvedEasy: 50, solvedMedium: 80, solvedHard: 20, ranking: 50000, acceptanceRate: 55 }, { title: 'Expert portfolio', detectedStack: ['React'], responsive: true, isUp: true });
+    const score2 = (0, scoring_1.computeUrScore)(mockResumeStandard, mockGithubFull, { solvedTotal: 150, solvedEasy: 50, solvedMedium: 80, solvedHard: 20, ranking: 50000, acceptanceRate: 55, topicStats: [] }, { title: 'Expert portfolio', detectedStack: ['React'], responsive: true, isUp: true });
     console.log('Test Case 2: Expert Profile (Verified resume + LeetCode bonus)');
     console.log(`Overall Score: ${score2.overall_score}/100`);
     console.log(`Skill Verification Score: ${score2.skill_verification}%`);

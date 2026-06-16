@@ -1,8 +1,18 @@
-import * as fs from 'fs';
-import * as path from 'path';
 import * as crypto from 'crypto';
+import mongoose, { Schema } from 'mongoose';
+import dotenv from 'dotenv';
+import path from 'path';
+dotenv.config({ path: path.join(__dirname, '../.env') });
 
-// Define DB Models matching schema.sql
+// Connect to MongoDB
+if (process.env.MONGO_URI) {
+  mongoose.connect(process.env.MONGO_URI)
+    .then(() => console.log('[DB] Successfully connected to MongoDB Atlas'))
+    .catch(err => console.error('[DB] Failed to connect to MongoDB', err));
+} else {
+  console.error('[DB] MONGO_URI is missing from environment variables');
+}
+
 export interface Profile {
   id: string;
   email: string;
@@ -48,137 +58,122 @@ export interface EvidenceStore {
   created_at: Date;
 }
 
-// Memory database with file synchronization for simple mock persistence
+// Mongoose Schemas
+const scanSchema = new Schema({
+  id: { type: String, required: true, unique: true },
+  developer_id: { type: String, default: null },
+  github_username: { type: String, required: true },
+  github_repo_name: { type: String, default: null },
+  resume_url: { type: String, default: null },
+  portfolio_url: { type: String, default: null },
+  leetcode_username: { type: String, default: null },
+  status: { type: String, default: 'pending' },
+  progress: { type: Number, default: 0 },
+  logs: { type: [String], default: [] },
+  created_at: { type: Date, default: Date.now },
+  updated_at: { type: Date, default: Date.now }
+});
+
+const ScanModel = mongoose.model('Scan', scanSchema);
+
+const reportSchema = new Schema({
+  id: { type: String, required: true, unique: true },
+  scan_id: { type: String, required: true },
+  overall_score: Number,
+  skill_verification: Number,
+  commit_quality: Number,
+  project_complexity: Number,
+  recency: Number,
+  cross_reference: Number,
+  activity_consistency: Number,
+  summary_metrics: Schema.Types.Mixed,
+  pdf_report_url: { type: String, default: null },
+  created_at: { type: Date, default: Date.now }
+});
+
+const ReportModel = mongoose.model('Report', reportSchema);
+
+const evidenceSchema = new Schema({
+  id: { type: String, required: true, unique: true },
+  scan_id: { type: String, required: true },
+  raw_evidence: Schema.Types.Mixed,
+  created_at: { type: Date, default: Date.now }
+});
+
+const EvidenceModel = mongoose.model('Evidence', evidenceSchema);
+
 class DatabaseClient {
-  private scansFile = path.join(__dirname, '../scans_db.json');
-  private reportsFile = path.join(__dirname, '../reports_db.json');
-  private evidenceFile = path.join(__dirname, '../evidence_db.json');
-
-  private scans: Map<string, Scan> = new Map();
-  private reports: Map<string, CompetencyReport> = new Map();
-  private evidence: Map<string, EvidenceStore> = new Map();
-
-  constructor() {
-    this.loadData();
-  }
-
-  private loadData() {
-    try {
-      if (fs.existsSync(this.scansFile)) {
-        const data = JSON.parse(fs.readFileSync(this.scansFile, 'utf8'));
-        Object.keys(data).forEach(k => this.scans.set(k, data[k]));
-      }
-      if (fs.existsSync(this.reportsFile)) {
-        const data = JSON.parse(fs.readFileSync(this.reportsFile, 'utf8'));
-        Object.keys(data).forEach(k => this.reports.set(k, data[k]));
-      }
-      if (fs.existsSync(this.evidenceFile)) {
-        const data = JSON.parse(fs.readFileSync(this.evidenceFile, 'utf8'));
-        Object.keys(data).forEach(k => this.evidence.set(k, data[k]));
-      }
-    } catch (err) {
-      console.error('Error loading mock database files:', err);
-    }
-  }
-
-  private saveData() {
-    try {
-      const scansObj: Record<string, Scan> = {};
-      this.scans.forEach((v, k) => { scansObj[k] = v; });
-      fs.writeFileSync(this.scansFile, JSON.stringify(scansObj, null, 2));
-
-      const reportsObj: Record<string, CompetencyReport> = {};
-      this.reports.forEach((v, k) => { reportsObj[k] = v; });
-      fs.writeFileSync(this.reportsFile, JSON.stringify(reportsObj, null, 2));
-
-      const evidenceObj: Record<string, EvidenceStore> = {};
-      this.evidence.forEach((v, k) => { evidenceObj[k] = v; });
-      fs.writeFileSync(this.evidenceFile, JSON.stringify(evidenceObj, null, 2));
-    } catch (err) {
-      console.error('Error saving mock database files:', err);
-    }
-  }
-
-  // --- Scans Table CRUD ---
   public async getScan(id: string): Promise<Scan | null> {
-    return this.scans.get(id) || null;
+    const doc = await ScanModel.findOne({ id }).lean();
+    return doc as unknown as Scan;
   }
 
   public async getScans(): Promise<Scan[]> {
-    return Array.from(this.scans.values()).sort((a, b) => 
-      new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-    );
+    const docs = await ScanModel.find().sort({ created_at: -1 }).lean();
+    return docs as unknown as Scan[];
   }
 
   public async insertScan(scan: Partial<Scan> & { github_username: string }): Promise<Scan> {
     const id = scan.id || crypto.randomUUID();
-    const newScan: Scan = {
+    const newScan = new ScanModel({
+      ...scan,
       id,
-      developer_id: scan.developer_id || null,
-      github_username: scan.github_username,
-      github_repo_name: scan.github_repo_name || null,
-      resume_url: scan.resume_url || null,
-      portfolio_url: scan.portfolio_url || null,
-      leetcode_username: scan.leetcode_username || null,
-      status: scan.status || 'pending',
-      progress: scan.progress || 0,
-      logs: scan.logs || [],
       created_at: scan.created_at || new Date(),
       updated_at: new Date()
-    };
-    this.scans.set(id, newScan);
-    this.saveData();
-    return newScan;
+    });
+    await newScan.save();
+    return newScan.toObject() as unknown as Scan;
   }
 
   public async updateScan(id: string, updates: Partial<Scan>): Promise<Scan> {
-    const scan = this.scans.get(id);
-    if (!scan) throw new Error(`Scan ${id} not found`);
+    const mongoUpdate: any = { $set: { ...updates, updated_at: new Date() } };
     
-    const updatedScan: Scan = {
-      ...scan,
-      ...updates,
-      logs: updates.logs ? [...scan.logs, ...updates.logs] : scan.logs,
-      updated_at: new Date()
-    };
-    this.scans.set(id, updatedScan);
-    this.saveData();
-    return updatedScan;
+    if (updates.logs) {
+      delete mongoUpdate.$set.logs;
+      mongoUpdate.$push = { logs: { $each: updates.logs } };
+    }
+
+    const scan = await ScanModel.findOneAndUpdate(
+      { id },
+      mongoUpdate,
+      { new: true }
+    ).lean();
+
+    if (!scan) throw new Error(`Scan ${id} not found`);
+    return scan as unknown as Scan;
   }
 
-  // --- Competency Reports Table CRUD ---
   public async getReportByScanId(scanId: string): Promise<CompetencyReport | null> {
-    return Array.from(this.reports.values()).find(r => r.scan_id === scanId) || null;
+    const doc = await ReportModel.findOne({ scan_id: scanId }).lean();
+    return doc as unknown as CompetencyReport;
   }
 
   public async insertReport(report: Omit<CompetencyReport, 'id' | 'created_at'>): Promise<CompetencyReport> {
     const id = crypto.randomUUID();
-    const newReport: CompetencyReport = {
+    const newReport = new ReportModel({
       ...report,
       id,
       created_at: new Date()
-    };
-    this.reports.set(id, newReport);
-    this.saveData();
-    return newReport;
+    });
+    await newReport.save();
+    return newReport.toObject() as unknown as CompetencyReport;
   }
 
-  // --- Evidence Table CRUD ---
   public async getEvidenceByScanId(scanId: string): Promise<EvidenceStore | null> {
-    return Array.from(this.evidence.values()).find(e => e.scan_id === scanId) || null;
+    const doc = await EvidenceModel.findOne({ scan_id: scanId }).lean();
+    return doc as unknown as EvidenceStore;
   }
 
   public async insertEvidence(scanId: string, raw_evidence: Record<string, any>): Promise<EvidenceStore> {
     const id = crypto.randomUUID();
-    const newEvidence: EvidenceStore = {
+    const newEvidence = new EvidenceModel({
       id,
       scan_id: scanId,
       raw_evidence,
       created_at: new Date()
-    };
-    this.evidence.set(id, newEvidence);
-    this.saveData();
-    return newEvidence;
+    });
+    await newEvidence.save();
+    return newEvidence.toObject() as unknown as EvidenceStore;
   }
 }
 

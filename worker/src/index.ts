@@ -85,7 +85,8 @@ async function run() {
         dependencies: r.dependencies,
         commits_analyzed: r.commits.length,
         readme_summary: r.readme ? `${r.readme.substring(0, 150)}...` : 'No README found',
-        ai_description: r.ai_description || 'No analysis available'
+        ai_description: r.ai_description || 'No analysis available',
+        file_paths: r.file_paths || []
       })),
       resume_extracted_metrics: {
         keywords: resumeAnalysis.keywords,
