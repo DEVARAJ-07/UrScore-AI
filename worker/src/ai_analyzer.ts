@@ -17,7 +17,7 @@ export async function analyzeRepoCodebase(
   try {
     const prompt = `
 You are an expert software architect evaluating a developer's repository.
-Analyze the following repository metadata and provide a brief, professional summary (1-3 sentences) of the codebase architecture, purpose, and tech stack. Focus on what the code actually represents based on the files and dependencies.
+Provide a concise, 2-3 sentence technical summary focusing specifically on the project's code structure, architectural strengths, and potential weaknesses. Analyze how the dependencies and files reflect the actual codebase quality and organization.
 
 Repository Name: ${repoName}
 GitHub Description: ${description || 'None'}

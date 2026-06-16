@@ -143,18 +143,39 @@ class GithubCrawler {
                 // 4. Fetch Commits
                 const commits = [];
                 try {
-                    const commitsRes = await axios_1.default.get(`https://api.github.com/repos/${username}/${r.name}/commits?author=${username}&per_page=10`, { headers, timeout: 3000 });
+                    let commitsRes = await axios_1.default.get(`https://api.github.com/repos/${username}/${r.name}/commits?author=${username}&per_page=10`, { headers, timeout: 3000 });
+                    if (!Array.isArray(commitsRes.data) || commitsRes.data.length === 0) {
+                        commitsRes = await axios_1.default.get(`https://api.github.com/repos/${username}/${r.name}/commits?per_page=10`, { headers, timeout: 3000 });
+                    }
                     if (Array.isArray(commitsRes.data)) {
                         commitsRes.data.forEach((c) => {
-                            commits.push({
-                                message: c.commit.message,
-                                date: c.commit.author.date
-                            });
+                            if (c && c.commit) {
+                                commits.push({
+                                    message: c.commit.message || '',
+                                    date: c.commit.author?.date || c.commit.committer?.date || new Date().toISOString()
+                                });
+                            }
                         });
                     }
                 }
                 catch (e) {
-                    // No commits retrieved
+                    // Fallback fetch if the author endpoint fails
+                    try {
+                        const commitsRes = await axios_1.default.get(`https://api.github.com/repos/${username}/${r.name}/commits?per_page=10`, { headers, timeout: 3000 });
+                        if (Array.isArray(commitsRes.data)) {
+                            commitsRes.data.forEach((c) => {
+                                if (c && c.commit) {
+                                    commits.push({
+                                        message: c.commit.message || '',
+                                        date: c.commit.author?.date || c.commit.committer?.date || new Date().toISOString()
+                                    });
+                                }
+                            });
+                        }
+                    }
+                    catch (err) {
+                        // No commits retrieved
+                    }
                 }
                 // 5. Fetch and analyze all files via Git Trees API
                 let totalFilesCount = 0;

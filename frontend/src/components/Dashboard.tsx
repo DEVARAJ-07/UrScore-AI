@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useScanStore } from '../store/useScanStore';
 import { 
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend,
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer
 } from 'recharts';
 import { ReportPDF } from './ReportPDF';
@@ -60,6 +60,7 @@ export const Dashboard: React.FC = () => {
   const [dragActive, setDragActive] = useState(false);
   const [isParsingFile, setIsParsingFile] = useState(false);
   const [showLogs, setShowLogs] = useState(false);
+  const [chartMetric, setChartMetric] = useState<'Commits' | 'Forks'>('Commits');
 
   const renderNode = (x: number, y: number, label: string, subtitle: string, icon: React.ReactNode, active: boolean) => {
     return (
@@ -252,10 +253,9 @@ export const Dashboard: React.FC = () => {
 
 
   const getRatingLabel = (score: number) => {
-    if (score >= 90) return { label: 'Elite Architect (L4)', color: 'text-emerald-400 border-emerald-500/35 bg-emerald-500/10' };
-    if (score >= 75) return { label: 'Senior Placement Ready (L3)', color: 'text-emerald-400 border-emerald-500/20 bg-emerald-500/5' };
-    if (score >= 55) return { label: 'System Contributor (L2)', color: 'text-teal-400 border-teal-500/35 bg-teal-500/10' };
-    return { label: 'Associate Level (L1)', color: 'text-amber-400 border-amber-500/35 bg-amber-500/10' };
+    if (score >= 85) return { label: 'Elite', color: 'text-fuchsia-400 border-fuchsia-500/50 bg-fuchsia-500/10 animate-pulse drop-shadow-[0_0_15px_rgba(232,121,249,0.5)]' };
+    if (score >= 70) return { label: 'Gold', color: 'text-yellow-400 border-yellow-500/50 bg-yellow-500/10 animate-pulse drop-shadow-[0_0_15px_rgba(250,204,21,0.5)]' };
+    return { label: 'Silver', color: 'text-slate-300 border-slate-400/50 bg-slate-400/10 animate-pulse drop-shadow-[0_0_15px_rgba(148,163,184,0.5)]' };
   };
 
   // Progress queries checkmarks logic (5 steps)
@@ -283,20 +283,20 @@ export const Dashboard: React.FC = () => {
                  {/* About UrScore AI & Points description */}
           <div className="max-w-4xl mx-auto space-y-8 text-left mb-12 view-transition border-b border-emerald-500/10 pb-8">
             <div className="space-y-4">
-              <h2 className="text-3xl font-black text-slate-100" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
+              <h2 className="text-xs font-black text-slate-100" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
                 About Urscore,
               </h2>
-              <p className="text-base text-slate-400 leading-relaxed font-semibold" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
+              <p className="text-sm text-slate-400 leading-relaxed font-semibold" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
                 UrScore AI is a smart platform that helps developers show their real skills and helps recruiters find the right people easily. Instead of trusting what someone writes on a resume, UrScore AI looks at what they have actually done and gives them a honest score based on their real work. Developers get a proper profile with a score and ranking that shows how strong they are and which field they are best suited for. This makes hiring simpler and fairer — developers get recognised for what they truly know, and recruiters find the right person without wasting time. You can also know yourself better with Urscore by verifying your profiles.
               </p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-12 pt-8 border-t border-emerald-500/10" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
               {/* GitHub Hook Details */}
               <div className="space-y-3">
-                <h3 className="text-base font-bold tracking-wide text-emerald-400">
+                <h3 className="text-sm font-bold tracking-wide text-emerald-400">
                   1. GitHub Source Hook
                 </h3>
-                <div className="text-sm text-slate-400 leading-relaxed">
+                <div className="text-xs text-slate-400 leading-relaxed">
                   <strong className="text-slate-200 block text-xs uppercase tracking-wider mb-1 text-emerald-400 font-bold">Process: Repo Crawler</strong>
                   Validates candidate profile and repository existence on GitHub. Queries the official API endpoints to extract commit messages, directory hierarchies, file histories, and language distribution byte counts.
                 </div>
@@ -304,10 +304,10 @@ export const Dashboard: React.FC = () => {
 
               {/* Resume Hook Details */}
               <div className="space-y-3">
-                <h3 className="text-base font-bold tracking-wide text-emerald-400">
+                <h3 className="text-sm font-bold tracking-wide text-emerald-400">
                   2. Resume Document Hook
                 </h3>
-                <div className="text-sm text-slate-400 leading-relaxed">
+                <div className="text-xs text-slate-400 leading-relaxed">
                   <strong className="text-slate-200 block text-xs uppercase tracking-wider mb-1 text-emerald-400 font-bold">Process: PDF Extractor</strong>
                   Ingests local resume files (PDF or TXT) client-side in the browser via HTML5 FileReader APIs, extracting raw text and cleaning layout structures to ensure safe execution downstream.
                 </div>
@@ -315,10 +315,10 @@ export const Dashboard: React.FC = () => {
 
               {/* Leetcode Hook Details */}
               <div className="space-y-3">
-                <h3 className="text-base font-bold tracking-wide text-emerald-400">
+                <h3 className="text-sm font-bold tracking-wide text-emerald-400">
                   3. LeetCode Stats Hook
                 </h3>
-                <div className="text-sm text-slate-400 leading-relaxed">
+                <div className="text-xs text-slate-400 leading-relaxed">
                   <strong className="text-slate-200 block text-xs uppercase tracking-wider mb-1 text-emerald-400 font-bold">Process: Stats Scraper</strong>
                   Fetches competitive problem-solving records from LeetCode public endpoints, retrieving overall rank, difficulty distributions (Easy, Medium, Hard), and candidate coding metrics.
                 </div>
@@ -326,10 +326,10 @@ export const Dashboard: React.FC = () => {
 
               {/* UrScore Core Engine Details */}
               <div className="space-y-3">
-                <h3 className="text-base font-bold tracking-wide text-emerald-400">
+                <h3 className="text-sm font-bold tracking-wide text-emerald-400">
                   4. UrScore Core Scorer
                 </h3>
-                <div className="text-sm text-slate-400 leading-relaxed">
+                <div className="text-xs text-slate-400 leading-relaxed">
                   <strong className="text-slate-200 block text-xs uppercase tracking-wider mb-1 text-emerald-400 font-bold">Process: Aggregator Core</strong>
                   Merges verified coding patterns, code complexity, years of experience, and competitive coding scores into a composite score out of 100, updated dynamically via push webhook runs.
                 </div>
@@ -343,8 +343,8 @@ export const Dashboard: React.FC = () => {
             
             <div className="flex items-center justify-between mb-6 border-b border-emerald-500/5 pb-4">
               <div className="flex items-center gap-2">
-                <span className="text-emerald-400 font-extrabold text-sm font-mono">⚡</span>
-                <h3 className="text-sm font-bold tracking-widest text-emerald-400 uppercase" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
+                <span className="text-emerald-400 font-extrabold text-xs font-mono">⚡</span>
+                <h3 className="text-xs font-bold tracking-widest text-emerald-400 uppercase" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
                   Flows and Hooks
                 </h3>
               </div>
@@ -427,7 +427,7 @@ export const Dashboard: React.FC = () => {
                   <div className="p-2 bg-[#030509] rounded-2xl border border-emerald-500/20 shadow-[0_0_20px_rgba(16,185,129,0.25)] mb-3 overflow-hidden w-16 h-16 flex items-center justify-center">
                     <img src="/logo.png" className="w-14 h-14 object-contain rounded-xl" alt="UrScore AI Logo" />
                   </div>
-                  <h4 className="text-sm font-black text-emerald-400">UrScore AI Core</h4>
+                  <h4 className="text-xs font-black text-emerald-400">UrScore AI Core</h4>
                 </div>
               </div>
             </div>
@@ -447,10 +447,10 @@ export const Dashboard: React.FC = () => {
                   </div>
                 </div>
                 
-                <h3 className="text-xl font-bold text-slate-100 mb-2">
-                  GitHub Codebase <span className="text-rose-500 font-extrabold text-lg leading-none">*</span>
+                <h3 className="text-xs font-bold text-slate-100 mb-2">
+                  GitHub Codebase <span className="text-rose-500 font-extrabold text-xs leading-none">*</span>
                 </h3>
-                <p className="text-sm text-slate-400 mb-6 leading-relaxed">Identify repository patterns, commit syntax, and framework imports</p>
+                <p className="text-xs text-slate-400 mb-6 leading-relaxed">Identify repository patterns, commit syntax, and framework imports</p>
 
                 {/* Sub tabs */}
                 <div className="flex p-1 bg-black/60 border border-emerald-500/10 rounded-xl text-xs font-bold mb-6">
@@ -484,7 +484,7 @@ export const Dashboard: React.FC = () => {
                         }}
                         className="fancy-input"
                       />
-                      <label htmlFor="gh-user" className="absolute left-5 top-4 text-slate-500 text-sm font-bold pointer-events-none transition-all duration-300">
+                      <label htmlFor="gh-user" className="absolute left-5 top-4 text-slate-500 text-xs font-bold pointer-events-none transition-all duration-300">
                         Enter GitHub username
                       </label>
                     </div>
@@ -512,7 +512,7 @@ export const Dashboard: React.FC = () => {
                         }}
                         className="fancy-input"
                       />
-                      <label htmlFor="gh-repo" className="absolute left-5 top-4 text-slate-500 text-sm font-bold pointer-events-none transition-all duration-300">
+                      <label htmlFor="gh-repo" className="absolute left-5 top-4 text-slate-500 text-xs font-bold pointer-events-none transition-all duration-300">
                         Enter GitHub repository link
                       </label>
                     </div>
@@ -550,12 +550,21 @@ export const Dashboard: React.FC = () => {
                   </div>
                 </div>
                 
-                <h3 className="text-xl font-bold text-slate-100 mb-2">
-                  Resume <span className="text-rose-500 font-extrabold text-lg leading-none">*</span>
+                <h3 className="text-xs font-bold text-slate-100 mb-2">
+                  Resume <span className="text-rose-500 font-extrabold text-xs leading-none">*</span>
                 </h3>
-                <p className="text-sm text-slate-400 mb-6 leading-relaxed">Verify candidate technology proficiencies strictly via file upload</p>
+                <p className="text-xs text-slate-400 mb-6 leading-relaxed">Verify candidate technology proficiencies strictly via file upload</p>
 
                 {/* Dropzone */}
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  id="file-ingest"
+                  onChange={handleFileChange}
+                  onClick={(e) => e.stopPropagation()}
+                  accept=".pdf,.txt,application/pdf,text/plain"
+                  className="hidden"
+                />
                 <div
                   onDragEnter={handleDrag}
                   onDragOver={handleDrag}
@@ -568,14 +577,6 @@ export const Dashboard: React.FC = () => {
                   }}
                   className={`border-2 border-dashed rounded-2xl p-8 text-center transition-all duration-350 relative cursor-pointer ${dragActive ? 'border-emerald-500 bg-emerald-600/5' : 'border-slate-800 bg-[#030509]/30 hover:border-slate-700'} min-h-[160px] flex flex-col justify-center`}
                 >
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    id="file-ingest"
-                    onChange={handleFileChange}
-                    accept=".pdf,.txt,application/pdf,text/plain"
-                    className="hidden"
-                  />
                   {isParsingFile ? (
                     <div className="space-y-4 text-center py-4 flex flex-col items-center justify-center">
                       <Loader2 className="w-10 h-10 text-emerald-400 animate-spin" />
@@ -586,13 +587,13 @@ export const Dashboard: React.FC = () => {
                       <Upload className="w-12 h-12 text-slate-500 mx-auto mb-3 animate-pulse" />
                       
                       {uploadedFileName ? (
-                        <div className="text-sm font-bold text-emerald-400 truncate max-w-full flex items-center justify-center gap-1">
+                        <div className="text-xs font-bold text-emerald-400 truncate max-w-full flex items-center justify-center gap-1">
                           <FileCheck className="w-4 h-4" />
                           {uploadedFileName}
                         </div>
                       ) : (
                         <div>
-                          <span className="text-sm font-bold text-emerald-400 hover:text-emerald-300 block">
+                          <span className="text-xs font-bold text-emerald-400 hover:text-emerald-300 block">
                             Browse Document
                           </span>
                           <div className="text-xs text-slate-500 mt-1">Drag & drop PDF or TXT file here</div>
@@ -620,8 +621,8 @@ export const Dashboard: React.FC = () => {
                   </div>
                 </div>
                 
-                <h3 className="text-xl font-bold text-slate-100 mb-2 flex items-center justify-between">Optional Audits <span className="text-[10px] uppercase tracking-wider font-extrabold text-slate-400 bg-slate-500/10 px-2 py-0.5 rounded border border-slate-500/10">Optional</span></h3>
-                <p className="text-sm text-slate-400 mb-6 leading-relaxed">Augment core score matrices with extra profiles statistics</p>
+                <h3 className="text-xs font-bold text-slate-100 mb-2 flex items-center justify-between">Optional Audits <span className="text-[10px] uppercase tracking-wider font-extrabold text-slate-400 bg-slate-500/10 px-2 py-0.5 rounded border border-slate-500/10">Optional</span></h3>
+                <p className="text-xs text-slate-400 mb-6 leading-relaxed">Augment core score matrices with extra profiles statistics</p>
 
                 <div className="space-y-6">
                   {/* Label Name Leetcode above input box */}
@@ -638,7 +639,7 @@ export const Dashboard: React.FC = () => {
                         onChange={(e) => setLeetcodeUsername(e.target.value)}
                         className="fancy-input"
                       />
-                      <label htmlFor="lc-user" className="absolute left-5 top-4 text-slate-500 text-sm font-bold pointer-events-none transition-all duration-300 flex items-center gap-1.5">
+                      <label htmlFor="lc-user" className="absolute left-5 top-4 text-slate-500 text-xs font-bold pointer-events-none transition-all duration-300 flex items-center gap-1.5">
                         <LeetCodeIcon />
                         Enter LeetCode username
                       </label>
@@ -657,7 +658,7 @@ export const Dashboard: React.FC = () => {
           {/* Trigger Button & Error Banner */}
           <div className="max-w-md mx-auto pt-4">
             {errorMsg && (
-              <div className="p-4 bg-red-950/20 border border-red-500/30 text-sm text-red-400 rounded-2xl mb-6 flex items-start gap-2.5">
+              <div className="p-4 bg-red-950/20 border border-red-500/30 text-xs text-red-400 rounded-2xl mb-6 flex items-start gap-2.5">
                 <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
                 <div className="space-y-1">
                   <div className="font-bold">Verification Error</div>
@@ -669,7 +670,7 @@ export const Dashboard: React.FC = () => {
             <button
               onClick={handleStartScan}
               disabled={isSubmitting || isParsingFile}
-              className="w-full py-5 bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-500 hover:from-emerald-500 hover:via-teal-500 hover:to-emerald-400 disabled:from-slate-900 disabled:to-slate-950 disabled:text-slate-600 text-white font-black rounded-2xl text-base uppercase tracking-widest transition-all duration-300 shadow-[0_0_40px_rgba(16,185,129,0.15)] flex items-center justify-center gap-2 hover:scale-[1.02]"
+              className="w-full py-5 bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-500 hover:from-emerald-500 hover:via-teal-500 hover:to-emerald-400 disabled:from-slate-900 disabled:to-slate-950 disabled:text-slate-600 text-white font-black rounded-2xl text-sm uppercase tracking-widest transition-all duration-300 shadow-[0_0_40px_rgba(16,185,129,0.15)] flex items-center justify-center gap-2 hover:scale-[1.02]"
             >
               {isSubmitting ? (
                 <>
@@ -696,7 +697,7 @@ export const Dashboard: React.FC = () => {
           <div className="flex justify-start">
             <button
               onClick={resetStore}
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#070b13] hover:bg-[#0c121e] border border-emerald-500/10 rounded-xl text-sm font-bold text-slate-400 transition-all duration-300 hover:border-emerald-500/30"
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#070b13] hover:bg-[#0c121e] border border-emerald-500/10 rounded-xl text-xs font-bold text-slate-400 transition-all duration-300 hover:border-emerald-500/30"
             >
               <ArrowLeft className="w-4 h-4 text-emerald-400" />
               Cancel & Back
@@ -709,7 +710,7 @@ export const Dashboard: React.FC = () => {
             <div className="lg:col-span-6 space-y-4">
               <div className="fancy-card p-6 shadow-2xl min-h-[460px] flex flex-col justify-between">
                 <div>
-                  <h3 className="text-sm font-bold text-slate-300 flex items-center gap-2 border-b border-emerald-500/10 pb-3 mb-4">
+                  <h3 className="text-xs font-bold text-slate-300 flex items-center gap-2 border-b border-emerald-500/10 pb-3 mb-4">
                     <Terminal className="w-4 h-4 text-emerald-400" />
                     Worker Telemetry Stream
                   </h3>
@@ -734,7 +735,7 @@ export const Dashboard: React.FC = () => {
               <div className="fancy-card p-8 shadow-2xl min-h-[460px]">
                 <div className="flex items-center justify-between mb-6 border-b border-emerald-500/10 pb-4">
                   <div>
-                    <h3 className="text-lg font-black text-slate-100">Verification Ingestion</h3>
+                    <h3 className="text-xs font-black text-slate-100">Verification Ingestion</h3>
                     <p className="text-xs text-slate-400 mt-1">Status of API queries across backend nodes</p>
                   </div>
                   <span className="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20 font-bold animate-pulse font-mono">
@@ -743,7 +744,7 @@ export const Dashboard: React.FC = () => {
                 </div>
 
                 {/* Checklist queries (as requested by user with ticks) */}
-                <div className="space-y-4 text-sm font-bold text-slate-300">
+                <div className="space-y-4 text-xs font-bold text-slate-300">
                   {[
                     'Analyzing Resume',
                     'Analyzing GitHub Profile',
@@ -803,10 +804,10 @@ export const Dashboard: React.FC = () => {
       {status === 'completed' && !viewingReport && evidence && (
         <div className="space-y-8 view-transition relative z-10 max-w-5xl mx-auto">
           <div className="text-center space-y-4 mb-12">
-            <h2 className="text-3xl font-black text-slate-100" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
+            <h2 className="text-xs font-black text-slate-100" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
               Codebase Analysis Complete
             </h2>
-            <p className="text-slate-400 font-semibold text-sm max-w-2xl mx-auto">
+            <p className="text-slate-400 font-semibold text-xs max-w-2xl mx-auto">
               Our AI engine has successfully parsed {evidence.repositories_analyzed.length} repositories from the candidate's profile. Below are the architectural summaries derived directly from their codebase files and dependencies.
             </p>
           </div>
@@ -821,13 +822,13 @@ export const Dashboard: React.FC = () => {
                   </div>
                   <div className="space-y-2 flex-1">
                     <div className="flex items-center justify-between">
-                      <h3 className="text-lg font-bold text-slate-200">{repo.name}</h3>
+                      <h3 className="text-xs font-bold text-slate-200">{repo.name}</h3>
                       <div className="flex items-center gap-3 text-xs font-mono">
                         <span className="text-amber-400/80 bg-amber-400/10 px-2 py-0.5 rounded">★ {repo.stars}</span>
                         <span className="text-slate-500">{Object.keys(repo.languages || {}).slice(0, 2).join(', ')}</span>
                       </div>
                     </div>
-                    <div className="text-sm leading-relaxed text-slate-400">
+                    <div className="text-xs leading-relaxed text-slate-400">
                       {repo.ai_description}
                     </div>
                   </div>
@@ -851,40 +852,40 @@ export const Dashboard: React.FC = () => {
                       <LeetCodeIcon />
                     </div>
                     <div>
-                      <h3 className="text-2xl font-black text-slate-100" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
+                      <h3 className="text-xs font-black text-slate-100" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
                         LeetCode Profile
                       </h3>
-                      <p className="text-emerald-400 font-bold text-sm">Top {Math.max(1, Math.round((report.leetcode_stats.ranking / 5000000) * 100))}% globally</p>
+                      <p className="text-emerald-400 font-bold text-xs">Top {Math.max(1, Math.round((report.leetcode_stats.ranking / 5000000) * 100))}% globally</p>
                     </div>
                   </div>
                   
                   <div className="grid grid-cols-3 gap-4">
                     <div className="bg-[#030509] border border-slate-800 rounded-2xl p-4 text-center shadow-inner relative overflow-hidden">
                       <div className="absolute top-0 left-0 w-full h-1 bg-emerald-400"></div>
-                      <div className="text-emerald-400 font-black text-3xl mb-1">{report.leetcode_stats.solvedEasy}</div>
+                      <div className="text-emerald-400 font-black text-xs mb-1">{report.leetcode_stats.solvedEasy}</div>
                       <div className="text-[10px] uppercase tracking-widest text-slate-500 font-bold">Easy</div>
                     </div>
                     <div className="bg-[#030509] border border-slate-800 rounded-2xl p-4 text-center shadow-inner relative overflow-hidden">
                       <div className="absolute top-0 left-0 w-full h-1 bg-amber-400"></div>
-                      <div className="text-amber-400 font-black text-3xl mb-1">{report.leetcode_stats.solvedMedium}</div>
+                      <div className="text-amber-400 font-black text-xs mb-1">{report.leetcode_stats.solvedMedium}</div>
                       <div className="text-[10px] uppercase tracking-widest text-slate-500 font-bold">Medium</div>
                     </div>
                     <div className="bg-[#030509] border border-slate-800 rounded-2xl p-4 text-center shadow-inner relative overflow-hidden">
                       <div className="absolute top-0 left-0 w-full h-1 bg-rose-500"></div>
-                      <div className="text-rose-500 font-black text-3xl mb-1">{report.leetcode_stats.solvedHard}</div>
+                      <div className="text-rose-500 font-black text-xs mb-1">{report.leetcode_stats.solvedHard}</div>
                       <div className="text-[10px] uppercase tracking-widest text-slate-500 font-bold">Hard</div>
                     </div>
                   </div>
                   
                   <div className="bg-emerald-950/20 border border-emerald-500/10 rounded-xl px-5 py-4 flex items-center justify-between">
-                    <div className="text-sm font-bold text-slate-400">Total Solved</div>
-                    <div className="text-xl font-black text-slate-100">{report.leetcode_stats.solvedTotal} <span className="text-slate-500 text-xs ml-1">Problems</span></div>
+                    <div className="text-xs font-bold text-slate-400">Total Solved</div>
+                    <div className="text-xs font-black text-slate-100">{report.leetcode_stats.solvedTotal} <span className="text-slate-500 text-xs ml-1">Problems</span></div>
                   </div>
                 </div>
 
                 {/* Right side: Topic Mastery (Trees, Graphs, Stack, etc.) */}
                 <div className="flex-[1.5] w-full">
-                  <h4 className="text-sm font-black text-slate-300 uppercase tracking-widest mb-6 flex items-center gap-2">
+                  <h4 className="text-xs font-black text-slate-300 uppercase tracking-widest mb-6 flex items-center gap-2">
                     <Sparkles className="w-4 h-4 text-emerald-400" />
                     Topic Mastery
                   </h4>
@@ -907,7 +908,7 @@ export const Dashboard: React.FC = () => {
                                   : 'bg-[#030509] border-slate-800 text-slate-400'
                             }`}
                           >
-                            <span className="text-sm font-bold">{topic.tagName}</span>
+                            <span className="text-xs font-bold">{topic.tagName}</span>
                             <div className={`w-1 h-1 rounded-full ${isHigh ? 'bg-emerald-400' : 'bg-slate-600'}`}></div>
                             <span className={`text-xs font-black ${isHigh ? 'text-white' : 'text-slate-500'}`}>{topic.problemsSolved}</span>
                           </div>
@@ -915,7 +916,7 @@ export const Dashboard: React.FC = () => {
                       })}
                     </div>
                   ) : (
-                    <div className="text-sm text-slate-500 italic p-6 border border-dashed border-slate-800 rounded-2xl text-center">
+                    <div className="text-xs text-slate-500 italic p-6 border border-dashed border-slate-800 rounded-2xl text-center">
                       Detailed topic statistics are not publicly available for this user.
                     </div>
                   )}
@@ -928,7 +929,7 @@ export const Dashboard: React.FC = () => {
           <div className="flex justify-center pt-8 pb-20 border-t border-emerald-500/10">
             <button
               onClick={() => setViewReport(true)}
-              className="px-8 py-4 bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-500 hover:from-emerald-500 hover:via-teal-500 hover:to-emerald-400 text-white font-black rounded-2xl text-sm uppercase tracking-widest transition-all duration-300 shadow-[0_0_30px_rgba(16,185,129,0.15)] flex items-center justify-center gap-2 hover:scale-[1.02]"
+              className="px-8 py-4 bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-500 hover:from-emerald-500 hover:via-teal-500 hover:to-emerald-400 text-white font-black rounded-2xl text-xs uppercase tracking-widest transition-all duration-300 shadow-[0_0_30px_rgba(16,185,129,0.15)] flex items-center justify-center gap-2 hover:scale-[1.02]"
             >
               Proceed to Final Report
               <ChevronRight className="w-5 h-5" />
@@ -938,35 +939,68 @@ export const Dashboard: React.FC = () => {
       )}
       {/* 4. FINAL ASSESSMENT REPORT DISPLAY (COMPLETED PHASE) */}
       {status === 'completed' && viewingReport && report && evidence && (() => {
-        // Dynamically calculate resume health parameters
-        const verifiedCount = evidence?.score_breakdown?.verified_keywords?.length || 0;
-        const unverifiedCount = evidence?.score_breakdown?.unverified_keywords?.length || 0;
-        const totalKeywords = verifiedCount + unverifiedCount;
-        const atsScore = totalKeywords > 0 
-          ? Math.round((verifiedCount / totalKeywords) * 35 + 60) 
-          : 75;
+        // Enforce frontend calculation of score based strictly on component weights out of 100
+        const calculatedScore = Math.round(
+          (report.skill_verification * 0.25) + 
+          (report.commit_quality * 0.20) + 
+          (report.project_complexity * 0.20) + 
+          (report.recency * 0.15) + 
+          (report.cross_reference * 0.12) + 
+          (report.activity_consistency * 0.08)
+        );
 
-        const unverifiedList = evidence?.score_breakdown?.unverified_keywords || [];
+        // Dynamically calculate resume health parameters
+        const baseVerified = evidence?.score_breakdown?.verified_keywords || [];
+        const baseUnverified = evidence?.score_breakdown?.unverified_keywords || [];
+        
+        // Fallback to parsed resume keywords if breakdown is totally empty
+        const fallbackLanguages = evidence?.resume_extracted_metrics?.keywords?.languages || [];
+        const fallbackFrameworks = evidence?.resume_extracted_metrics?.keywords?.frameworks || [];
+        const fallbackTools = evidence?.resume_extracted_metrics?.keywords?.tools || [];
+        
+        const repoSkills = (evidence?.repositories_analyzed || []).flatMap((r: any) => [
+          ...Object.keys(r.languages || {}), 
+          ...(r.dependencies || [])
+        ]);
+        const uniqueRepoSkills = Array.from(new Set(repoSkills)).filter((s: any) => s.length > 2).slice(0, 12);
+
+        const initialVerifiedList = baseVerified.length > 0 ? baseVerified : [...fallbackLanguages, ...fallbackFrameworks, ...uniqueRepoSkills].slice(0, 15);
+        const initialUnverifiedList = baseVerified.length === 0 && baseUnverified.length === 0 ? fallbackTools : baseUnverified;
+
+        const verifiedList = initialVerifiedList;
+        const unverifiedList = initialUnverifiedList;
+
+        const verifiedCount = verifiedList.length;
+        const unverifiedCount = unverifiedList.length;
+        const totalKeywords = verifiedCount + unverifiedCount;
+        let atsScore = 0;
+        if (totalKeywords > 0) {
+          const overlapScore = (verifiedCount / totalKeywords) * 35;
+          const volumeScore = Math.min(25, (verifiedCount / 10) * 25);
+          const reliabilityPenalty = Math.min(20, unverifiedCount * 10);
+          const formatScore = 20 - reliabilityPenalty;
+          atsScore = Math.max(0, Math.min(80, Math.round(overlapScore + volumeScore + formatScore)));
+        }
+
         const mistakes = [
           unverifiedList.length > 0 
-            ? `Listed proficiencies [${unverifiedList.slice(0, 3).join(', ')}] in resume are missing matching files or libraries in GitHub repos.`
-            : "Resume projects lack deep links or reference indicators to live repositories.",
-          "Commit history has minor occurrences of unstructured or generic messages (e.g. 'update code')."
+            ? `Listed proficiencies [${unverifiedList.slice(0, 3).join(', ')}] in resume lack robust reference indicators or deep links to live, active repositories.`
+            : "Resume projects lack explicit deep links or reference indicators mapping to your live repositories.",
+          `Commit history across your ${evidence?.repositories_analyzed?.length || 'analyzed'} repositories shows minor occurrences of unstructured or generic commit messages.`
         ];
         
         const improvements = [
           unverifiedList.length > 0
-            ? `Verify claimed skills by pushing projects utilizing ${unverifiedList.slice(0, 2).join(', ')} to public repositories.`
-            : "Add specific dependencies and packages in package.json or requirements.txt to clear validation nodes.",
-          "Adopt Conventional Commits format (feat:, fix:, docs:) in repositories.",
-          "Increase unit testing coverage within GitHub repos to boost verified project complexity metrics."
+            ? `Verify your claimed skills by pushing code that actively imports and utilizes ${unverifiedList.slice(0, 2).join(' and ')} to your public repositories.`
+            : "Add specific dependencies and packages explicitly in package.json or requirements.txt to clear AI validation nodes.",
+          "Adopt the Conventional Commits format (feat:, fix:, docs:) universally across your repositories.",
+          `Increase test coverage and complex algorithms within your ${evidence?.repositories_analyzed?.[0]?.name || 'primary'} repo to boost project complexity metrics.`
         ];
 
         const repoChartData = evidence?.repositories_analyzed?.map((r: any) => ({
           name: r.name.length > 18 ? `${r.name.slice(0, 15)}...` : r.name,
           Commits: r.commits_analyzed || 0,
-          Stars: r.stars || 0,
-          Forks: r.forks || 0,
+          Forks: r.forks_count || r.forks || 0,
         })) || [];
 
         return (
@@ -990,17 +1024,17 @@ export const Dashboard: React.FC = () => {
               {/* Glass Score medallion */}
               <div className="md:col-span-4 flex flex-col items-center justify-center border-b md:border-b-0 md:border-r border-emerald-500/10 pb-6 md:pb-0 md:pr-8">
                 <span className="text-[10px] text-slate-500 uppercase font-bold tracking-wider">
-                  Composite score
+                  Competency ScoreCard
                 </span>
                 <div className="relative flex items-center justify-center w-28 h-28 rounded-full score-medallion mt-3">
                   <div className="text-center">
-                    <span className="text-xl font-black text-slate-100 tracking-tight">{report.overall_score}</span>
+                    <span className="text-xs font-black text-slate-100 tracking-tight">{calculatedScore}</span>
                     <span className="text-xs text-slate-500 block -mt-1 font-bold">/100</span>
                   </div>
                 </div>
                 
-                <div className={`mt-3 px-3 py-1 text-[10px] font-bold rounded-full border ${getRatingLabel(report.overall_score).color}`}>
-                  {getRatingLabel(report.overall_score).label}
+                <div className={`mt-3 px-3 py-1 text-[10px] font-bold rounded-full border ${getRatingLabel(calculatedScore).color}`}>
+                  {getRatingLabel(calculatedScore).label}
                 </div>
               </div>
 
@@ -1008,7 +1042,7 @@ export const Dashboard: React.FC = () => {
               <div className="md:col-span-8 space-y-4 text-xs text-slate-400">
                 <h3 className="text-xs font-bold text-slate-100 flex items-center gap-1.5 tracking-wider uppercase" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
                   <Award className="w-5 h-5 text-emerald-400" />
-                  Verification Report Finalized
+                  Competency ScoreCard
                 </h3>
                 
                 <div className="grid grid-cols-3 gap-4 pt-2 border-t border-slate-900">
@@ -1058,19 +1092,22 @@ export const Dashboard: React.FC = () => {
             {/* Verification Subscores Breakdown Grid */}
             <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
               {[
-                { name: "Skill Verification", val: report.skill_verification, weight: "25%", color: "border-emerald-500/10 hover:border-emerald-500/25" },
-                { name: "Commit Quality", val: report.commit_quality, weight: "20%", color: "border-blue-500/10 hover:border-blue-500/25" },
-                { name: "Project Complexity", val: report.project_complexity, weight: "20%", color: "border-purple-500/10 hover:border-purple-500/25" },
-                { name: "Recency Weighting", val: report.recency, weight: "15%", color: "border-pink-500/10 hover:border-pink-500/25" },
-                { name: "Cross Reference", val: report.cross_reference, weight: "12%", color: "border-amber-500/10 hover:border-amber-500/25" },
-                { name: "Consistency", val: report.activity_consistency, weight: "8%", color: "border-teal-500/10 hover:border-teal-500/25" },
-              ].map((sub, i) => (
-                <div key={i} className={`fancy-card p-4 text-center border bg-[#06090f] transition-all duration-300 hover:scale-[1.02] ${sub.color}`}>
-                  <span className="text-[9px] text-slate-500 uppercase font-bold tracking-wider block leading-tight">{sub.name}</span>
-                  <span className="text-base font-black block mt-1 text-slate-200">{sub.val}%</span>
-                  <span className="text-[8px] text-slate-500 block mt-0.5 font-semibold">Weight: {sub.weight}</span>
-                </div>
-              ))}
+                { name: "Skill Verification", val: report.skill_verification, weight: 25, color: "border-emerald-500/10 hover:border-emerald-500/25" },
+                { name: "Commit Quality", val: report.commit_quality, weight: 20, color: "border-blue-500/10 hover:border-blue-500/25" },
+                { name: "Project Complexity", val: report.project_complexity, weight: 20, color: "border-purple-500/10 hover:border-purple-500/25" },
+                { name: "Recency Weighting", val: report.recency, weight: 15, color: "border-pink-500/10 hover:border-pink-500/25" },
+                { name: "Cross Reference", val: report.cross_reference, weight: 12, color: "border-amber-500/10 hover:border-amber-500/25" },
+                { name: "Consistency", val: report.activity_consistency, weight: 8, color: "border-teal-500/10 hover:border-teal-500/25" },
+              ].map((sub, i) => {
+                const limitVal = (sub.val * (sub.weight / 100)).toFixed(1).replace(/\.0$/, '');
+                return (
+                  <div key={i} className={`fancy-card p-4 text-center border bg-[#06090f] transition-all duration-300 hover:scale-[1.02] ${sub.color}`}>
+                    <span className="text-[9px] text-slate-500 uppercase font-bold tracking-wider block leading-tight">{sub.name}</span>
+                    <span className="text-sm font-black block mt-1 text-slate-200">{limitVal}%</span>
+                    <span className="text-[8px] text-slate-500 block mt-0.5 font-semibold">Max: {sub.weight}%</span>
+                  </div>
+                );
+              })}
             </div>
 
             {/* Split row: Verification Matrix & Resume insights */}
@@ -1092,9 +1129,9 @@ export const Dashboard: React.FC = () => {
                     <h4 className="text-[10px] font-bold text-emerald-400 uppercase tracking-wider">
                       ✓ Verified Technical Proficiencies
                     </h4>
-                    {evidence?.score_breakdown?.verified_keywords?.length > 0 ? (
+                    {verifiedList.length > 0 ? (
                       <div className="flex flex-wrap gap-1.5">
-                        {evidence.score_breakdown.verified_keywords.map((skill: string, idx: number) => (
+                        {verifiedList.map((skill: string, idx: number) => (
                           <span 
                             key={idx}
                             className="text-[10px] font-mono font-bold px-2.5 py-1 bg-emerald-950/20 border border-emerald-500/25 text-emerald-300 rounded-full"
@@ -1113,9 +1150,9 @@ export const Dashboard: React.FC = () => {
                     <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
                       ✗ Unverified / Resume Only Claims
                     </h4>
-                    {evidence?.score_breakdown?.unverified_keywords?.length > 0 ? (
+                    {unverifiedList.length > 0 ? (
                       <div className="flex flex-wrap gap-1.5">
-                        {evidence.score_breakdown.unverified_keywords.map((skill: string, idx: number) => (
+                        {unverifiedList.map((skill: string, idx: number) => (
                           <span 
                             key={idx}
                             className="text-[10px] font-mono px-2.5 py-1 bg-slate-900/40 border border-slate-800 text-slate-400 rounded-full"
@@ -1143,7 +1180,7 @@ export const Dashboard: React.FC = () => {
                   {/* ATS Score & Gauge */}
                   <div className="flex items-center gap-4 mb-4 bg-black/40 border border-slate-900 rounded-xl p-3.5">
                     <div className="relative flex items-center justify-center w-16 h-16 rounded-full border-4 border-emerald-500/20 bg-slate-950 shrink-0">
-                      <span className="text-lg font-black text-emerald-400">{atsScore}</span>
+                      <span className="text-xs font-black text-emerald-400">{atsScore}</span>
                       <span className="text-[8px] text-slate-500 block absolute bottom-1.5 font-bold">ATS %</span>
                     </div>
                     <div>
@@ -1158,7 +1195,7 @@ export const Dashboard: React.FC = () => {
                   <div className="space-y-2 mb-4">
                     <h4 className="text-[10px] font-bold text-rose-400 uppercase tracking-wider flex items-center gap-1.5">
                       <AlertCircle className="w-3 h-3" />
-                      Areas of Improvement (Mistakes)
+                      Good
                     </h4>
                     <ul className="space-y-1.5">
                       {mistakes.map((m, idx) => (
@@ -1173,7 +1210,7 @@ export const Dashboard: React.FC = () => {
                   <div className="space-y-2">
                     <h4 className="text-[10px] font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
                       <Sparkles className="w-3 h-3" />
-                      Actionable Recommendations (Betters)
+                      Better
                     </h4>
                     <ul className="space-y-1.5">
                       {improvements.map((imp, idx) => (
@@ -1191,66 +1228,51 @@ export const Dashboard: React.FC = () => {
 
             {/* Repository Activity & Performance (separate container box, dynamic) */}
             <div className="fancy-card p-8 shadow-2xl border border-slate-900 bg-[#06090f] space-y-4">
-              <h3 className="text-xs font-bold text-slate-300 mb-6 flex items-center gap-1.5 tracking-wider uppercase">
-                <TrendingUp className="w-4 h-4 text-emerald-400" />
-                Repository Activity & Performance Metrics
-              </h3>
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xs font-bold text-slate-300 flex items-center gap-1.5 tracking-wider uppercase m-0">
+                  <TrendingUp className="w-4 h-4 text-emerald-400" />
+                  Repository Activity & Performance Metrics
+                </h3>
+                <div className="flex bg-slate-900 border border-slate-800 rounded-lg p-1">
+                  <button 
+                    onClick={() => setChartMetric('Commits')}
+                    className={`px-4 py-1.5 text-[10px] font-bold uppercase tracking-wider rounded-md transition-all ${chartMetric === 'Commits' ? 'bg-emerald-500/20 text-emerald-400' : 'text-slate-400 hover:text-slate-200'}`}
+                  >
+                    Commits
+                  </button>
+                  <button 
+                    onClick={() => setChartMetric('Forks')}
+                    className={`px-4 py-1.5 text-[10px] font-bold uppercase tracking-wider rounded-md transition-all ${chartMetric === 'Forks' ? 'bg-emerald-500/20 text-emerald-400' : 'text-slate-400 hover:text-slate-200'}`}
+                  >
+                    Forks
+                  </button>
+                </div>
+              </div>
               <div className="w-full h-80">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart 
                     data={repoChartData} 
-                    margin={{ top: 20, right: 30, left: 10, bottom: 20 }}
-                    barGap={16}
-                    barCategoryGap="35%"
+                    margin={{ top: 20, right: 30, left: 0, bottom: 20 }}
                   >
                     <defs>
-                      <linearGradient id="colorCommits" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#059669" stopOpacity={0.85}/>
-                        <stop offset="95%" stopColor="#10b981" stopOpacity={0.15}/>
-                      </linearGradient>
-                      <linearGradient id="colorStars" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.85}/>
-                        <stop offset="95%" stopColor="#3b82f6" stopOpacity={0.15}/>
-                      </linearGradient>
-                      <linearGradient id="colorForks" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.85}/>
-                        <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0.15}/>
+                      <linearGradient id="colorBar" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor={chartMetric === 'Commits' ? '#10b981' : '#a78bfa'} stopOpacity={1}/>
+                        <stop offset="100%" stopColor={chartMetric === 'Commits' ? '#047857' : '#6d28d9'} stopOpacity={0.4}/>
                       </linearGradient>
                     </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" opacity={0.15} />
-                    <XAxis dataKey="name" tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 'bold' }} axisLine={{ stroke: '#1e293b' }} tickLine={false} />
-                    <YAxis tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 'bold' }} axisLine={{ stroke: '#1e293b' }} tickLine={false} />
-                    <Legend 
-                      wrapperStyle={{ fontSize: '10px', paddingTop: '15px' }} 
-                      iconType="circle"
-                      iconSize={8}
+                    <CartesianGrid strokeDasharray="4 4" stroke="#1e293b" opacity={0.4} vertical={false} />
+                    <XAxis dataKey="name" interval={0} tick={{ fill: '#64748b', fontSize: 9, fontWeight: 'bold' }} axisLine={{ stroke: '#1e293b' }} tickLine={false} dy={10} />
+                    <YAxis tick={{ fill: '#64748b', fontSize: 10, fontWeight: 'bold' }} axisLine={{ stroke: '#1e293b' }} tickLine={false} dx={-10} />
+                    <Tooltip 
+                      cursor={{ fill: '#1e293b', opacity: 0.3 }}
+                      contentStyle={{ backgroundColor: '#020617', borderColor: '#1e293b', borderRadius: '12px', fontSize: '11px', fontWeight: 'bold', color: '#f8fafc', boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.5)' }}
+                      itemStyle={{ color: chartMetric === 'Commits' ? '#34d399' : '#c4b5fd' }}
                     />
                     <Bar 
-                      dataKey="Commits" 
-                      fill="url(#colorCommits)" 
-                      stroke="#059669" 
-                      strokeWidth={1} 
-                      radius={[4, 4, 0, 0]} 
-                      barSize={12} 
-                      activeBar={false} 
-                    />
-                    <Bar 
-                      dataKey="Stars" 
-                      fill="url(#colorStars)" 
-                      stroke="#3b82f6" 
-                      strokeWidth={1} 
-                      radius={[4, 4, 0, 0]} 
-                      barSize={12} 
-                      activeBar={false} 
-                    />
-                    <Bar 
-                      dataKey="Forks" 
-                      fill="url(#colorForks)" 
-                      stroke="#8b5cf6" 
-                      strokeWidth={1} 
-                      radius={[4, 4, 0, 0]} 
-                      barSize={12} 
-                      activeBar={false} 
+                      dataKey={chartMetric} 
+                      fill="url(#colorBar)" 
+                      radius={[6, 6, 0, 0]}
+                      barSize={40}
                     />
                   </BarChart>
                 </ResponsiveContainer>
@@ -1270,7 +1292,7 @@ export const Dashboard: React.FC = () => {
                         <LeetCodeIcon />
                       </div>
                       <div>
-                        <h3 className="text-sm font-bold text-slate-100">
+                        <h3 className="text-xs font-bold text-slate-100">
                           LeetCode Algorithm Statistics
                         </h3>
                         <p className="text-emerald-400 font-bold text-[10px] mt-0.5">
@@ -1281,15 +1303,15 @@ export const Dashboard: React.FC = () => {
 
                     <div className="grid grid-cols-3 gap-3">
                       <div className="bg-[#030509] border border-slate-800 rounded-xl p-3 text-center">
-                        <div className="text-emerald-400 font-black text-xl mb-0.5">{evidence.leetcode_stats.solvedEasy || 0}</div>
+                        <div className="text-emerald-400 font-black text-xs mb-0.5">{evidence.leetcode_stats.solvedEasy || 0}</div>
                         <div className="text-[8px] uppercase tracking-widest text-slate-500 font-bold">Easy</div>
                       </div>
                       <div className="bg-[#030509] border border-slate-800 rounded-xl p-3 text-center">
-                        <div className="text-amber-400 font-black text-xl mb-0.5">{evidence.leetcode_stats.solvedMedium || 0}</div>
+                        <div className="text-amber-400 font-black text-xs mb-0.5">{evidence.leetcode_stats.solvedMedium || 0}</div>
                         <div className="text-[8px] uppercase tracking-widest text-slate-500 font-bold">Medium</div>
                       </div>
                       <div className="bg-[#030509] border border-slate-800 rounded-xl p-3 text-center">
-                        <div className="text-rose-500 font-black text-xl mb-0.5">{evidence.leetcode_stats.solvedHard || 0}</div>
+                        <div className="text-rose-500 font-black text-xs mb-0.5">{evidence.leetcode_stats.solvedHard || 0}</div>
                         <div className="text-[8px] uppercase tracking-widest text-slate-500 font-bold">Hard</div>
                       </div>
                     </div>
@@ -1342,7 +1364,7 @@ export const Dashboard: React.FC = () => {
             <div className="fancy-card p-6 shadow-xl border border-slate-900 bg-[#030509]/30">
               <button 
                 onClick={() => setShowLogs(!showLogs)}
-                className="w-full flex items-center justify-between text-sm font-bold text-slate-400 hover:text-slate-200 transition"
+                className="w-full flex items-center justify-between text-xs font-bold text-slate-400 hover:text-slate-200 transition"
               >
                 <span className="flex items-center gap-2">
                   <Terminal className="w-4 h-4 text-emerald-400" />
@@ -1377,14 +1399,14 @@ export const Dashboard: React.FC = () => {
           <div className="flex justify-start">
             <button
               onClick={resetStore}
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#070b13] hover:bg-[#0c121e] border border-red-500/10 rounded-xl text-sm font-bold text-slate-400 transition-all duration-300 hover:border-red-500/35"
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#070b13] hover:bg-[#0c121e] border border-red-500/10 rounded-xl text-xs font-bold text-slate-400 transition-all duration-300 hover:border-red-500/35"
             >
               <ArrowLeft className="w-4 h-4 text-red-400" />
               Back to Form
             </button>
           </div>
           <div className="fancy-card p-8 shadow-2xl border-red-500/20 bg-red-950/10">
-            <h3 className="text-xl font-bold text-red-400 flex items-center gap-2 mb-4">
+            <h3 className="text-xs font-bold text-red-400 flex items-center gap-2 mb-4">
               <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
               Scan Failed
             </h3>
@@ -1404,3 +1426,5 @@ export const Dashboard: React.FC = () => {
     </div>
   );
 };
+
+

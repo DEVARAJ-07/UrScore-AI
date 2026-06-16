@@ -136,24 +136,35 @@ export class GithubCrawler {
         // 4. Fetch Commits
         const commits: { message: string; date: string; }[] = [];
         try {
-          let commitsRes = await axios.get(`https://api.github.com/repos/${username}/${r.name}/commits?author=${username}&per_page=10`, { headers, timeout: 3000 });
-          if (!Array.isArray(commitsRes.data) || commitsRes.data.length === 0) {
-            commitsRes = await axios.get(`https://api.github.com/repos/${username}/${r.name}/commits?per_page=10`, { headers, timeout: 3000 });
-          }
-          if (Array.isArray(commitsRes.data)) {
-            commitsRes.data.forEach((c: any) => {
-              if (c && c.commit) {
-                commits.push({
-                  message: c.commit.message || '',
-                  date: c.commit.author?.date || c.commit.committer?.date || new Date().toISOString()
-                });
+          for (let page = 1; page <= 4; page++) {
+            let commitsRes = await axios.get(`https://api.github.com/repos/${username}/${r.name}/commits?author=${username}&per_page=100&page=${page}`, { headers, timeout: 3000 });
+            
+            if (!Array.isArray(commitsRes.data) || commitsRes.data.length === 0) {
+              if (page === 1) {
+                commitsRes = await axios.get(`https://api.github.com/repos/${username}/${r.name}/commits?per_page=100&page=1`, { headers, timeout: 3000 });
+              } else {
+                break;
               }
-            });
+            }
+            
+            if (Array.isArray(commitsRes.data) && commitsRes.data.length > 0) {
+              commitsRes.data.forEach((c: any) => {
+                if (c && c.commit) {
+                  commits.push({
+                    message: c.commit.message || '',
+                    date: c.commit.author?.date || c.commit.committer?.date || new Date().toISOString()
+                  });
+                }
+              });
+              if (commitsRes.data.length < 100) break;
+            } else {
+              break;
+            }
           }
         } catch (e) {
           // Fallback fetch if the author endpoint fails
           try {
-            const commitsRes = await axios.get(`https://api.github.com/repos/${username}/${r.name}/commits?per_page=10`, { headers, timeout: 3000 });
+            const commitsRes = await axios.get(`https://api.github.com/repos/${username}/${r.name}/commits?per_page=100`, { headers, timeout: 3000 });
             if (Array.isArray(commitsRes.data)) {
               commitsRes.data.forEach((c: any) => {
                 if (c && c.commit) {

@@ -4,6 +4,8 @@ import { getGateway } from '../ws/gateway';
 import { startWorkerScan } from '../services/runner';
 import axios from 'axios';
 import multer from 'multer';
+import * as fs from 'fs';
+import * as path from 'path';
 const pdfParse = require('pdf-parse');
 
 const upload = multer({ storage: multer.memoryStorage() });
@@ -66,6 +68,25 @@ router.post('/trigger', upload.single('resume_file'), async (req: Request, res: 
         resume_text = pdfData.text.replace(/\0/g, ' ').trim();
       } catch (pdfErr) {
         console.error(`[API ERROR] Failed to parse PDF server-side:`, pdfErr);
+      }
+    }
+
+    // Save uploaded file to public/resumes directory on local disk
+    if (req.file) {
+      try {
+        const resumesDir = path.resolve(__dirname, '../../public/resumes');
+        if (!fs.existsSync(resumesDir)) {
+          fs.mkdirSync(resumesDir, { recursive: true });
+        }
+        const targetFilename = resume_filename || req.file.originalname;
+        const filePath = path.join(resumesDir, targetFilename);
+        fs.writeFileSync(filePath, req.file.buffer);
+        console.log(`[API] Saved uploaded resume file to disk at: ${filePath}`);
+        if (!resume_filename) {
+          resume_filename = targetFilename;
+        }
+      } catch (writeErr: any) {
+        console.error(`[API ERROR] Failed to save uploaded resume file:`, writeErr);
       }
     }
 
