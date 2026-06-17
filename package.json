@@ -7,6 +7,9 @@
     "install-backend": "npm --prefix backend install",
     "install-worker": "npm --prefix worker install",
     "install-frontend": "npm --prefix frontend install",
+    "build-backend": "npm --prefix backend run build",
+    "build-worker": "npm --prefix worker run build",
+    "build": "npm run build-worker && npm run build-backend",
     "dev-backend": "npm --prefix backend run dev",
     "dev-frontend": "npm --prefix frontend run dev",
     "dev": "npx concurrently -k -n \"backend,frontend\" -c \"magenta,cyan\" \"npm run dev-backend\" \"npm run dev-frontend\""

@@ -1,5 +1,6 @@
 import { spawn } from 'child_process';
 import * as path from 'path';
+import * as fs from 'fs';
 import { db } from '../db';
 import { getGateway } from '../ws/gateway';
 
@@ -13,35 +14,72 @@ export async function startWorkerScan(
 ): Promise<void> {
   const gateway = getGateway();
   
-  // Path to the worker script
-  // During local development using ts-node, we execute the TypeScript worker directly.
-  const workerPath = path.resolve(__dirname, '../../../worker/src/index.ts');
+  // Path to the worker scripts
+  const compiledWorkerPath = path.resolve(__dirname, '../../../worker/dist/index.js');
+  const isProd = process.env.NODE_ENV === 'production' || !__filename.endsWith('.ts');
+  const useCompiled = isProd && fs.existsSync(compiledWorkerPath);
   
-  console.log(`[RUNNER] Spawning worker for scan ${scanId} at path: ${workerPath}`);
+  let execPath = process.execPath;
+  let argsList: string[] = [];
 
-  // We spawn the worker using ts-node to execute TypeScript directly
-  const child = spawn(
-    process.execPath,
-    [
-      path.resolve(__dirname, '../../node_modules/ts-node/dist/bin.js'),
-      workerPath,
+  if (useCompiled) {
+    console.log(`[RUNNER] Found compiled worker. Spawning worker in production mode using node.`);
+    argsList = [
+      compiledWorkerPath,
       scanId,
       githubUsername,
       resumeText || '',
       leetcodeUsername || '',
       portfolioUrl || '',
       githubRepoName || ''
-    ],
-    {
-      env: {
-        ...process.env,
-        TS_NODE_PROJECT: path.resolve(__dirname, '../../../worker/tsconfig.json'),
-        TS_NODE_TRANSPILE_ONLY: 'true'
-      },
-      cwd: path.resolve(__dirname, '../../../worker'),
-      stdio: ['ignore', 'pipe', 'pipe', 'ipc']
-    }
-  );
+    ];
+  } else {
+    const workerTsPath = path.resolve(__dirname, '../../../worker/src/index.ts');
+    const tsNodeBin = path.resolve(__dirname, '../../node_modules/ts-node/dist/bin.js');
+    console.log(`[RUNNER] Compiled worker not found. Spawning worker in development mode using ts-node.`);
+    argsList = [
+      tsNodeBin,
+      workerTsPath,
+      scanId,
+      githubUsername,
+      resumeText || '',
+      leetcodeUsername || '',
+      portfolioUrl || '',
+      githubRepoName || ''
+    ];
+  }
+
+  console.log(`[RUNNER] Spawning process: ${execPath} with args:`, argsList);
+
+  let child;
+  try {
+    child = spawn(
+      execPath,
+      argsList,
+      {
+        env: {
+          ...process.env,
+          TS_NODE_PROJECT: path.resolve(__dirname, '../../../worker/tsconfig.json'),
+          TS_NODE_TRANSPILE_ONLY: 'true'
+        },
+        cwd: path.resolve(__dirname, '../../../worker'),
+        stdio: ['ignore', 'pipe', 'pipe', 'ipc']
+      }
+    );
+  } catch (spawnErr: any) {
+    console.error(`[RUNNER ERROR] Failed to spawn child worker process:`, spawnErr);
+    await db.updateScan(scanId, {
+      status: 'failed',
+      progress: 100,
+      logs: [`[SYSTEM ERROR] Failed to start analysis worker: ${spawnErr.message}`]
+    });
+    gateway.sendScanUpdate(scanId, {
+      status: 'failed',
+      progress: 100,
+      logs: [`[SYSTEM ERROR] Failed to start analysis worker.`]
+    });
+    return;
+  }
 
   child.stdout?.on('data', (data) => {
     console.log(`[WORKER OUT] ${data.toString().trim()}`);
