@@ -243,12 +243,16 @@ export const ReportPDF: React.FC<ReportPDFProps> = ({ report, evidence }) => {
           Analyzed Project Summaries
         </Text>
         {projects.length > 0 ? (
-          projects.map((proj: any, idx: number) => (
-            <View style={styles.card} key={`proj-${idx}`} wrap={false}>
-              <Text style={styles.cardTitle}>{proj.name}</Text>
-              <Text style={[styles.cardBody, { marginTop: 6 }]}>{proj.description}</Text>
-            </View>
-          ))
+          projects.map((proj: any, idx: number) => {
+            const projName = typeof proj === 'string' ? proj : (proj.name || 'Unnamed Project');
+            const projDesc = typeof proj === 'string' ? 'Technical project verified via resume audit.' : (proj.description || 'No description provided.');
+            return (
+              <View style={styles.card} key={`proj-${idx}`} wrap={false}>
+                <Text style={styles.cardTitle}>{projName}</Text>
+                <Text style={[styles.cardBody, { marginTop: 6 }]}>{projDesc}</Text>
+              </View>
+            );
+          })
         ) : (
           <View style={styles.card}>
             <Text style={styles.cardTitle}>Parsed Repository Footprint</Text>

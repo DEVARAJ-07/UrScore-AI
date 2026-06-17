@@ -146,11 +146,29 @@ async function run() {
             else {
                 pdfUrl = `http://localhost:5001/public/reports/${filename}`;
                 sendLog(`[AWS WARNING] Missing credentials. Simulated PDF upload: ${pdfUrl}`, 97);
+                try {
+                    const destDir = path.resolve(__dirname, '../../backend/public/reports');
+                    if (!fs.existsSync(destDir))
+                        fs.mkdirSync(destDir, { recursive: true });
+                    fs.copyFileSync(pdfPath, path.join(destDir, filename));
+                }
+                catch (copyErr) {
+                    sendLog(`[SYSTEM ERROR] Local copy failed: ${copyErr.message}`, 97);
+                }
             }
         }
         catch (e) {
             sendLog(`[AWS ERROR] S3/SES Failed: ${e.message}`, 97);
             pdfUrl = `http://localhost:5001/public/reports/${filename}`;
+            try {
+                const destDir = path.resolve(__dirname, '../../backend/public/reports');
+                if (!fs.existsSync(destDir))
+                    fs.mkdirSync(destDir, { recursive: true });
+                fs.copyFileSync(pdfPath, path.join(destDir, filename));
+            }
+            catch (copyErr) {
+                sendLog(`[SYSTEM ERROR] Local copy failed: ${copyErr.message}`, 97);
+            }
         }
         const finalizedReport = {
             ...report,

@@ -53,9 +53,8 @@ export const useScanStore = create<ScanState>((set, get) => ({
       viewingReport: false
     });
 
-    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    // Match server port
-    const socketUrl = `${protocol}//localhost:5001`;
+    const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001';
+    const socketUrl = apiBase.replace(/^http/, 'ws');
     const socket = new WebSocket(socketUrl);
     activeSocket = socket;
 
@@ -150,8 +149,9 @@ export const useScanStore = create<ScanState>((set, get) => ({
 // HTTP fetcher helper to get the generated report and store in Zustand
 async function fetchReportAndEvidence(scanId: string, set: any) {
   try {
-    const reportRes = await fetch(`http://localhost:5001/api/scans/${scanId}/report`);
-    const evidenceRes = await fetch(`http://localhost:5001/api/scans/${scanId}/evidence`);
+    const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001';
+    const reportRes = await fetch(`${apiBase}/api/scans/${scanId}/report`);
+    const evidenceRes = await fetch(`${apiBase}/api/scans/${scanId}/evidence`);
     
     if (reportRes.ok && evidenceRes.ok) {
       const report = await reportRes.json();

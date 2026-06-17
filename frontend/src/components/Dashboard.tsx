@@ -170,6 +170,11 @@ export const Dashboard: React.FC = () => {
         setErrorMsg('GitHub username is required');
         return;
       }
+      // If user pasted a full profile URL in profile mode, extract the username
+      const profileMatch = targetUsername.match(/github\.com\/([^\/]+)/i);
+      if (profileMatch) {
+        targetUsername = profileMatch[1];
+      }
     }
 
     if (!uploadedFileName) {
@@ -188,7 +193,8 @@ export const Dashboard: React.FC = () => {
       formData.append('resume_filename', uploadedFileName);
       if (resumeFile) formData.append('resume_file', resumeFile);
 
-      const response = await fetch('/api/scans/trigger', {
+      const apiBase = process.env.NEXT_PUBLIC_API_URL || '';
+      const response = await fetch(`${apiBase}/api/scans/trigger`, {
         method: 'POST',
         body: formData
       });

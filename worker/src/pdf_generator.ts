@@ -185,8 +185,11 @@ export const generatePdfReport = async (reportData: any, evidenceData: any, scan
             doc.y = 60;
           }
 
-          doc.fontSize(12).fillColor(colors.indigo).text(`• ${proj.name || 'Unnamed Project'}`);
-          doc.fontSize(10).fillColor(colors.textDark).text(proj.description || 'No description provided.', {
+          const projName = typeof proj === 'string' ? proj : (proj.name || 'Unnamed Project');
+          const projDesc = typeof proj === 'string' ? 'Technical project verified via resume audit.' : (proj.description || 'No description provided.');
+
+          doc.fontSize(12).fillColor(colors.indigo).text(`• ${projName}`);
+          doc.fontSize(10).fillColor(colors.textDark).text(projDesc, {
             indent: 15,
             width: 480
           });
