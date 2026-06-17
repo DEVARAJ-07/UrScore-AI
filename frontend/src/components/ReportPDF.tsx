@@ -1,5 +1,5 @@
 import React from 'react';
-import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
+import { Document, Page, Text, View, StyleSheet, Svg, Path, Circle } from '@react-pdf/renderer';
 
 const styles = StyleSheet.create({
   page: { padding: 35, fontSize: 9, fontFamily: 'Helvetica', color: '#1e293b', backgroundColor: '#ffffff', display: 'flex', flexDirection: 'column' },
@@ -56,14 +56,17 @@ export const ReportPDF: React.FC<ReportPDFProps> = ({ report, evidence }) => {
   const username = evidence.github_profile?.username || 'N/A';
   const totalRepos = report.summary_metrics?.total_repos || evidence.repositories_analyzed?.length || 0;
 
-  const calculatedScore = Math.round(
-    (report.skill_verification * 0.25) + 
-    (report.commit_quality * 0.20) + 
-    (report.project_complexity * 0.20) + 
-    (report.recency * 0.15) + 
-    (report.cross_reference * 0.12) + 
-    (report.activity_consistency * 0.08)
-  );
+  // Rely strictly on backend's calculated overall_score which includes all dynamic bonuses
+  const calculatedScore = Math.round(report.overall_score || 0);
+
+  const getPdfBadgeColor = (score: number) => {
+    if (score >= 85) return { primary: '#d946ef', secondary: '#fdf4ff', ribbon: '#86198f', label: 'ELITE' };
+    if (score >= 70) return { primary: '#eab308', secondary: '#fefce8', ribbon: '#a16207', label: 'GOLD' };
+    if (score >= 60) return { primary: '#94a3b8', secondary: '#f8fafc', ribbon: '#334155', label: 'SILVER' };
+    if (score >= 50) return { primary: '#f97316', secondary: '#fff7ed', ribbon: '#9a3412', label: 'BRONZE' };
+    return null;
+  };
+  const badge = getPdfBadgeColor(calculatedScore);
 
   const repos = evidence.repositories_analyzed || [];
   const projects = evidence.resume_extracted_metrics?.extracted_projects || [];
@@ -102,9 +105,22 @@ export const ReportPDF: React.FC<ReportPDFProps> = ({ report, evidence }) => {
             <Text style={{ fontSize: 14, fontWeight: 'bold', color: '#0f172a' }}>{name}</Text>
             <Text style={{ color: '#64748b', marginTop: 4, fontSize: 9 }}>GitHub: @{username}</Text>
           </View>
-          <View style={{ alignItems: 'flex-end' }}>
-            <Text style={styles.scoreLabel}>COMPOSITE SCORE</Text>
-            <Text style={styles.scoreValue}>{calculatedScore}/100</Text>
+          <View style={{ alignItems: 'flex-end', flexDirection: 'row', gap: 12 }}>
+            {badge && (
+              <View style={{ alignItems: 'center', marginRight: 15 }}>
+                <Svg width="44" height="54" viewBox="0 0 40 50">
+                  <Path d="M 12 0 L 28 0 L 32 20 L 20 15 L 8 20 Z" fill={badge.ribbon} />
+                  <Circle cx="20" cy="30" r="16" fill={badge.primary} stroke={badge.secondary} strokeWidth="3" />
+                  <Circle cx="20" cy="30" r="10" fill="none" stroke="rgba(0,0,0,0.2)" strokeWidth="1" />
+                  <Path d="M 20 24 L 22 28.5 L 27 28.5 L 23 31.5 L 24.5 36 L 20 33.5 L 15.5 36 L 17 31.5 L 13 28.5 L 18 28.5 Z" fill="rgba(0,0,0,0.3)" />
+                </Svg>
+                <Text style={{ color: badge.ribbon, fontSize: 11, fontWeight: 'black', marginTop: 2, letterSpacing: 1.5 }}>{badge.label}</Text>
+              </View>
+            )}
+            <View style={{ alignItems: 'flex-end' }}>
+              <Text style={styles.scoreLabel}>COMPOSITE SCORE</Text>
+              <Text style={styles.scoreValue}>{calculatedScore}/100</Text>
+            </View>
           </View>
         </View>
 
@@ -294,12 +310,6 @@ export const ReportPDF: React.FC<ReportPDFProps> = ({ report, evidence }) => {
               <Text style={{ fontSize: 8, color: '#64748b', fontWeight: 'bold', letterSpacing: 1 }}>TOTAL SOLVED</Text>
               <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#0f172a', marginTop: 6 }}>
                 {leetcode.solvedTotal || 0}
-              </Text>
-            </View>
-            <View style={styles.statBox}>
-              <Text style={{ fontSize: 8, color: '#64748b', fontWeight: 'bold', letterSpacing: 1 }}>ACCEPTANCE RATE</Text>
-              <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#0f172a', marginTop: 6 }}>
-                {leetcode.acceptanceRate || 0}%
               </Text>
             </View>
             <View style={styles.statBox}>

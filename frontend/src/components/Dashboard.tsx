@@ -68,7 +68,7 @@ export const Dashboard: React.FC = () => {
         className={`absolute rounded-2xl p-3 bg-[#06090f]/95 border transition-all duration-300 flex flex-col justify-between ${
           active 
             ? 'border-emerald-500/25 shadow-[0_0_15px_rgba(16,185,129,0.08)] text-slate-100 hover:border-emerald-400/50 hover:scale-[1.03]' 
-            : 'border-slate-800 text-slate-400 opacity-65 hover:opacity-100 hover:border-slate-700'
+            : 'border-slate-800 text-slate-400 opacity-65 hover:opacity-100 '
         }`}
         style={{
           left: `${x}px`,
@@ -252,10 +252,12 @@ export const Dashboard: React.FC = () => {
 
 
 
-  const getRatingLabel = (score: number) => {
-    if (score >= 85) return { label: 'Elite', color: 'text-fuchsia-400 border-fuchsia-500/50 bg-fuchsia-500/10 animate-pulse drop-shadow-[0_0_15px_rgba(232,121,249,0.5)]' };
-    if (score >= 70) return { label: 'Gold', color: 'text-yellow-400 border-yellow-500/50 bg-yellow-500/10 animate-pulse drop-shadow-[0_0_15px_rgba(250,204,21,0.5)]' };
-    return { label: 'Silver', color: 'text-slate-300 border-slate-400/50 bg-slate-400/10 animate-pulse drop-shadow-[0_0_15px_rgba(148,163,184,0.5)]' };
+  const getRatingBadge = (score: number) => {
+    if (score >= 85) return { label: 'Elite', medalColor: 'from-[#e879f9] to-[#c026d3]', borderColor: 'border-[#fdf4ff]', ribbonColor: 'from-[#a21caf] to-[#701a75]', text: 'text-[#e879f9]' };
+    if (score >= 70) return { label: 'Gold', medalColor: 'from-[#fef08a] to-[#ca8a04]', borderColor: 'border-[#fefce8]', ribbonColor: 'from-[#b45309] to-[#78350f]', text: 'text-[#fef08a]' };
+    if (score >= 60) return { label: 'Silver', medalColor: 'from-[#e2e8f0] to-[#64748b]', borderColor: 'border-[#f8fafc]', ribbonColor: 'from-[#475569] to-[#334155]', text: 'text-[#e2e8f0]' };
+    if (score >= 50) return { label: 'Bronze', medalColor: 'from-[#fed7aa] to-[#c2410c]', borderColor: 'border-[#fff7ed]', ribbonColor: 'from-[#9a3412] to-[#7c2d12]', text: 'text-[#fed7aa]' };
+    return null;
   };
 
   // Progress queries checkmarks logic (5 steps)
@@ -575,7 +577,7 @@ export const Dashboard: React.FC = () => {
                       fileInputRef.current?.click();
                     }
                   }}
-                  className={`border-2 border-dashed rounded-2xl p-8 text-center transition-all duration-350 relative cursor-pointer ${dragActive ? 'border-emerald-500 bg-emerald-600/5' : 'border-slate-800 bg-[#030509]/30 hover:border-slate-700'} min-h-[160px] flex flex-col justify-center`}
+                  className={`border-2 border-dashed rounded-2xl p-8 text-center transition-all duration-350 relative cursor-pointer ${dragActive ? 'border-emerald-500 bg-emerald-600/5' : 'border-slate-800 bg-[#030509]/30 '} min-h-[160px] flex flex-col justify-center`}
                 >
                   {isParsingFile ? (
                     <div className="space-y-4 text-center py-4 flex flex-col items-center justify-center">
@@ -697,7 +699,7 @@ export const Dashboard: React.FC = () => {
           <div className="flex justify-start">
             <button
               onClick={resetStore}
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#070b13] hover:bg-[#0c121e] border border-emerald-500/10 rounded-xl text-xs font-bold text-slate-400 transition-all duration-300 hover:border-emerald-500/30"
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#070b13] hover:bg-[#0c121e] border border-emerald-500/10 rounded-xl text-xs font-bold text-slate-400 transition-all duration-300 "
             >
               <ArrowLeft className="w-4 h-4 text-emerald-400" />
               Cancel & Back
@@ -815,7 +817,7 @@ export const Dashboard: React.FC = () => {
           <div className="space-y-6">
             {evidence.repositories_analyzed.map((repo: any, idx: number) => (
               <div key={idx} className="fancy-card p-6 shadow-xl relative overflow-hidden group">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 blur-3xl pointer-events-none group-hover:bg-emerald-500/10 transition-colors duration-500" />
+                <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 blur-3xl pointer-events-none group-/10 transition-colors duration-500" />
                 <div className="flex items-start gap-4">
                   <div className="p-3 bg-[#030509] rounded-2xl border border-emerald-500/10 shadow-md shrink-0">
                     <Code className="w-6 h-6 text-emerald-400" />
@@ -840,7 +842,7 @@ export const Dashboard: React.FC = () => {
           {/* Custom Visualization for LeetCode Stats if they exist */}
           {report.leetcode_stats && report.leetcode_stats.solvedTotal > 0 && (
             <div className="fancy-card p-8 mt-12 mb-12 shadow-2xl relative overflow-hidden group">
-              <div className="absolute top-0 left-0 w-64 h-64 bg-emerald-500/10 blur-3xl rounded-full pointer-events-none group-hover:bg-emerald-500/20 transition-all duration-700"></div>
+              <div className="absolute top-0 left-0 w-64 h-64 bg-emerald-500/10 blur-3xl rounded-full pointer-events-none group-/20 transition-all duration-700"></div>
               <div className="absolute bottom-0 right-0 w-64 h-64 bg-teal-500/10 blur-3xl rounded-full pointer-events-none group-hover:bg-teal-500/20 transition-all duration-700"></div>
               
               <div className="relative z-10 flex flex-col md:flex-row items-center md:items-start gap-12">
@@ -939,15 +941,8 @@ export const Dashboard: React.FC = () => {
       )}
       {/* 4. FINAL ASSESSMENT REPORT DISPLAY (COMPLETED PHASE) */}
       {status === 'completed' && viewingReport && report && evidence && (() => {
-        // Enforce frontend calculation of score based strictly on component weights out of 100
-        const calculatedScore = Math.round(
-          (report.skill_verification * 0.25) + 
-          (report.commit_quality * 0.20) + 
-          (report.project_complexity * 0.20) + 
-          (report.recency * 0.15) + 
-          (report.cross_reference * 0.12) + 
-          (report.activity_consistency * 0.08)
-        );
+        // Rely strictly on backend's calculated overall_score which includes all dynamic bonuses
+        const calculatedScore = Math.round(report.overall_score || 0);
 
         // Dynamically calculate resume health parameters
         const baseVerified = evidence?.score_breakdown?.verified_keywords || [];
@@ -964,22 +959,23 @@ export const Dashboard: React.FC = () => {
         ]);
         const uniqueRepoSkills = Array.from(new Set(repoSkills)).filter((s: any) => s.length > 2).slice(0, 12);
 
-        const initialVerifiedList = baseVerified.length > 0 ? baseVerified : [...fallbackLanguages, ...fallbackFrameworks, ...uniqueRepoSkills].slice(0, 15);
-        const initialUnverifiedList = baseVerified.length === 0 && baseUnverified.length === 0 ? fallbackTools : baseUnverified;
+        const verifiedList = baseVerified.length > 0 ? baseVerified : [...fallbackLanguages, ...fallbackFrameworks, ...uniqueRepoSkills].slice(0, 15);
+        const unverifiedList = baseVerified.length === 0 && baseUnverified.length === 0 ? fallbackTools : baseUnverified;
 
-        const verifiedList = initialVerifiedList;
-        const unverifiedList = initialUnverifiedList;
-
+        // Calculate ATS Score - Restore balanced logic capped at 80%
         const verifiedCount = verifiedList.length;
         const unverifiedCount = unverifiedList.length;
         const totalKeywords = verifiedCount + unverifiedCount;
         let atsScore = 0;
+        
         if (totalKeywords > 0) {
-          const overlapScore = (verifiedCount / totalKeywords) * 35;
-          const volumeScore = Math.min(25, (verifiedCount / 10) * 25);
-          const reliabilityPenalty = Math.min(20, unverifiedCount * 10);
-          const formatScore = 20 - reliabilityPenalty;
+          const overlapScore = (verifiedCount / totalKeywords) * 40;
+          const volumeScore = Math.min(20, (verifiedCount / 10) * 20);
+          const formatScore = 20 - Math.min(20, unverifiedCount * 5);
           atsScore = Math.max(0, Math.min(80, Math.round(overlapScore + volumeScore + formatScore)));
+        } else if (evidence?.repositories_analyzed?.length > 0) {
+          // Fallback if no resume uploaded at all, cap at 80
+          atsScore = Math.min(80, 50 + (evidence.repositories_analyzed.length * 2));
         }
 
         const mistakes = [
@@ -1018,73 +1014,105 @@ export const Dashboard: React.FC = () => {
             </div>
 
             {/* Title / Header Candidate Card */}
-            <div className="fancy-card p-8 grid grid-cols-1 md:grid-cols-12 gap-8 items-center shadow-2xl relative overflow-hidden bg-[#06090f]">
-              <div className="absolute top-0 right-0 w-36 h-36 bg-gradient-to-br from-emerald-600/10 to-transparent pointer-events-none rounded-bl-full" />
-              
-              {/* Glass Score medallion */}
-              <div className="md:col-span-4 flex flex-col items-center justify-center border-b md:border-b-0 md:border-r border-emerald-500/10 pb-6 md:pb-0 md:pr-8">
-                <span className="text-[10px] text-slate-500 uppercase font-bold tracking-wider">
+            <div className="p-8 flex flex-col md:flex-row items-center justify-between shadow-2xl relative bg-gradient-to-r from-[#04060a] to-[#0a0f18] border border-slate-800/60 rounded-2xl overflow-hidden w-full">
+              <style>{`
+                @keyframes swing {
+                  0% { transform: rotate(0deg) translateY(0); }
+                  25% { transform: rotate(4deg) translateY(-2px); }
+                  50% { transform: rotate(0deg) translateY(0); }
+                  75% { transform: rotate(-4deg) translateY(-2px); }
+                  100% { transform: rotate(0deg) translateY(0); }
+                }
+              `}</style>
+              <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-600/5 blur-[100px] pointer-events-none rounded-full" />
+
+              {/* Section 1: Score (Left) */}
+              <div className="flex-shrink-0 flex flex-col items-center justify-center md:border-r border-slate-800/60 md:pr-10 w-full md:w-48 mb-8 md:mb-0">
+                <span className="text-[10px] text-slate-500 uppercase font-bold tracking-wider mb-2">
                   Competency ScoreCard
                 </span>
-                <div className="relative flex items-center justify-center w-28 h-28 rounded-full score-medallion mt-3">
-                  <div className="text-center">
-                    <span className="text-xs font-black text-slate-100 tracking-tight">{calculatedScore}</span>
-                    <span className="text-xs text-slate-500 block -mt-1 font-bold">/100</span>
+                <div className="relative flex items-center justify-center w-28 h-28 rounded-full score-medallion overflow-hidden shadow-[0_0_40px_rgba(16,185,129,0.2)]">
+                  <div className="absolute inset-0 bg-gradient-to-r from-emerald-500 to-teal-500 animate-[spin_3s_linear_infinite] opacity-30"></div>
+                  <div className="absolute inset-1 bg-[#06090f] rounded-full flex items-center justify-center z-10">
+                    <div className="text-center">
+                      <span className="text-2xl font-black text-slate-100 tracking-tight">{calculatedScore}</span>
+                      <span className="text-[10px] text-slate-500 block -mt-1 font-bold">/100</span>
+                    </div>
                   </div>
-                </div>
-                
-                <div className={`mt-3 px-3 py-1 text-[10px] font-bold rounded-full border ${getRatingLabel(calculatedScore).color}`}>
-                  {getRatingLabel(calculatedScore).label}
                 </div>
               </div>
 
-              {/* Header Info */}
-              <div className="md:col-span-8 space-y-4 text-xs text-slate-400">
-                <h3 className="text-xs font-bold text-slate-100 flex items-center gap-1.5 tracking-wider uppercase" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
-                  <Award className="w-5 h-5 text-emerald-400" />
-                  Competency ScoreCard
-                </h3>
-                
-                <div className="grid grid-cols-3 gap-4 pt-2 border-t border-slate-900">
+              {/* Section 2: Info & Actions (Middle) */}
+              <div className="flex-grow px-0 md:px-10 flex flex-col justify-center space-y-6 w-full mb-8 md:mb-0">
+                <div className="flex items-center gap-6 text-slate-400 border-b border-slate-800/50 pb-6">
                   <div>
                     <span className="text-slate-500 block text-[9px] uppercase font-bold tracking-wider">Candidate Name</span>
-                    <span className="font-bold text-slate-300 text-[10px] mt-0.5 block">{evidence?.github_profile?.name || evidence?.github_profile?.username || 'N/A'}</span>
+                    <span className="font-bold text-slate-100 text-sm mt-1 block">{evidence?.github_profile?.name || evidence?.github_profile?.username || 'N/A'}</span>
                   </div>
+                  <div className="w-px h-8 bg-slate-800"></div>
                   <div>
                     <span className="text-slate-500 block text-[9px] uppercase font-bold tracking-wider">Total Repos</span>
-                    <span className="font-bold text-slate-300 text-[10px] mt-0.5 block">
-                      {evidence?.github_profile?.public_repos || 0} Repos
-                    </span>
+                    <span className="font-bold text-slate-300 text-xs mt-1 block">{evidence?.github_profile?.public_repos || 0}</span>
                   </div>
+                  <div className="w-px h-8 bg-slate-800"></div>
                   <div>
-                    <span className="text-slate-500 block text-[9px] uppercase font-bold tracking-wider">Repos Count (Analyzed)</span>
-                    <span className="font-bold text-slate-300 text-[10px] mt-0.5 block">
-                      {evidence?.repositories_analyzed?.length || 0} Repos
-                    </span>
+                    <span className="text-slate-500 block text-[9px] uppercase font-bold tracking-wider">Repos Analyzed</span>
+                    <span className="font-bold text-emerald-400 text-xs mt-1 block">{evidence?.repositories_analyzed?.length || 0}</span>
                   </div>
                 </div>
 
-                <div className="pt-2 flex gap-3">
+                <div className="flex items-center gap-4">
                   <DownloadLink
                     document={<ReportPDF report={report} evidence={evidence} />}
                     fileName={`competency_report_${evidence.github_profile.username}.pdf`}
-                    className="inline-flex items-center gap-1.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 px-4 py-2 rounded-lg text-[10px] font-bold transition text-white shadow-glow"
+                    className="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 font-bold text-white shadow-[0_0_20px_rgba(16,185,129,0.15)] text-[10px] uppercase tracking-wider border border-emerald-500/30 transition-transform active:scale-95"
                   >
                     {({ loading }: any) => (
                       (<>
                         <Download className="w-3.5 h-3.5" />
-                        {loading ? 'Compiling PDF...' : 'Download PDF Report'}
+                        {loading ? 'Compiling...' : 'Download PDF'}
                       </>) as any
                     )}
                   </DownloadLink>
 
                   <button
                     onClick={resetStore}
-                    className="inline-flex items-center gap-1.5 bg-[#030509] hover:bg-[#0c121e] border border-emerald-500/10 px-4 py-2 rounded-lg text-[10px] font-bold transition text-slate-300"
+                    className="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-[#0c121e] border border-emerald-500/20 font-bold text-emerald-500 text-[10px] uppercase tracking-wider shadow-inner transition-transform active:scale-95"
                   >
                     <RefreshCw className="w-3.5 h-3.5" />
-                    Run New Audit
+                    New Audit
                   </button>
+                </div>
+              </div>
+
+              {/* Section 3: Award Badge (Right) */}
+              <div className="flex-shrink-0 flex flex-col items-center justify-center md:border-l border-slate-800/60 md:pl-10 w-full md:w-48">
+                <span className="text-slate-500 block text-[9px] uppercase font-bold tracking-wider mb-3">Award Tier</span>
+                <div className="flex flex-col items-center min-h-24">
+                  {getRatingBadge(calculatedScore) ? (
+                    <div className="flex flex-col items-center">
+                      <div 
+                        className="inline-flex flex-col items-center drop-shadow-xl"
+                        style={{ transformOrigin: 'top center', animation: 'swing 4s ease-in-out infinite' }}
+                      >
+                        <div className="flex -mb-2 z-0">
+                          <div className={`w-3.5 h-6 bg-gradient-to-b ${getRatingBadge(calculatedScore)?.ribbonColor} skew-y-[20deg]`}></div>
+                          <div className={`w-3.5 h-6 bg-gradient-to-b ${getRatingBadge(calculatedScore)?.ribbonColor} -skew-y-[20deg]`}></div>
+                        </div>
+                        <div className={`relative z-10 w-14 h-14 rounded-full bg-gradient-to-br ${getRatingBadge(calculatedScore)?.medalColor} ${getRatingBadge(calculatedScore)?.borderColor} border-[3px] flex items-center justify-center shadow-inner overflow-hidden`}>
+                          <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/40 to-transparent animate-[spin_4s_linear_infinite] opacity-70"></div>
+                          <div className="w-8 h-8 rounded-full border border-black/20 flex items-center justify-center relative z-20">
+                            <div className="w-4 h-4 bg-black/40" style={{ clipPath: 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)' }}></div>
+                          </div>
+                        </div>
+                      </div>
+                      <span className={`text-[11px] font-black mt-3 tracking-widest uppercase ${getRatingBadge(calculatedScore)?.text}`}>
+                        {getRatingBadge(calculatedScore)?.label}
+                      </span>
+                    </div>
+                  ) : (
+                    <span className="font-bold text-slate-500 text-[10px] mt-2">No Medal</span>
+                  )}
                 </div>
               </div>
             </div>
@@ -1322,13 +1350,6 @@ export const Dashboard: React.FC = () => {
                         {evidence.leetcode_stats.ranking > 0 ? `#${evidence.leetcode_stats.ranking.toLocaleString()}` : 'N/A'}
                       </div>
                     </div>
-
-                    <div className="bg-emerald-950/15 border border-emerald-500/10 rounded-xl px-4 py-3 flex items-center justify-between">
-                      <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Acceptance Rate</div>
-                      <div className="text-xs font-bold text-slate-200">
-                        {evidence.leetcode_stats.acceptanceRate}%
-                      </div>
-                    </div>
                   </div>
 
                   {/* Right: Topic Focus */}
@@ -1426,5 +1447,6 @@ export const Dashboard: React.FC = () => {
     </div>
   );
 };
+
 
 
