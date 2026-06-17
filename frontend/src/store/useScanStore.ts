@@ -90,8 +90,12 @@ export const useScanStore = create<ScanState>((set, get) => ({
           });
           
           if (data.logs && data.logs.length > 0) {
-            // Re-sync logs array from updates
-            set({ logs: data.logs });
+            data.logs.forEach((logLine: string) => {
+              const currentLogs = get().logs;
+              if (!currentLogs.includes(logLine)) {
+                set((state) => ({ logs: [...state.logs, logLine] }));
+              }
+            });
           }
 
           // If completed, fetch report files
