@@ -161,11 +161,15 @@ async function run() {
         report: finalizedReport,
         evidence,
         logs
+      }, (err) => {
+        if (err) console.error("Failed to send COMPLETED ipc message:", err);
+        sendLog(`Worker completed task successfully.`, 100);
+        process.exit(0);
       });
+    } else {
+      sendLog(`Worker completed task successfully (No IPC channel).`, 100);
+      process.exit(0);
     }
-
-    sendLog(`Worker completed task successfully.`, 100);
-    process.exit(0);
 
   } catch (err: any) {
     sendLog(`Fatal Error: ${err.message}`, 95);
@@ -174,9 +178,12 @@ async function run() {
         type: 'FAILED',
         error: err.message,
         logs
+      }, () => {
+        process.exit(1);
       });
+    } else {
+      process.exit(1);
     }
-    process.exit(1);
   }
 }
 
