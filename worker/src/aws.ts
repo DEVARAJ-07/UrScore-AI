@@ -36,7 +36,14 @@ export const uploadReportToS3 = async (filePath: string, filename: string): Prom
       ContentType: "application/pdf"
     };
 
-    await s3Client.send(new PutObjectCommand(uploadParams));
+    // Timeout of 8 seconds for S3 upload to prevent metadata server hangs
+    const timeoutPromise = new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error("S3 upload timed out after 8 seconds")), 8000)
+    );
+
+    const apiPromise = s3Client.send(new PutObjectCommand(uploadParams));
+    
+    await Promise.race([apiPromise, timeoutPromise]);
     
     // Construct the public URL assuming the bucket is public or we return a presigned URL.
     const url = `https://${BUCKET_NAME}.s3.${actualRegion}.amazonaws.com/reports/${filename}`;
@@ -80,10 +87,18 @@ export const sendReportEmail = async (recipientEmail: string, reportUrl: string,
       Source: SENDER_EMAIL,
     };
 
-    await sesClient.send(new SendEmailCommand(params));
+    // Timeout of 5 seconds for email dispatch to prevent metadata server hangs
+    const timeoutPromise = new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error("Email dispatch timed out after 5 seconds")), 5000)
+    );
+
+    const apiPromise = sesClient.send(new SendEmailCommand(params));
+
+    await Promise.race([apiPromise, timeoutPromise]);
     return true;
   } catch (err: any) {
     console.error("Error sending SES email:", err);
     throw new Error(`Failed to send email: ${err.message}`);
   }
 };
+
