@@ -1,7 +1,5 @@
 import { GoogleGenAI } from '@google/genai';
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-
 export async function analyzeRepoCodebase(
   repoName: string,
   description: string | null,
@@ -9,12 +7,16 @@ export async function analyzeRepoCodebase(
   dependencies: string[],
   filePaths: string[]
 ): Promise<string> {
-  // If no API key is provided, return a simulated description immediately.
-  if (!process.env.GEMINI_API_KEY) {
+  const apiKey = process.env.GEMINI_API_KEY;
+
+  // Validate that we have a key and it looks like a Google Gemini API key (starts with AIzaSy)
+  if (!apiKey || !apiKey.startsWith('AIzaSy')) {
     return generateSimulatedAiDescription(repoName, description, languages, dependencies, filePaths);
   }
 
   try {
+    const ai = new GoogleGenAI({ apiKey });
+
     const prompt = `
 You are an expert software architect evaluating a developer's repository.
 Provide a concise, 2-3 sentence technical summary focusing specifically on the project's code structure, architectural strengths, and potential weaknesses. Analyze how the dependencies and files reflect the actual codebase quality and organization.
@@ -28,18 +30,26 @@ Key File Paths (subset): ${filePaths.slice(0, 50).join(', ')}
 Please provide ONLY the summary text, without any introductory phrases or pleasantries.
 `;
 
-    const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
-      contents: prompt,
-      config: {
-        maxOutputTokens: 256,
-        temperature: 0.2,
-      }
-    });
+    // Timeout of 5 seconds to prevent metadata server or network hangs
+    const timeoutPromise = new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error('Gemini API request timed out after 5 seconds')), 5000)
+    );
 
-    return response.text || 'Could not generate analysis.';
+    const apiPromise = (async () => {
+      const response = await ai.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: prompt,
+        config: {
+          maxOutputTokens: 256,
+          temperature: 0.2,
+        }
+      });
+      return response.text || 'Could not generate analysis.';
+    })();
+
+    return await Promise.race([apiPromise, timeoutPromise]);
   } catch (error: any) {
-    console.error('[AI Analyzer] Error generating summary, falling back to simulated:', error.message);
+    console.error(`[AI Analyzer] Error generating summary for ${repoName}: ${error.message}. Falling back to simulation.`);
     return generateSimulatedAiDescription(repoName, description, languages, dependencies, filePaths);
   }
 }
@@ -67,3 +77,4 @@ function generateSimulatedAiDescription(
 
   return `This codebase is built primarily using ${langStr}, structured ${structureStr}.${descStr} ${depStr}Analysis of the ${filePaths.length || 'tracked'} files across the ${repoName} repository indicates a solid focus on maintainability and separation of concerns.`;
 }
+
