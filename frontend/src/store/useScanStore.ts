@@ -19,6 +19,7 @@ interface ScanState {
 }
 
 let activeSocket: WebSocket | null = null;
+let pollIntervalId: any = null;
 
 export const useScanStore = create<ScanState>((set, get) => ({
   activeScanId: null,
@@ -37,9 +38,13 @@ export const useScanStore = create<ScanState>((set, get) => ({
   },
 
   startScanSubscription: (scanId: string) => {
-    // Close existing socket
+    // Close existing socket and clear interval
     if (activeSocket) {
       activeSocket.close();
+    }
+    if (pollIntervalId) {
+      clearInterval(pollIntervalId);
+      pollIntervalId = null;
     }
 
     set({
@@ -55,6 +60,8 @@ export const useScanStore = create<ScanState>((set, get) => ({
 
     const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001';
     const socketUrl = apiBase.replace(/^http/, 'ws');
+    
+    console.log(`Connecting to WebSocket: ${socketUrl}`);
     const socket = new WebSocket(socketUrl);
     activeSocket = socket;
 
@@ -83,12 +90,11 @@ export const useScanStore = create<ScanState>((set, get) => ({
           });
           
           if (data.logs && data.logs.length > 0) {
-            data.logs.forEach((logLine: string) => {
-              get().appendLog(logLine);
-            });
+            // Re-sync logs array from updates
+            set({ logs: data.logs });
           }
 
-          // If completed, fetch report via standard HTTP to sync local store
+          // If completed, fetch report files
           if (data.status === 'completed') {
             get().appendLog(`[CLIENT] Fetching finalized report files...`);
             fetchReportAndEvidence(scanId, set);
@@ -108,11 +114,18 @@ export const useScanStore = create<ScanState>((set, get) => ({
     socket.onclose = () => {
       set({ wsConnected: false });
       console.log('WebSocket connection closed');
+      
+      // If the scan is still running, start HTTP polling immediately as fallback
+      const currentStatus = get().status;
+      if (currentStatus === 'pending' || currentStatus === 'fetching_github') {
+        startHttpPolling(scanId, set, get);
+      }
     };
 
     socket.onerror = () => {
       set({ wsConnected: false });
       get().appendLog(`[CLIENT ERROR] WebSocket connection failed. Updates will poll via HTTP.`);
+      startHttpPolling(scanId, set, get);
     };
   },
 
@@ -120,6 +133,10 @@ export const useScanStore = create<ScanState>((set, get) => ({
     if (activeSocket) {
       activeSocket.close();
       activeSocket = null;
+    }
+    if (pollIntervalId) {
+      clearInterval(pollIntervalId);
+      pollIntervalId = null;
     }
     set({ wsConnected: false });
   },
@@ -133,6 +150,10 @@ export const useScanStore = create<ScanState>((set, get) => ({
       activeSocket.close();
       activeSocket = null;
     }
+    if (pollIntervalId) {
+      clearInterval(pollIntervalId);
+      pollIntervalId = null;
+    }
     set({
       activeScanId: null,
       logs: [],
@@ -145,6 +166,41 @@ export const useScanStore = create<ScanState>((set, get) => ({
     });
   }
 }));
+
+// Fallback HTTP Polling helper
+function startHttpPolling(scanId: string, set: any, get: any) {
+  if (pollIntervalId) return;
+
+  get().appendLog(`[CLIENT] Initiating live HTTP telemetry polling fallback...`);
+
+  pollIntervalId = setInterval(async () => {
+    try {
+      const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001';
+      const res = await fetch(`${apiBase}/api/scans/${scanId}`);
+      if (!res.ok) return;
+
+      const scanData = await res.json();
+      
+      // Update store with telemetry details
+      set({
+        status: scanData.status,
+        progress: scanData.progress,
+        logs: scanData.logs || []
+      });
+
+      if (scanData.status === 'completed') {
+        get().appendLog(`[CLIENT] Fetching finalized report files...`);
+        fetchReportAndEvidence(scanId, set);
+        get().stopScanSubscription();
+      } else if (scanData.status === 'failed') {
+        get().appendLog(`[SYSTEM] Execution failed. Pipeline terminated.`);
+        get().stopScanSubscription();
+      }
+    } catch (err) {
+      console.error('Error polling scan status:', err);
+    }
+  }, 3000);
+}
 
 // HTTP fetcher helper to get the generated report and store in Zustand
 async function fetchReportAndEvidence(scanId: string, set: any) {
