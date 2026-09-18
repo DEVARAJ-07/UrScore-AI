@@ -194,10 +194,15 @@ export const Dashboard: React.FC = () => {
       if (resumeFile) formData.append('resume_file', resumeFile);
 
       const apiBase = getApiBase();
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 60000); // 60s timeout to allow Render free tier wake-up
+
       const response = await fetch(`${apiBase}/api/scans/trigger`, {
         method: 'POST',
-        body: formData
+        body: formData,
+        signal: controller.signal
       });
+      clearTimeout(timeoutId);
 
       let errMessage = 'Verification request refused by API validation nodes';
       const contentType = response.headers.get('content-type');
@@ -225,8 +230,10 @@ export const Dashboard: React.FC = () => {
       }
     } catch (err: any) {
       const currentApi = getApiBase();
-      if (err.message === 'Failed to fetch' || err.name === 'TypeError') {
-        setErrorMsg(`Cannot connect to backend server at ${currentApi}. Please ensure your backend service is running and active.`);
+      if (err.name === 'AbortError') {
+        setErrorMsg(`Request timed out while connecting to ${currentApi}. If Render was sleeping, it may take ~45 seconds to wake up. Please try again.`);
+      } else if (err.message === 'Failed to fetch' || err.name === 'TypeError') {
+        setErrorMsg(`Cannot reach backend server at ${currentApi}. Please ensure your backend is live (if on Render free tier, it may be booting up from sleep).`);
       } else {
         setErrorMsg(err.message || 'Scans startup failed');
       }
