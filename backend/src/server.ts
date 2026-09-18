@@ -49,10 +49,14 @@ app.post('/api/upload-resume', (req, res) => {
     const filePath = path.join(resumesDir, name);
     fs.writeFileSync(filePath, fileBuffer);
 
+    const protocol = req.headers['x-forwarded-proto'] || req.protocol;
+    const host = req.get('host');
+    const baseUrl = `${protocol}://${host}`;
+
     res.json({
       message: 'Resume uploaded successfully',
       filename: name,
-      url: `http://localhost:5001/public/resumes/${name}`
+      url: `${baseUrl}/public/resumes/${name}`
     });
   } catch (err: any) {
     res.status(500).json({ error: err.message });

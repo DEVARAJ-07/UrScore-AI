@@ -21,6 +21,14 @@ interface ScanState {
 let activeSocket: WebSocket | null = null;
 let pollIntervalId: any = null;
 
+export function getApiBase(): string {
+  const envUrl = process.env.NEXT_PUBLIC_API_URL;
+  if (envUrl && envUrl.trim() !== '') {
+    return envUrl.trim().replace(/\/+$/, '');
+  }
+  return 'http://localhost:5001';
+}
+
 export const useScanStore = create<ScanState>((set, get) => ({
   activeScanId: null,
   logs: [],
@@ -58,8 +66,9 @@ export const useScanStore = create<ScanState>((set, get) => ({
       viewingReport: false
     });
 
-    const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001';
-    const socketUrl = apiBase.replace(/^http/, 'ws');
+    const apiBase = getApiBase();
+    // Convert http -> ws and https -> wss
+    const socketUrl = apiBase.replace(/^https:\/\//i, 'wss://').replace(/^http:\/\//i, 'ws://');
     
     console.log(`Connecting to WebSocket: ${socketUrl}`);
     const socket = new WebSocket(socketUrl);
@@ -179,7 +188,7 @@ function startHttpPolling(scanId: string, set: any, get: any) {
 
   pollIntervalId = setInterval(async () => {
     try {
-      const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001';
+      const apiBase = getApiBase();
       const res = await fetch(`${apiBase}/api/scans/${scanId}`);
       if (!res.ok) return;
 
@@ -209,7 +218,7 @@ function startHttpPolling(scanId: string, set: any, get: any) {
 // HTTP fetcher helper to get the generated report and store in Zustand
 async function fetchReportAndEvidence(scanId: string, set: any) {
   try {
-    const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001';
+    const apiBase = getApiBase();
     const reportRes = await fetch(`${apiBase}/api/scans/${scanId}/report`);
     const evidenceRes = await fetch(`${apiBase}/api/scans/${scanId}/evidence`);
     

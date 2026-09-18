@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
-import { useScanStore } from '../store/useScanStore';
+import { useScanStore, getApiBase } from '../store/useScanStore';
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer
@@ -193,7 +193,7 @@ export const Dashboard: React.FC = () => {
       formData.append('resume_filename', uploadedFileName);
       if (resumeFile) formData.append('resume_file', resumeFile);
 
-      const apiBase = process.env.NEXT_PUBLIC_API_URL || '';
+      const apiBase = getApiBase();
       const response = await fetch(`${apiBase}/api/scans/trigger`, {
         method: 'POST',
         body: formData
@@ -224,7 +224,12 @@ export const Dashboard: React.FC = () => {
         throw new Error('Received unexpected non-JSON response from verification server.');
       }
     } catch (err: any) {
-      setErrorMsg(err.message || 'Scans startup failed');
+      const currentApi = getApiBase();
+      if (err.message === 'Failed to fetch' || err.name === 'TypeError') {
+        setErrorMsg(`Cannot connect to backend server at ${currentApi}. Please ensure your backend service is running and active.`);
+      } else {
+        setErrorMsg(err.message || 'Scans startup failed');
+      }
     } finally {
       setIsSubmitting(false);
     }

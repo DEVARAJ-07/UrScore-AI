@@ -121,13 +121,17 @@ router.post('/trigger', upload.single('resume_file'), async (req: Request, res: 
       console.warn(`[API WARNING] GitHub validation check failed: ${err.message}`);
     }
 
+    const protocol = req.headers['x-forwarded-proto'] || req.protocol;
+    const host = req.get('host');
+    const baseUrl = `${protocol}://${host}`;
+
     // Insert scan with "pending" status
     const scan = await db.insertScan({
       github_username,
       github_repo_name: github_repo_name || null,
       portfolio_url: portfolio_url || null,
       leetcode_username: leetcode_username || null,
-      resume_url: resume_filename ? `http://localhost:5001/public/resumes/${resume_filename}` : null,
+      resume_url: resume_filename ? `${baseUrl}/public/resumes/${resume_filename}` : null,
       status: 'pending',
       progress: 0,
       logs: [`[SYSTEM] Created scan request for GitHub user ${github_username}.`]

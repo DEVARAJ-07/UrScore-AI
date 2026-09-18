@@ -119,8 +119,8 @@ async function run() {
           sendLog(`Dispatching report via AWS SES to ${email}...`, 98);
           await sendReportEmail(email, pdfUrl, githubProfile.name || githubProfile.username);
         }
-      } else {
-        pdfUrl = `http://localhost:5001/public/reports/${filename}`;
+        const backendBase = (process.env.BACKEND_URL || 'http://localhost:5001').replace(/\/+$/, '');
+        pdfUrl = `${backendBase}/public/reports/${filename}`;
         sendLog(`[AWS WARNING] Missing credentials. Simulated PDF upload: ${pdfUrl}`, 97);
         try {
           const destDir = path.resolve(__dirname, '../../backend/public/reports');
@@ -132,7 +132,8 @@ async function run() {
       }
     } catch (e: any) {
       sendLog(`[AWS ERROR] S3/SES Failed: ${e.message}`, 97);
-      pdfUrl = `http://localhost:5001/public/reports/${filename}`;
+      const backendBase = (process.env.BACKEND_URL || 'http://localhost:5001').replace(/\/+$/, '');
+      pdfUrl = `${backendBase}/public/reports/${filename}`;
       try {
         const destDir = path.resolve(__dirname, '../../backend/public/reports');
         if (!fs.existsSync(destDir)) fs.mkdirSync(destDir, { recursive: true });
