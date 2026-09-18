@@ -112,13 +112,14 @@ async function run() {
       if (process.env.AWS_ACCESS_KEY_ID) {
         pdfUrl = await uploadReportToS3(pdfPath, filename);
         sendLog(`Report uploaded successfully to S3: ${pdfUrl}`, 97);
-        
+
         // 7. Send SES Email
         const email = process.env.AWS_SES_SENDER || 'devakrs07@gmail.com';
         if (email) {
           sendLog(`Dispatching report via AWS SES to ${email}...`, 98);
           await sendReportEmail(email, pdfUrl, githubProfile.name || githubProfile.username);
         }
+      } else {
         const backendBase = (process.env.BACKEND_URL || 'http://localhost:5001').replace(/\/+$/, '');
         pdfUrl = `${backendBase}/public/reports/${filename}`;
         sendLog(`[AWS WARNING] Missing credentials. Simulated PDF upload: ${pdfUrl}`, 97);
