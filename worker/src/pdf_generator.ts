@@ -336,7 +336,7 @@ export const generatePdfReport = async (reportData: any, evidenceData: any, scan
         resolve(filePath);
       });
 
-      writeStream.on('error', (err) => {
+      writeStream.on('error', (err: any) => {
         reject(err);
       });
       

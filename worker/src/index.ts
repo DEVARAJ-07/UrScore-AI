@@ -162,7 +162,7 @@ async function run() {
         report: finalizedReport,
         evidence,
         logs
-      }, (err) => {
+      }, (err: any) => {
         if (err) console.error("Failed to send COMPLETED ipc message:", err);
         sendLog(`Worker completed task successfully.`, 100);
         process.exit(0);
