@@ -3,7 +3,7 @@
     "target": "ES2022",
     "module": "CommonJS",
     "lib": ["ES2022", "DOM"],
-    "types": ["node", "pdfkit"],
+    "types": ["node"],
     "outDir": "./dist",
     "rootDir": "./src",
     "strict": false,
