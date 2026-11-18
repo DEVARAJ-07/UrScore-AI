@@ -1,0 +1,422 @@
+{
+  "d434ab5a-aa36-4746-ab4e-8d6b1477e509": {
+    "id": "d434ab5a-aa36-4746-ab4e-8d6b1477e509",
+    "scan_id": "61369017-e50d-4698-b9bd-0294d9783f61",
+    "raw_evidence": {
+      "github_profile": {
+        "username": "DEVARAJ-07",
+        "name": "DEVARAJ-07 Developer",
+        "avatar_url": "https://api.dicebear.com/7.x/adventurer/svg?seed=DEVARAJ-07",
+        "public_repos": 4,
+        "followers": 12,
+        "created_at": "2025-11-13T06:45:08.311Z"
+      },
+      "repositories_analyzed": [
+        {
+          "name": "e-commerce-microservices",
+          "stars": 34,
+          "forks": 8,
+          "languages": {
+            "TypeScript": 8400,
+            "JavaScript": 4200,
+            "HTML": 1600
+          },
+          "dependencies": [
+            "express",
+            "typescript",
+            "redis",
+            "pg",
+            "prisma",
+            "jsonwebtoken",
+            "dotenv",
+            "cors",
+            "jest"
+          ],
+          "commits_analyzed": 5,
+          "readme_summary": "# E-Commerce Microservice Suite\nThis project implements the core ordering and shopping API.\n## Architecture\n- Express API Gateway\n- JWT Authentication...",
+          "ai_description": "This codebase is built primarily using standard web technologies, structured organized modularly. Analysis of the tracked files across the e-commerce-microservices repository indicates a solid focus on maintainability and separation of concerns.",
+          "file_paths": [
+            "package.json",
+            "tsconfig.json",
+            "src/index.ts",
+            "src/services/db.ts",
+            "tests/db.test.ts"
+          ]
+        },
+        {
+          "name": "react-dashboard-tailwind",
+          "stars": 18,
+          "forks": 3,
+          "languages": {
+            "TypeScript": 2100,
+            "CSS": 900,
+            "HTML": 400
+          },
+          "dependencies": [
+            "react",
+            "react-dom",
+            "typescript",
+            "zustand",
+            "recharts",
+            "tailwindcss",
+            "postcss",
+            "vite"
+          ],
+          "commits_analyzed": 3,
+          "readme_summary": "# React Admin Hub\nPremium admin dashboard using Zustand global store.\n- Real-time Recharts data plots.\n- Responsive tailwind grid layouts....",
+          "ai_description": "This codebase is built primarily using standard web technologies, structured organized modularly. Analysis of the tracked files across the react-dashboard-tailwind repository indicates a solid focus on maintainability and separation of concerns.",
+          "file_paths": [
+            "package.json",
+            "src/main.tsx",
+            "src/App.tsx",
+            "src/components/Chart.tsx",
+            "src/components/Chart.test.tsx"
+          ]
+        },
+        {
+          "name": "python-data-crawler",
+          "stars": 5,
+          "forks": 1,
+          "languages": {
+            "Python": 820
+          },
+          "dependencies": [
+            "boto3",
+            "requests",
+            "beautifulsoup4",
+            "pandas",
+            "pytest"
+          ],
+          "commits_analyzed": 2,
+          "readme_summary": "# Python S3 Data Pipeline\nPulls listings and stores them in AWS S3 buckets.\n### Prerequisites\nSetup `boto3` AWS credentials in environment variables....",
+          "ai_description": "This codebase is built primarily using standard web technologies, structured organized modularly. Analysis of the tracked files across the python-data-crawler repository indicates a solid focus on maintainability and separation of concerns.",
+          "file_paths": [
+            "requirements.txt",
+            "crawler.py",
+            "parser.py",
+            "tests/test_crawler.py"
+          ]
+        },
+        {
+          "name": "ci-cd-docker-template",
+          "stars": 2,
+          "forks": 0,
+          "languages": {
+            "YAML": 150
+          },
+          "dependencies": [
+            "docker",
+            "kubernetes",
+            "github-actions"
+          ],
+          "commits_analyzed": 1,
+          "readme_summary": "# DevOps Template\nWorkflows for running node tasks on push and pull request....",
+          "ai_description": "This codebase is built primarily using standard web technologies, structured organized modularly. Analysis of the tracked files across the ci-cd-docker-template repository indicates a solid focus on maintainability and separation of concerns.",
+          "file_paths": [
+            ".github/workflows/ci.yml",
+            ".github/workflows/cd.yml",
+            "Dockerfile",
+            "README.md"
+          ]
+        }
+      ],
+      "resume_extracted_metrics": {
+        "keywords": {
+          "languages": [],
+          "frameworks": [],
+          "databases": [],
+          "tools": []
+        },
+        "experience_years": 1,
+        "extracted_projects": []
+      },
+      "leetcode_stats": null,
+      "portfolio_stats": null,
+      "score_breakdown": {
+        "verified_keywords": [],
+        "unverified_keywords": []
+      }
+    },
+    "created_at": "2026-11-13T06:45:09.649Z"
+  },
+  "02e9f177-24fa-4e1d-965f-a7535e1363ac": {
+    "id": "02e9f177-24fa-4e1d-965f-a7535e1363ac",
+    "scan_id": "4f3d8b56-7039-47a6-b94f-a14577f5bc69",
+    "raw_evidence": {
+      "github_profile": {
+        "username": "Devaraj-07",
+        "name": "Devaraj-07 Developer",
+        "avatar_url": "https://api.dicebear.com/7.x/adventurer/svg?seed=Devaraj-07",
+        "public_repos": 4,
+        "followers": 12,
+        "created_at": "2025-11-13T06:46:09.788Z"
+      },
+      "repositories_analyzed": [
+        {
+          "name": "e-commerce-microservices",
+          "stars": 34,
+          "forks": 8,
+          "languages": {
+            "TypeScript": 8400,
+            "JavaScript": 4200,
+            "HTML": 1600
+          },
+          "dependencies": [
+            "express",
+            "typescript",
+            "redis",
+            "pg",
+            "prisma",
+            "jsonwebtoken",
+            "dotenv",
+            "cors",
+            "jest"
+          ],
+          "commits_analyzed": 5,
+          "readme_summary": "# E-Commerce Microservice Suite\nThis project implements the core ordering and shopping API.\n## Architecture\n- Express API Gateway\n- JWT Authentication...",
+          "ai_description": "This codebase is built primarily using standard web technologies, structured organized modularly. Analysis of the tracked files across the e-commerce-microservices repository indicates a solid focus on maintainability and separation of concerns.",
+          "file_paths": [
+            "package.json",
+            "tsconfig.json",
+            "src/index.ts",
+            "src/services/db.ts",
+            "tests/db.test.ts"
+          ]
+        },
+        {
+          "name": "react-dashboard-tailwind",
+          "stars": 18,
+          "forks": 3,
+          "languages": {
+            "TypeScript": 2100,
+            "CSS": 900,
+            "HTML": 400
+          },
+          "dependencies": [
+            "react",
+            "react-dom",
+            "typescript",
+            "zustand",
+            "recharts",
+            "tailwindcss",
+            "postcss",
+            "vite"
+          ],
+          "commits_analyzed": 3,
+          "readme_summary": "# React Admin Hub\nPremium admin dashboard using Zustand global store.\n- Real-time Recharts data plots.\n- Responsive tailwind grid layouts....",
+          "ai_description": "This codebase is built primarily using standard web technologies, structured organized modularly. Analysis of the tracked files across the react-dashboard-tailwind repository indicates a solid focus on maintainability and separation of concerns.",
+          "file_paths": [
+            "package.json",
+            "src/main.tsx",
+            "src/App.tsx",
+            "src/components/Chart.tsx",
+            "src/components/Chart.test.tsx"
+          ]
+        },
+        {
+          "name": "python-data-crawler",
+          "stars": 5,
+          "forks": 1,
+          "languages": {
+            "Python": 820
+          },
+          "dependencies": [
+            "boto3",
+            "requests",
+            "beautifulsoup4",
+            "pandas",
+            "pytest"
+          ],
+          "commits_analyzed": 2,
+          "readme_summary": "# Python S3 Data Pipeline\nPulls listings and stores them in AWS S3 buckets.\n### Prerequisites\nSetup `boto3` AWS credentials in environment variables....",
+          "ai_description": "This codebase is built primarily using standard web technologies, structured organized modularly. Analysis of the tracked files across the python-data-crawler repository indicates a solid focus on maintainability and separation of concerns.",
+          "file_paths": [
+            "requirements.txt",
+            "crawler.py",
+            "parser.py",
+            "tests/test_crawler.py"
+          ]
+        },
+        {
+          "name": "ci-cd-docker-template",
+          "stars": 2,
+          "forks": 0,
+          "languages": {
+            "YAML": 150
+          },
+          "dependencies": [
+            "docker",
+            "kubernetes",
+            "github-actions"
+          ],
+          "commits_analyzed": 1,
+          "readme_summary": "# DevOps Template\nWorkflows for running node tasks on push and pull request....",
+          "ai_description": "This codebase is built primarily using standard web technologies, structured organized modularly. Analysis of the tracked files across the ci-cd-docker-template repository indicates a solid focus on maintainability and separation of concerns.",
+          "file_paths": [
+            ".github/workflows/ci.yml",
+            ".github/workflows/cd.yml",
+            "Dockerfile",
+            "README.md"
+          ]
+        }
+      ],
+      "resume_extracted_metrics": {
+        "keywords": {
+          "languages": [],
+          "frameworks": [],
+          "databases": [],
+          "tools": []
+        },
+        "experience_years": 1,
+        "extracted_projects": []
+      },
+      "leetcode_stats": null,
+      "portfolio_stats": null,
+      "score_breakdown": {
+        "verified_keywords": [],
+        "unverified_keywords": []
+      }
+    },
+    "created_at": "2026-11-13T06:46:11.583Z"
+  },
+  "7dafbece-f280-497f-bf33-2d9a42715ad9": {
+    "id": "7dafbece-f280-497f-bf33-2d9a42715ad9",
+    "scan_id": "1ec10bb0-bc97-4944-b574-701109a557fa",
+    "raw_evidence": {
+      "github_profile": {
+        "username": "Kaviyariya",
+        "name": "Kaviyariya Developer",
+        "avatar_url": "https://api.dicebear.com/7.x/adventurer/svg?seed=Kaviyariya",
+        "public_repos": 4,
+        "followers": 12,
+        "created_at": "2025-11-13T06:46:50.424Z"
+      },
+      "repositories_analyzed": [
+        {
+          "name": "e-commerce-microservices",
+          "stars": 34,
+          "forks": 8,
+          "languages": {
+            "TypeScript": 8400,
+            "JavaScript": 4200,
+            "HTML": 1600
+          },
+          "dependencies": [
+            "express",
+            "typescript",
+            "redis",
+            "pg",
+            "prisma",
+            "jsonwebtoken",
+            "dotenv",
+            "cors",
+            "jest"
+          ],
+          "commits_analyzed": 5,
+          "readme_summary": "# E-Commerce Microservice Suite\nThis project implements the core ordering and shopping API.\n## Architecture\n- Express API Gateway\n- JWT Authentication...",
+          "ai_description": "This codebase is built primarily using standard web technologies, structured organized modularly. Analysis of the tracked files across the e-commerce-microservices repository indicates a solid focus on maintainability and separation of concerns.",
+          "file_paths": [
+            "package.json",
+            "tsconfig.json",
+            "src/index.ts",
+            "src/services/db.ts",
+            "tests/db.test.ts"
+          ]
+        },
+        {
+          "name": "react-dashboard-tailwind",
+          "stars": 18,
+          "forks": 3,
+          "languages": {
+            "TypeScript": 2100,
+            "CSS": 900,
+            "HTML": 400
+          },
+          "dependencies": [
+            "react",
+            "react-dom",
+            "typescript",
+            "zustand",
+            "recharts",
+            "tailwindcss",
+            "postcss",
+            "vite"
+          ],
+          "commits_analyzed": 3,
+          "readme_summary": "# React Admin Hub\nPremium admin dashboard using Zustand global store.\n- Real-time Recharts data plots.\n- Responsive tailwind grid layouts....",
+          "ai_description": "This codebase is built primarily using standard web technologies, structured organized modularly. Analysis of the tracked files across the react-dashboard-tailwind repository indicates a solid focus on maintainability and separation of concerns.",
+          "file_paths": [
+            "package.json",
+            "src/main.tsx",
+            "src/App.tsx",
+            "src/components/Chart.tsx",
+            "src/components/Chart.test.tsx"
+          ]
+        },
+        {
+          "name": "python-data-crawler",
+          "stars": 5,
+          "forks": 1,
+          "languages": {
+            "Python": 820
+          },
+          "dependencies": [
+            "boto3",
+            "requests",
+            "beautifulsoup4",
+            "pandas",
+            "pytest"
+          ],
+          "commits_analyzed": 2,
+          "readme_summary": "# Python S3 Data Pipeline\nPulls listings and stores them in AWS S3 buckets.\n### Prerequisites\nSetup `boto3` AWS credentials in environment variables....",
+          "ai_description": "This codebase is built primarily using standard web technologies, structured organized modularly. Analysis of the tracked files across the python-data-crawler repository indicates a solid focus on maintainability and separation of concerns.",
+          "file_paths": [
+            "requirements.txt",
+            "crawler.py",
+            "parser.py",
+            "tests/test_crawler.py"
+          ]
+        },
+        {
+          "name": "ci-cd-docker-template",
+          "stars": 2,
+          "forks": 0,
+          "languages": {
+            "YAML": 150
+          },
+          "dependencies": [
+            "docker",
+            "kubernetes",
+            "github-actions"
+          ],
+          "commits_analyzed": 1,
+          "readme_summary": "# DevOps Template\nWorkflows for running node tasks on push and pull request....",
+          "ai_description": "This codebase is built primarily using standard web technologies, structured organized modularly. Analysis of the tracked files across the ci-cd-docker-template repository indicates a solid focus on maintainability and separation of concerns.",
+          "file_paths": [
+            ".github/workflows/ci.yml",
+            ".github/workflows/cd.yml",
+            "Dockerfile",
+            "README.md"
+          ]
+        }
+      ],
+      "resume_extracted_metrics": {
+        "keywords": {
+          "languages": [],
+          "frameworks": [],
+          "databases": [],
+          "tools": []
+        },
+        "experience_years": 1,
+        "extracted_projects": []
+      },
+      "leetcode_stats": null,
+      "portfolio_stats": null,
+      "score_breakdown": {
+        "verified_keywords": [],
+        "unverified_keywords": []
+      }
+    },
+    "created_at": "2026-11-13T06:46:53.124Z"
+  }
+}
