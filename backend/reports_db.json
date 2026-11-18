@@ -278,5 +278,65 @@
     "pdf_report_url": "http://localhost:5001/public/reports/233a50e1-cea9-47ab-ae5f-be0a9bc2e42a_competency_report.pdf",
     "id": "432ddb2f-cd35-4959-b27e-cd52ce245fe9",
     "created_at": "2026-06-13T10:52:37.993Z"
+  },
+  "afddabdb-9366-44e6-87e4-25b414912559": {
+    "scan_id": "61369017-e50d-4698-b9bd-0294d9783f61",
+    "overall_score": 82.55,
+    "skill_verification": 100,
+    "commit_quality": 100,
+    "project_complexity": 70.74,
+    "recency": 100,
+    "cross_reference": 50,
+    "activity_consistency": 30,
+    "summary_metrics": {
+      "total_repos": 4,
+      "verified_skills_count": 0,
+      "leetcode_solved": 0,
+      "portfolio_title": null,
+      "experience_years": 1
+    },
+    "pdf_report_url": "https://urscore-reports.s3.ap-southeast-1.amazonaws.com/reports/61369017-e50d-4698-b9bd-0294d9783f61_competency_report.pdf",
+    "id": "afddabdb-9366-44e6-87e4-25b414912559",
+    "created_at": "2026-11-13T06:45:09.625Z"
+  },
+  "8d1be4ba-7907-462b-bee8-46344ee5afb8": {
+    "scan_id": "4f3d8b56-7039-47a6-b94f-a14577f5bc69",
+    "overall_score": 82.55,
+    "skill_verification": 100,
+    "commit_quality": 100,
+    "project_complexity": 70.74,
+    "recency": 100,
+    "cross_reference": 50,
+    "activity_consistency": 30,
+    "summary_metrics": {
+      "total_repos": 4,
+      "verified_skills_count": 0,
+      "leetcode_solved": 0,
+      "portfolio_title": null,
+      "experience_years": 1
+    },
+    "pdf_report_url": "https://urscore-reports.s3.ap-southeast-1.amazonaws.com/reports/4f3d8b56-7039-47a6-b94f-a14577f5bc69_competency_report.pdf",
+    "id": "8d1be4ba-7907-462b-bee8-46344ee5afb8",
+    "created_at": "2026-11-13T06:46:11.565Z"
+  },
+  "35f3d7b6-4f07-45d6-b390-d751bd4c512f": {
+    "scan_id": "1ec10bb0-bc97-4944-b574-701109a557fa",
+    "overall_score": 82.55,
+    "skill_verification": 100,
+    "commit_quality": 100,
+    "project_complexity": 70.74,
+    "recency": 100,
+    "cross_reference": 50,
+    "activity_consistency": 30,
+    "summary_metrics": {
+      "total_repos": 4,
+      "verified_skills_count": 0,
+      "leetcode_solved": 0,
+      "portfolio_title": null,
+      "experience_years": 1
+    },
+    "pdf_report_url": "https://urscore-reports.s3.ap-southeast-1.amazonaws.com/reports/1ec10bb0-bc97-4944-b574-701109a557fa_competency_report.pdf",
+    "id": "35f3d7b6-4f07-45d6-b390-d751bd4c512f",
+    "created_at": "2026-11-13T06:46:53.104Z"
   }
 }
